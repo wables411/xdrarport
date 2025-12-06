@@ -1,0 +1,543 @@
+[
+  {
+    "id": "file-0",
+    "filename": "XDRAR.mov",
+    "path": "/media/XDRAR.mov",
+    "type": "video",
+    "extension": "mov",
+    "size": 132071340
+  },
+  {
+    "id": "project-1",
+    "name": "411 logos",
+    "folder": "411 logos",
+    "path": "/media/411 logos",
+    "thumbnail": "/media/411 logos/4111.png",
+    "thumbnailType": "image",
+    "files": [
+      {
+        "filename": "4111.png",
+        "path": "/media/411 logos/4111.png",
+        "type": "image",
+        "extension": "png",
+        "size": 3818194
+      },
+      {
+        "filename": "4112.png",
+        "path": "/media/411 logos/4112.png",
+        "type": "image",
+        "extension": "png",
+        "size": 3646613
+      },
+      {
+        "filename": "4113.png",
+        "path": "/media/411 logos/4113.png",
+        "type": "image",
+        "extension": "png",
+        "size": 3714841
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "project-2",
+    "name": "petty mart",
+    "folder": "petty mart",
+    "path": "/media/petty mart",
+    "thumbnail": "/media/petty mart/PM banner.png",
+    "thumbnailType": "image",
+    "files": [
+      {
+        "filename": "PM NFT.mp4",
+        "path": "/media/petty mart/PM NFT.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 67726675
+      },
+      {
+        "filename": "PM banner.png",
+        "path": "/media/petty mart/PM banner.png",
+        "type": "image",
+        "extension": "png",
+        "size": 1894424
+      },
+      {
+        "filename": "Petty Mart Carousel.gif",
+        "path": "/media/petty mart/Petty Mart Carousel.gif",
+        "type": "image",
+        "extension": "gif",
+        "size": 17673047
+      },
+      {
+        "filename": "Petty_Fest_Backdrops1.mp4",
+        "path": "/media/petty mart/Petty_Fest_Backdrops1.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 741772
+      },
+      {
+        "filename": "Petty_Fest_Backdrops2.mp4",
+        "path": "/media/petty mart/Petty_Fest_Backdrops2.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 6889077
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "project-3",
+    "name": "Planeta Pisces logos",
+    "folder": "Planeta Pisces logos",
+    "path": "/media/Planeta Pisces logos",
+    "thumbnail": "/media/Planeta Pisces logos/Planeta Pisces Logo 1.png",
+    "thumbnailType": "image",
+    "files": [
+      {
+        "filename": "Planeta Pisces Logo 1.png",
+        "path": "/media/Planeta Pisces logos/Planeta Pisces Logo 1.png",
+        "type": "image",
+        "extension": "png",
+        "size": 87805
+      },
+      {
+        "filename": "Planeta Pisces Logo 2.png",
+        "path": "/media/Planeta Pisces logos/Planeta Pisces Logo 2.png",
+        "type": "image",
+        "extension": "png",
+        "size": 96593
+      },
+      {
+        "filename": "Planeta Pisces Logo 3.png",
+        "path": "/media/Planeta Pisces logos/Planeta Pisces Logo 3.png",
+        "type": "image",
+        "extension": "png",
+        "size": 105477
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "project-4",
+    "name": "portion club",
+    "folder": "portion club",
+    "path": "/media/portion club",
+    "thumbnail": "/media/portion club/PC TAPE COVER FINAL.png",
+    "thumbnailType": "image",
+    "files": [
+      {
+        "filename": "Blade_Rave.mp4",
+        "path": "/media/portion club/Blade_Rave.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 23443231
+      },
+      {
+        "filename": "PC PARTY PROMO-1.mov",
+        "path": "/media/portion club/PC PARTY PROMO-1.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 74617875
+      },
+      {
+        "filename": "PC TAPE COVER FINAL.png",
+        "path": "/media/portion club/PC TAPE COVER FINAL.png",
+        "type": "image",
+        "extension": "png",
+        "size": 4492639
+      },
+      {
+        "filename": "PC TWITTER POST FINAL.mov",
+        "path": "/media/portion club/PC TWITTER POST FINAL.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 73182768
+      },
+      {
+        "filename": "PC tape backcover final.png",
+        "path": "/media/portion club/PC tape backcover final.png",
+        "type": "image",
+        "extension": "png",
+        "size": 3671689
+      },
+      {
+        "filename": "PC69_Hologram.mp4",
+        "path": "/media/portion club/PC69_Hologram.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 25345836
+      },
+      {
+        "filename": "PC_Squid.mp4",
+        "path": "/media/portion club/PC_Squid.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 1131780
+      },
+      {
+        "filename": "PortionClub.mp4",
+        "path": "/media/portion club/PortionClub.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 3630481
+      },
+      {
+        "filename": "Portion_Club_Logo.avi",
+        "path": "/media/portion club/Portion_Club_Logo.avi",
+        "type": "video",
+        "extension": "avi",
+        "size": 297303624
+      },
+      {
+        "filename": "Splat.mp4",
+        "path": "/media/portion club/Splat.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 661459
+      },
+      {
+        "filename": "pumpkinclub_69.mov",
+        "path": "/media/portion club/pumpkinclub_69.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 646062
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "project-5",
+    "name": "Rare Bet Sports Clips",
+    "folder": "RBS",
+    "path": "/media/RBS",
+    "thumbnail": "/media/RBS/Devin Booker/Devin Booker.mp4",
+    "thumbnailType": "video",
+    "files": [
+      {
+        "filename": "Artboard 1.png",
+        "path": "/media/RBS/Devin Booker/Artboard 1.png",
+        "type": "image",
+        "extension": "png",
+        "size": 2996871
+      },
+      {
+        "filename": "Devin Booker.mp4",
+        "path": "/media/RBS/Devin Booker/Devin Booker.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 44598687
+      },
+      {
+        "filename": "Donovan_Mitchell_Edit.mp4",
+        "path": "/media/RBS/Donovan Mitchell/Donovan_Mitchell_Edit.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 49806786
+      },
+      {
+        "filename": "jalen brunson edit watermarked.mp4",
+        "path": "/media/RBS/Jalen Brunson/jalen brunson edit watermarked.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 52282997
+      },
+      {
+        "filename": "Jayson Tatum Highlights.mp4",
+        "path": "/media/RBS/Jayson Tatum/Jayson Tatum Highlights.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 58524385
+      },
+      {
+        "filename": "Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
+        "path": "/media/RBS/Kawhi Leonard/Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 26480848
+      },
+      {
+        "filename": "Damien lillard cover.png",
+        "path": "/media/RBS/Lillard/Damien lillard cover.png",
+        "type": "image",
+        "extension": "png",
+        "size": 1603972
+      },
+      {
+        "filename": "Damien lillard.mp4",
+        "path": "/media/RBS/Lillard/Damien lillard.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 54644481
+      },
+      {
+        "filename": "Luka Doncic Edit.mp4",
+        "path": "/media/RBS/Luka Doncic/Luka Doncic Edit.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 48445685
+      },
+      {
+        "filename": "Nikola Jokic.mp4",
+        "path": "/media/RBS/Nikola Jokic 2/Nikola Jokic.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 396382249
+      },
+      {
+        "filename": "Shai Gilgeous Alexander2.mp4",
+        "path": "/media/RBS/Shai Gilgeous-Alexander 2/Shai Gilgeous Alexander2.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 39710036
+      },
+      {
+        "filename": "giannis antetokounmpo.mp4",
+        "path": "/media/RBS/giannis antetokounmpo/giannis antetokounmpo.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 44587446
+      }
+    ],
+    "videos": [
+      {
+        "filename": "Devin Booker.mp4",
+        "path": "/media/RBS/Devin Booker/Devin Booker.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 44598687,
+        "playerName": "Devin Booker"
+      },
+      {
+        "filename": "Donovan_Mitchell_Edit.mp4",
+        "path": "/media/RBS/Donovan Mitchell/Donovan_Mitchell_Edit.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 49806786,
+        "playerName": "Donovan Mitchell"
+      },
+      {
+        "filename": "jalen brunson edit watermarked.mp4",
+        "path": "/media/RBS/Jalen Brunson/jalen brunson edit watermarked.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 52282997,
+        "playerName": "Jalen Brunson"
+      },
+      {
+        "filename": "Jayson Tatum Highlights.mp4",
+        "path": "/media/RBS/Jayson Tatum/Jayson Tatum Highlights.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 58524385,
+        "playerName": "Jayson Tatum"
+      },
+      {
+        "filename": "Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
+        "path": "/media/RBS/Kawhi Leonard/Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 26480848,
+        "playerName": "Kawhi Leonard"
+      },
+      {
+        "filename": "Damien lillard.mp4",
+        "path": "/media/RBS/Lillard/Damien lillard.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 54644481,
+        "playerName": "Lillard"
+      },
+      {
+        "filename": "Luka Doncic Edit.mp4",
+        "path": "/media/RBS/Luka Doncic/Luka Doncic Edit.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 48445685,
+        "playerName": "Luka Doncic"
+      },
+      {
+        "filename": "Nikola Jokic.mp4",
+        "path": "/media/RBS/Nikola Jokic 2/Nikola Jokic.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 396382249,
+        "playerName": "Nikola Jokic 2"
+      },
+      {
+        "filename": "Shai Gilgeous Alexander2.mp4",
+        "path": "/media/RBS/Shai Gilgeous-Alexander 2/Shai Gilgeous Alexander2.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 39710036,
+        "playerName": "Shai Gilgeous-Alexander 2"
+      },
+      {
+        "filename": "giannis antetokounmpo.mp4",
+        "path": "/media/RBS/giannis antetokounmpo/giannis antetokounmpo.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 44587446,
+        "playerName": "giannis antetokounmpo"
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "project-6",
+    "name": "Sith rave",
+    "folder": "Sith rave",
+    "path": "/media/Sith rave",
+    "thumbnail": "/media/Sith rave/!NFO.mp4",
+    "thumbnailType": "video",
+    "files": [
+      {
+        "filename": "!NFO.mp4",
+        "path": "/media/Sith rave/!NFO.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 144687780
+      },
+      {
+        "filename": "Flyer.mov",
+        "path": "/media/Sith rave/Flyer.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 267805311
+      },
+      {
+        "filename": "RAINSDEAF.mp4",
+        "path": "/media/Sith rave/RAINSDEAF.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 144693893
+      },
+      {
+        "filename": "VAMPY.mov",
+        "path": "/media/Sith rave/VAMPY.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 145529403
+      },
+      {
+        "filename": "tall ceo.mov",
+        "path": "/media/Sith rave/tall ceo.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 144371115
+      },
+      {
+        "filename": "technopagan.mov",
+        "path": "/media/Sith rave/technopagan.mov",
+        "type": "video",
+        "extension": "mov",
+        "size": 285595116
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "project-7",
+    "name": "Text Me Records Logo",
+    "folder": "Text me bridge logo",
+    "path": "/media/Text me bridge logo",
+    "thumbnail": "/media/Text me bridge logo/Text Me bridge Phone logo.png",
+    "thumbnailType": "image",
+    "files": [
+      {
+        "filename": "Text Me bridge Phone logo.png",
+        "path": "/media/Text me bridge logo/Text Me bridge Phone logo.png",
+        "type": "image",
+        "extension": "png",
+        "size": 269272
+      },
+      {
+        "filename": "Text Me text (w logo).png",
+        "path": "/media/Text me bridge logo/Text Me text (w logo).png",
+        "type": "image",
+        "extension": "png",
+        "size": 114168
+      }
+    ],
+    "type": "project"
+  },
+  {
+    "id": "file-1",
+    "filename": "Bodysync.MP4",
+    "path": "/media/Bodysync.MP4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 17420630
+  },
+  {
+    "id": "file-2",
+    "filename": "Drip_Cici_G.mp4",
+    "path": "/media/Drip_Cici_G.mp4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 40942659
+  },
+  {
+    "id": "file-3",
+    "filename": "dump it.mov",
+    "path": "/media/dump it.mov",
+    "type": "video",
+    "extension": "mov",
+    "size": 32726952
+  },
+  {
+    "id": "file-4",
+    "filename": "IMTRLWORLD.mp4",
+    "path": "/media/IMTRLWORLD.mp4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 88152972
+  },
+  {
+    "id": "file-5",
+    "filename": "MM YOU CAN HAVE MY HEART AD.mp4",
+    "path": "/media/MM YOU CAN HAVE MY HEART AD.mp4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 32452434
+  },
+  {
+    "id": "file-6",
+    "filename": "Red_Room_TV.mp4",
+    "path": "/media/Red_Room_TV.mp4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 13527344
+  },
+  {
+    "id": "file-7",
+    "filename": "Ricky_Lake_Logo.mp4",
+    "path": "/media/Ricky_Lake_Logo.mp4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 8196628
+  },
+  {
+    "id": "file-8",
+    "filename": "ricky.mov",
+    "path": "/media/ricky.mov",
+    "type": "video",
+    "extension": "mov",
+    "size": 72497619
+  },
+  {
+    "id": "file-9",
+    "filename": "SAUCE.mov",
+    "path": "/media/SAUCE.mov",
+    "type": "video",
+    "extension": "mov",
+    "size": 75288079
+  },
+  {
+    "id": "file-10",
+    "filename": "sprung.mp4",
+    "path": "/media/sprung.mp4",
+    "type": "video",
+    "extension": "mp4",
+    "size": 16052682
+  }
+]

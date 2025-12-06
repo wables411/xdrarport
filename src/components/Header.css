@@ -1,0 +1,130 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: #000;
+  border-bottom: 1px solid #333;
+  padding: 0;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  max-width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.header-name {
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 8px 12px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.header-name:hover {
+  opacity: 0.7;
+}
+
+.header-name:active {
+  opacity: 0.5;
+}
+
+.header-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  padding: 8px 12px;
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+  text-transform: uppercase;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.header-button:hover {
+  opacity: 0.7;
+}
+
+.header-button:active {
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: 50px;
+  }
+
+  .header-content {
+    padding: 8px 12px;
+    gap: 8px;
+    height: 100%;
+  }
+
+  .header-name {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-height: 44px;
+  }
+
+  .header-button {
+    font-size: 12px;
+    padding: 6px 10px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .header-right {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-name {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .header-button {
+    font-size: 11px;
+    padding: 6px 8px;
+    min-width: 40px;
+  }
+}
+

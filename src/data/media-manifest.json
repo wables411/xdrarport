@@ -2,7 +2,7 @@
   {
     "id": "file-0",
     "filename": "XDRAR.mov",
-    "path": "/media/XDRAR.mov",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mov",
     "type": "video",
     "extension": "mov",
     "size": 132071340
@@ -49,7 +49,7 @@
     "files": [
       {
         "filename": "PM NFT.mp4",
-        "path": "/media/petty mart/PM NFT.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/petty mart/PM NFT.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 67726675
@@ -70,14 +70,14 @@
       },
       {
         "filename": "Petty_Fest_Backdrops1.mp4",
-        "path": "/media/petty mart/Petty_Fest_Backdrops1.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/petty mart/Petty_Fest_Backdrops1.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 741772
       },
       {
         "filename": "Petty_Fest_Backdrops2.mp4",
-        "path": "/media/petty mart/Petty_Fest_Backdrops2.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/petty mart/Petty_Fest_Backdrops2.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 6889077
@@ -127,14 +127,14 @@
     "files": [
       {
         "filename": "Blade_Rave.mp4",
-        "path": "/media/portion club/Blade_Rave.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/Blade_Rave.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 23443231
       },
       {
         "filename": "PC PARTY PROMO-1.mov",
-        "path": "/media/portion club/PC PARTY PROMO-1.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PC PARTY PROMO-1.mov",
         "type": "video",
         "extension": "mov",
         "size": 74617875
@@ -148,7 +148,7 @@
       },
       {
         "filename": "PC TWITTER POST FINAL.mov",
-        "path": "/media/portion club/PC TWITTER POST FINAL.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PC TWITTER POST FINAL.mov",
         "type": "video",
         "extension": "mov",
         "size": 73182768
@@ -162,42 +162,42 @@
       },
       {
         "filename": "PC69_Hologram.mp4",
-        "path": "/media/portion club/PC69_Hologram.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PC69_Hologram.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 25345836
       },
       {
         "filename": "PC_Squid.mp4",
-        "path": "/media/portion club/PC_Squid.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PC_Squid.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 1131780
       },
       {
         "filename": "PortionClub.mp4",
-        "path": "/media/portion club/PortionClub.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PortionClub.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 3630481
       },
       {
         "filename": "Portion_Club_Logo.avi",
-        "path": "/media/portion club/Portion_Club_Logo.avi",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/Portion_Club_Logo.avi",
         "type": "video",
         "extension": "avi",
         "size": 297303624
       },
       {
         "filename": "Splat.mp4",
-        "path": "/media/portion club/Splat.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/Splat.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 661459
       },
       {
         "filename": "pumpkinclub_69.mov",
-        "path": "/media/portion club/pumpkinclub_69.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/pumpkinclub_69.mov",
         "type": "video",
         "extension": "mov",
         "size": 646062
@@ -210,7 +210,7 @@
     "name": "Rare Bet Sports Clips",
     "folder": "RBS",
     "path": "/media/RBS",
-    "thumbnail": "/media/RBS/Devin Booker/Devin Booker.mp4",
+    "thumbnail": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Devin Booker/Devin Booker.mp4",
     "thumbnailType": "video",
     "files": [
       {
@@ -222,35 +222,35 @@
       },
       {
         "filename": "Devin Booker.mp4",
-        "path": "/media/RBS/Devin Booker/Devin Booker.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Devin Booker/Devin Booker.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 44598687
       },
       {
         "filename": "Donovan_Mitchell_Edit.mp4",
-        "path": "/media/RBS/Donovan Mitchell/Donovan_Mitchell_Edit.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Donovan Mitchell/Donovan_Mitchell_Edit.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 49806786
       },
       {
         "filename": "jalen brunson edit watermarked.mp4",
-        "path": "/media/RBS/Jalen Brunson/jalen brunson edit watermarked.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Jalen Brunson/jalen brunson edit watermarked.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 52282997
       },
       {
         "filename": "Jayson Tatum Highlights.mp4",
-        "path": "/media/RBS/Jayson Tatum/Jayson Tatum Highlights.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Jayson Tatum/Jayson Tatum Highlights.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 58524385
       },
       {
         "filename": "Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
-        "path": "/media/RBS/Kawhi Leonard/Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Kawhi Leonard/Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
         "type": "video",
         "extension": "mp4",
         "size": 26480848
@@ -264,35 +264,35 @@
       },
       {
         "filename": "Damien lillard.mp4",
-        "path": "/media/RBS/Lillard/Damien lillard.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Lillard/Damien lillard.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 54644481
       },
       {
         "filename": "Luka Doncic Edit.mp4",
-        "path": "/media/RBS/Luka Doncic/Luka Doncic Edit.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Luka Doncic/Luka Doncic Edit.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 48445685
       },
       {
         "filename": "Nikola Jokic.mp4",
-        "path": "/media/RBS/Nikola Jokic 2/Nikola Jokic.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Nikola Jokic 2/Nikola Jokic.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 396382249
       },
       {
         "filename": "Shai Gilgeous Alexander2.mp4",
-        "path": "/media/RBS/Shai Gilgeous-Alexander 2/Shai Gilgeous Alexander2.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Shai Gilgeous-Alexander 2/Shai Gilgeous Alexander2.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 39710036
       },
       {
         "filename": "giannis antetokounmpo.mp4",
-        "path": "/media/RBS/giannis antetokounmpo/giannis antetokounmpo.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/giannis antetokounmpo/giannis antetokounmpo.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 44587446
@@ -301,7 +301,7 @@
     "videos": [
       {
         "filename": "Devin Booker.mp4",
-        "path": "/media/RBS/Devin Booker/Devin Booker.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Devin Booker/Devin Booker.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 44598687,
@@ -309,7 +309,7 @@
       },
       {
         "filename": "Donovan_Mitchell_Edit.mp4",
-        "path": "/media/RBS/Donovan Mitchell/Donovan_Mitchell_Edit.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Donovan Mitchell/Donovan_Mitchell_Edit.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 49806786,
@@ -317,7 +317,7 @@
       },
       {
         "filename": "jalen brunson edit watermarked.mp4",
-        "path": "/media/RBS/Jalen Brunson/jalen brunson edit watermarked.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Jalen Brunson/jalen brunson edit watermarked.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 52282997,
@@ -325,7 +325,7 @@
       },
       {
         "filename": "Jayson Tatum Highlights.mp4",
-        "path": "/media/RBS/Jayson Tatum/Jayson Tatum Highlights.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Jayson Tatum/Jayson Tatum Highlights.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 58524385,
@@ -333,7 +333,7 @@
       },
       {
         "filename": "Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
-        "path": "/media/RBS/Kawhi Leonard/Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Kawhi Leonard/Kawhi_Leonard[Juicy_J-Riley(Fahhh_Remix)].mp4",
         "type": "video",
         "extension": "mp4",
         "size": 26480848,
@@ -341,7 +341,7 @@
       },
       {
         "filename": "Damien lillard.mp4",
-        "path": "/media/RBS/Lillard/Damien lillard.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Lillard/Damien lillard.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 54644481,
@@ -349,7 +349,7 @@
       },
       {
         "filename": "Luka Doncic Edit.mp4",
-        "path": "/media/RBS/Luka Doncic/Luka Doncic Edit.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Luka Doncic/Luka Doncic Edit.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 48445685,
@@ -357,7 +357,7 @@
       },
       {
         "filename": "Nikola Jokic.mp4",
-        "path": "/media/RBS/Nikola Jokic 2/Nikola Jokic.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Nikola Jokic 2/Nikola Jokic.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 396382249,
@@ -365,7 +365,7 @@
       },
       {
         "filename": "Shai Gilgeous Alexander2.mp4",
-        "path": "/media/RBS/Shai Gilgeous-Alexander 2/Shai Gilgeous Alexander2.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/Shai Gilgeous-Alexander 2/Shai Gilgeous Alexander2.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 39710036,
@@ -373,7 +373,7 @@
       },
       {
         "filename": "giannis antetokounmpo.mp4",
-        "path": "/media/RBS/giannis antetokounmpo/giannis antetokounmpo.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/RBS/giannis antetokounmpo/giannis antetokounmpo.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 44587446,
@@ -387,47 +387,47 @@
     "name": "Sith rave",
     "folder": "Sith rave",
     "path": "/media/Sith rave",
-    "thumbnail": "/media/Sith rave/!NFO.mp4",
+    "thumbnail": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/!NFO.mp4",
     "thumbnailType": "video",
     "files": [
       {
         "filename": "!NFO.mp4",
-        "path": "/media/Sith rave/!NFO.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/!NFO.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 144687780
       },
       {
         "filename": "Flyer.mov",
-        "path": "/media/Sith rave/Flyer.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/Flyer.mov",
         "type": "video",
         "extension": "mov",
         "size": 267805311
       },
       {
         "filename": "RAINSDEAF.mp4",
-        "path": "/media/Sith rave/RAINSDEAF.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/RAINSDEAF.mp4",
         "type": "video",
         "extension": "mp4",
         "size": 144693893
       },
       {
         "filename": "VAMPY.mov",
-        "path": "/media/Sith rave/VAMPY.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/VAMPY.mov",
         "type": "video",
         "extension": "mov",
         "size": 145529403
       },
       {
         "filename": "tall ceo.mov",
-        "path": "/media/Sith rave/tall ceo.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/tall ceo.mov",
         "type": "video",
         "extension": "mov",
         "size": 144371115
       },
       {
         "filename": "technopagan.mov",
-        "path": "/media/Sith rave/technopagan.mov",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Sith rave/technopagan.mov",
         "type": "video",
         "extension": "mov",
         "size": 285595116
@@ -463,7 +463,7 @@
   {
     "id": "file-1",
     "filename": "Bodysync.MP4",
-    "path": "/media/Bodysync.MP4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Bodysync.MP4",
     "type": "video",
     "extension": "mp4",
     "size": 17420630
@@ -471,7 +471,7 @@
   {
     "id": "file-2",
     "filename": "Drip_Cici_G.mp4",
-    "path": "/media/Drip_Cici_G.mp4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Drip_Cici_G.mp4",
     "type": "video",
     "extension": "mp4",
     "size": 40942659
@@ -479,7 +479,7 @@
   {
     "id": "file-3",
     "filename": "dump it.mov",
-    "path": "/media/dump it.mov",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/dump it.mov",
     "type": "video",
     "extension": "mov",
     "size": 32726952
@@ -487,7 +487,7 @@
   {
     "id": "file-4",
     "filename": "IMTRLWORLD.mp4",
-    "path": "/media/IMTRLWORLD.mp4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/IMTRLWORLD.mp4",
     "type": "video",
     "extension": "mp4",
     "size": 88152972
@@ -495,7 +495,7 @@
   {
     "id": "file-5",
     "filename": "MM YOU CAN HAVE MY HEART AD.mp4",
-    "path": "/media/MM YOU CAN HAVE MY HEART AD.mp4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/MM YOU CAN HAVE MY HEART AD.mp4",
     "type": "video",
     "extension": "mp4",
     "size": 32452434
@@ -503,7 +503,7 @@
   {
     "id": "file-6",
     "filename": "Red_Room_TV.mp4",
-    "path": "/media/Red_Room_TV.mp4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Red_Room_TV.mp4",
     "type": "video",
     "extension": "mp4",
     "size": 13527344
@@ -511,7 +511,7 @@
   {
     "id": "file-7",
     "filename": "Ricky_Lake_Logo.mp4",
-    "path": "/media/Ricky_Lake_Logo.mp4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/Ricky_Lake_Logo.mp4",
     "type": "video",
     "extension": "mp4",
     "size": 8196628
@@ -519,7 +519,7 @@
   {
     "id": "file-8",
     "filename": "ricky.mov",
-    "path": "/media/ricky.mov",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/ricky.mov",
     "type": "video",
     "extension": "mov",
     "size": 72497619
@@ -527,7 +527,7 @@
   {
     "id": "file-9",
     "filename": "SAUCE.mov",
-    "path": "/media/SAUCE.mov",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/SAUCE.mov",
     "type": "video",
     "extension": "mov",
     "size": 75288079
@@ -535,7 +535,7 @@
   {
     "id": "file-10",
     "filename": "sprung.mp4",
-    "path": "/media/sprung.mp4",
+    "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/sprung.mp4",
     "type": "video",
     "extension": "mp4",
     "size": 16052682

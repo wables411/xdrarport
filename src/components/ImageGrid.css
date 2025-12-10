@@ -138,16 +138,11 @@
   transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 10;
-  text-align: center;
-  white-space: nowrap;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  overflow-x: auto;
-  overflow-y: hidden;
-  max-width: 100%;
+  overflow: hidden;
+  width: 100%;
   box-sizing: border-box;
-  padding: 0 10px;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  padding: 0;
 }
 
 .thumbnail-overlay-text::-webkit-scrollbar {
@@ -157,6 +152,7 @@
 .thumbnail-overlay-text-wrapper {
   display: inline-block;
   white-space: nowrap;
+  min-width: max-content;
 }
 
 .image-item:hover .thumbnail-overlay-text {
@@ -164,7 +160,7 @@
 }
 
 .image-item:hover .thumbnail-overlay-text-wrapper {
-  animation: scroll-text-horizontal 5s linear infinite;
+  animation: scroll-text-horizontal 4s linear infinite;
 }
 
 @keyframes scroll-text-horizontal {
@@ -172,7 +168,7 @@
     transform: translateX(100%);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translateX(calc(-100% - 20px));
   }
 }
 

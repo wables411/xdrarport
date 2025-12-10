@@ -1,10 +1,10 @@
 .social-buttons {
   position: fixed;
   bottom: 24px;
-  right: 24px;
+  left: 24px;
   z-index: 1000;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 16px;
 }
 
@@ -36,7 +36,7 @@
 @media (max-width: 768px) {
   .social-buttons {
     bottom: 16px;
-    right: 16px;
+    left: 16px;
     gap: 12px;
   }
 
@@ -56,7 +56,7 @@
 @media (max-width: 480px) {
   .social-buttons {
     bottom: 12px;
-    right: 12px;
+    left: 12px;
     gap: 10px;
   }
 }

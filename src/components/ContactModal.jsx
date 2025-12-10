@@ -9,6 +9,7 @@ function ContactModal({ onClose }) {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null) // 'success' or 'error'
+  const [errorMessage, setErrorMessage] = useState(null)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -44,6 +45,7 @@ function ContactModal({ onClose }) {
       }
 
       setSubmitStatus('success')
+      setErrorMessage(null)
       setFormData({ name: '', email: '', comment: '' })
       
       // Close modal after 2 seconds
@@ -55,6 +57,7 @@ function ContactModal({ onClose }) {
     } catch (error) {
       console.error('Form submission error:', error)
       setSubmitStatus('error')
+      setErrorMessage(error.message || 'Something went wrong. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -118,7 +121,7 @@ function ContactModal({ onClose }) {
           )}
           {submitStatus === 'error' && (
             <div className="form-message form-error">
-              Something went wrong. Please try again.
+              {errorMessage || 'Something went wrong. Please try again.'}
             </div>
           )}
           <button 

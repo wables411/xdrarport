@@ -122,8 +122,8 @@
     "name": "portion club",
     "folder": "portion club",
     "path": "/media/portion club",
-    "thumbnail": "/media/portion club/PC TAPE COVER FINAL.png",
-    "thumbnailType": "image",
+    "thumbnail": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PC69_Hologram.mp4",
+    "thumbnailType": "video",
     "files": [
       {
         "filename": "Blade_Rave.mp4",

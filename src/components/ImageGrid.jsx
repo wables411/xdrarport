@@ -103,6 +103,7 @@ function ImageGrid({ onProjectClick }) {
                     }}
                   />
                 )}
+                <div className="thumbnail-overlay-text">{title}</div>
               </div>
             )
           })}

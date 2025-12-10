@@ -152,7 +152,7 @@
 .thumbnail-overlay-text-wrapper {
   display: inline-block;
   white-space: nowrap;
-  min-width: max-content;
+  padding-left: 100%;
 }
 
 .image-item:hover .thumbnail-overlay-text {
@@ -165,10 +165,10 @@
 
 @keyframes scroll-text-horizontal {
   0% {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-100% - 20px));
+    transform: translateX(calc(-100% - 100%));
   }
 }
 

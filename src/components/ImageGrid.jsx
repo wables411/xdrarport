@@ -46,6 +46,10 @@ function ImageGrid({ onProjectClick }) {
               ? item.name 
               : item.filename?.replace(/\.[^/.]+$/, '') || `Item ${item.id}`
             
+            // #region agent log
+            fetch('http://127.0.0.1:7242/ingest/74edaf60-af37-4359-ab5b-b4267d8ddea6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ImageGrid.jsx:45',message:'Title computed for item',data:{itemId:item.id,itemType:item.type,title:title,titleLength:title?.length,hasTitle:!!title},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+            // #endregion
+            
             // For all projects, use thumbnail; for files, use the file itself
             let displayPath, displayType
             if (item.type === 'project') {
@@ -66,6 +70,60 @@ function ImageGrid({ onProjectClick }) {
                 className="image-item"
                 onClick={() => handleMediaClick(item)}
                 style={{ '--hover-color': hoverColor }}
+                onMouseEnter={(e) => {
+                  // #region agent log
+                  console.log('[DEBUG] Hover enter - itemId:', item.id, 'title:', title, 'titleLength:', title?.length);
+                  // #endregion
+                  const overlayEl = e.currentTarget.querySelector('.thumbnail-overlay-text');
+                  const wrapperEl = e.currentTarget.querySelector('.thumbnail-overlay-text-wrapper');
+                  // #region agent log
+                  console.log('[DEBUG] DOM - overlay exists:', !!overlayEl, 'wrapper exists:', !!wrapperEl, 'wrapper text:', wrapperEl?.textContent);
+                  // #endregion
+                  if (overlayEl) {
+                    const computedStyle = window.getComputedStyle(overlayEl);
+                    const rect = overlayEl.getBoundingClientRect();
+                    // #region agent log
+                    console.log('[DEBUG] Overlay - opacity:', computedStyle.opacity, 'display:', computedStyle.display, 'zIndex:', computedStyle.zIndex, 'width:', rect.width, 'height:', rect.height);
+                    // #endregion
+                  }
+                  if (wrapperEl) {
+                    const wrapperStyle = window.getComputedStyle(wrapperEl);
+                    const wrapperRect = wrapperEl.getBoundingClientRect();
+                    const parentRect = wrapperEl.parentElement?.getBoundingClientRect();
+                    // #region agent log
+                    console.log('[DEBUG] Wrapper - animation:', wrapperStyle.animation, 'animationName:', wrapperStyle.animationName, 'transform:', wrapperStyle.transform, 'wrapper width:', wrapperRect.width, 'parent width:', parentRect?.width);
+                    // #endregion
+                  }
+                }}
+                onMouseLeave={() => {
+                  // #region agent log
+                  console.log('[DEBUG] Hover leave - itemId:', item.id);
+                  // #endregion
+                }}
+                onTouchStart={(e) => {
+                  // For mobile devices - trigger the hover effect on touch
+                  const overlayEl = e.currentTarget.querySelector('.thumbnail-overlay-text');
+                  const wrapperEl = e.currentTarget.querySelector('.thumbnail-overlay-text-wrapper');
+                  if (overlayEl) {
+                    overlayEl.style.opacity = '1';
+                    overlayEl.style.visibility = 'visible';
+                  }
+                  if (wrapperEl) {
+                    wrapperEl.style.animation = 'scroll-text-horizontal 6s linear infinite';
+                  }
+                }}
+                onTouchEnd={(e) => {
+                  // Stop animation on touch end for mobile
+                  const overlayEl = e.currentTarget.querySelector('.thumbnail-overlay-text');
+                  const wrapperEl = e.currentTarget.querySelector('.thumbnail-overlay-text-wrapper');
+                  if (overlayEl) {
+                    overlayEl.style.opacity = '0';
+                    overlayEl.style.visibility = 'hidden';
+                  }
+                  if (wrapperEl) {
+                    wrapperEl.style.animation = 'none';
+                  }
+                }}
               >
                 {displayType === 'image' ? (
                   <img

@@ -38,7 +38,9 @@ export async function onRequestPost(context) {
     // Get configuration from environment variables
     const resendApiKey = env.RESEND_API_KEY
     const yourEmail = env.CONTACT_EMAIL || 'xd.rar@gmail.com'
-    const fromEmail = env.FROM_EMAIL || `noreply@${new URL(request.url).hostname}`
+    // Use domain from request URL (e.g., noreply@xdrar.xyz) or fallback to env var
+    const hostname = new URL(request.url).hostname
+    const fromEmail = env.FROM_EMAIL || `noreply@${hostname}`
     
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured')

@@ -131,13 +131,13 @@
   font-weight: bold;
   color: transparent;
   -webkit-text-stroke: 2px white;
-  text-stroke: 2px white;
+  -webkit-text-fill-color: transparent;
   text-transform: uppercase;
   letter-spacing: 2px;
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
-  z-index: 100;
+  z-index: 1000;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
   overflow: hidden;
   width: 100%;
@@ -160,6 +160,7 @@
 .image-item:hover .thumbnail-overlay-text {
   opacity: 1 !important;
   visibility: visible;
+  display: block !important;
 }
 
 .image-item:hover .thumbnail-overlay-text-wrapper {

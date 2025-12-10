@@ -159,20 +159,16 @@
 }
 
 .image-item:hover .thumbnail-overlay-text-wrapper {
-  animation: scroll-text 10s linear infinite;
+  animation: scroll-text-horizontal 8s linear infinite;
 }
 
-@keyframes scroll-text {
+@keyframes scroll-text-horizontal {
   0% {
-    transform: translateX(0);
+    transform: translateX(100%);
   }
   100% {
-    transform: translateX(calc(-100% + 100%));
+    transform: translateX(-100%);
   }
-}
-
-.image-item:hover .thumbnail-overlay-text {
-  opacity: 1;
 }
 
 @media (max-width: 768px) {

@@ -12,6 +12,17 @@
 export async function onRequestPost(context) {
   const { request, env } = context
   
+  // Handle CORS preflight
+  if (request.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    })
+  }
+  
   try {
     const data = await request.json()
     const { name, email, comment } = data
@@ -63,15 +74,30 @@ export async function onRequestPost(context) {
       }),
       { 
         status: 200,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
       }
     )
     
   } catch (error) {
     console.error('Contact form error:', error)
+    const errorMessage = error.message || 'Failed to send email. Please try again.'
     return new Response(
-      JSON.stringify({ error: 'Failed to send email. Please try again.' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      }),
+      { 
+        status: 500, 
+        headers: { 
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type'
+        } 
+      }
     )
   }
 }
@@ -93,8 +119,17 @@ async function sendEmail({ apiKey, to, from, subject, text, replyTo }) {
   })
   
   if (!response.ok) {
-    const error = await response.text()
-    throw new Error(`Resend API error: ${error}`)
+    const errorText = await response.text()
+    let errorMessage = `Resend API error (${response.status}): ${errorText}`
+    try {
+      const errorJson = JSON.parse(errorText)
+      if (errorJson.message) {
+        errorMessage = `Resend API error: ${errorJson.message}`
+      }
+    } catch (e) {
+      // Not JSON, use text as is
+    }
+    throw new Error(errorMessage)
   }
   
   return response.json()

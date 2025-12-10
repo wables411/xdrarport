@@ -44,8 +44,8 @@
     "name": "petty mart",
     "folder": "petty mart",
     "path": "/media/petty mart",
-    "thumbnail": "/media/petty mart/PM banner.png",
-    "thumbnailType": "image",
+    "thumbnail": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/petty mart/Petty_Fest_Backdrops2.mp4",
+    "thumbnailType": "video",
     "files": [
       {
         "filename": "PM NFT.mp4",

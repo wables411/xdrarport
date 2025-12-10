@@ -25,7 +25,8 @@
   padding: 0;
   width: 100%;
   margin: 0;
-  grid-auto-rows: min-content;
+  grid-auto-rows: auto;
+  align-items: start;
 }
 
 .image-item {
@@ -39,7 +40,8 @@
   display: block;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  aspect-ratio: auto;
+  margin: 0;
+  padding: 0;
 }
 
 .image-item img,
@@ -48,7 +50,9 @@
   height: auto;
   display: block;
   transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
-  object-fit: cover;
+  object-fit: contain;
+  margin: 0;
+  padding: 0;
 }
 
 .image-item:hover {
@@ -98,20 +102,43 @@
   transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 10;
-  text-align: center;
   white-space: nowrap;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  overflow-x: auto;
+  overflow-x: scroll;
   overflow-y: hidden;
-  max-width: 100%;
-  padding: 0 10px;
+  width: 100%;
   box-sizing: border-box;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  text-align: left;
+  padding: 0 10px;
+  animation: scroll-text 10s linear infinite;
 }
 
 .thumbnail-overlay-text::-webkit-scrollbar {
   display: none;
+}
+
+@keyframes scroll-text {
+  0% {
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    transform: translateY(-50%) translateX(calc(-100% + 100%));
+  }
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+.image-item:hover .thumbnail-overlay-text {
+  opacity: 1;
+  overflow-x: auto;
+  animation: none;
+}
+
+.image-item:hover .thumbnail-overlay-text:not(:hover) {
+  animation: scroll-text 10s linear infinite;
 }
 
 .image-item:hover .thumbnail-overlay-text {

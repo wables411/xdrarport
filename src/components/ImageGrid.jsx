@@ -72,7 +72,7 @@ function ImageGrid({ onProjectClick }) {
                     src={encodedPath}
                     alt={title}
                     loading="lazy"
-                    style={{ width: '100%', height: 'auto' }}
+                    style={{ width: '100%', height: 'auto', display: 'block', margin: 0, padding: 0 }}
                     onError={(e) => {
                       console.error('Failed to load image:', encodedPath, displayPath, e)
                     }}
@@ -87,7 +87,7 @@ function ImageGrid({ onProjectClick }) {
                     loop
                     playsInline
                     preload="auto"
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                    style={{ width: '100%', height: 'auto', display: 'block', margin: 0, padding: 0 }}
                     onMouseEnter={(e) => {
                       e.target.play().catch(err => console.error('Video play error:', err))
                     }}

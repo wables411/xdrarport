@@ -38,9 +38,13 @@ export async function onRequestPost(context) {
     // Get configuration from environment variables
     const resendApiKey = env.RESEND_API_KEY
     const yourEmail = env.CONTACT_EMAIL || 'xd.rar@gmail.com'
-    // Use domain from request URL (e.g., noreply@xdrar.xyz) or fallback to env var
+    // Force use of verified domain - must use xdrar.xyz domain, not onboarding@resend.dev
     const hostname = new URL(request.url).hostname
-    const fromEmail = env.FROM_EMAIL || `noreply@${hostname}`
+    // Always use the verified domain, ignore env var if it's still the test email
+    let fromEmail = env.FROM_EMAIL || `noreply@${hostname}`
+    if (fromEmail.includes('onboarding@resend.dev') || fromEmail.includes('resend.dev')) {
+      fromEmail = `noreply@${hostname}`
+    }
     
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured')

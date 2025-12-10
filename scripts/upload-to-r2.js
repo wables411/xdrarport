@@ -3,14 +3,12 @@
  * Upload video files to Cloudflare R2
  * 
  * Prerequisites:
- * 1. Install: npm install @aws-sdk/client-s3
- * 2. Set environment variables:
- *    - R2_ACCOUNT_ID=your_account_id
- *    - R2_ACCESS_KEY_ID=your_access_key
- *    - R2_SECRET_ACCESS_KEY=your_secret_key
- *    - R2_BUCKET_NAME=your_bucket_name
- *    - R2_PUBLIC_URL=https://your-bucket.r2.dev (or custom domain)
+ * 1. Install: npm install @aws-sdk/client-s3 dotenv
+ * 2. Set environment variables in .env file or export them
  */
+
+import { config } from 'dotenv'
+config()
 
 import { S3Client, PutObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3'
 import fs from 'fs'
@@ -193,3 +191,5 @@ async function main() {
 }
 
 main().catch(console.error)
+
+

@@ -106,7 +106,9 @@ npm run generate-media
 **Environment variables:**
 Add these in the Pages dashboard:
 - `VITE_R2_PUBLIC_URL` = Your R2 public URL (e.g., `https://your-bucket.r2.dev`)
-- `VITE_FORMSPREE_ENDPOINT` = Your Formspree form endpoint (see Step 3)
+- `RESEND_API_KEY` = Your Resend API key (for contact form)
+- `CONTACT_EMAIL` = `xd.rar@gmail.com`
+- `FROM_EMAIL` = `noreply@xdrar.xyz` (or use Resend's default)
 
 ### 2.3 Deploy
 
@@ -117,12 +119,39 @@ Add these in the Pages dashboard:
    - Run `npm run build`
    - Deploy to `*.pages.dev` domain
 
-### 2.4 Custom Domain (Optional)
+### 2.4 Connect Your Domain (xdrar.xyz from GoDaddy)
 
-1. In Pages dashboard → **Custom domains**
-2. Add your domain
-3. Update DNS records as instructed
-4. SSL is automatic
+1. In Pages dashboard → Your site → **Custom domains** → **Set up a custom domain**
+2. Enter: `xdrar.xyz`
+3. Cloudflare will show you DNS records to add
+
+**In GoDaddy:**
+1. Go to GoDaddy DNS management for `xdrar.xyz`
+2. Add/update these records:
+   - **Type:** CNAME
+   - **Name:** @ (or root)
+   - **Value:** The Cloudflare Pages URL (e.g., `your-site.pages.dev`)
+   - **TTL:** 3600
+   
+   OR if CNAME doesn't work for root:
+   - **Type:** A
+   - **Name:** @
+   - **Value:** Cloudflare's IP (Cloudflare will provide this)
+
+3. For www subdomain (optional):
+   - **Type:** CNAME
+   - **Name:** www
+   - **Value:** `your-site.pages.dev`
+
+4. Save DNS changes in GoDaddy
+5. Wait 5-10 minutes for DNS to propagate
+6. Cloudflare will automatically provision SSL certificate
+
+**Note:** If you want to use Cloudflare's nameservers (recommended):
+1. In Cloudflare dashboard, add `xdrar.xyz` as a site
+2. Cloudflare will give you nameservers
+3. Update nameservers in GoDaddy to point to Cloudflare
+4. Then add custom domain in Pages
 
 ---
 
@@ -145,15 +174,15 @@ The contact form sends emails directly from your site using Resend API.
 1. Go to Pages dashboard → Your site → **Settings** → **Environment variables**
 2. Add these variables:
    - `RESEND_API_KEY` = Your Resend API key
-   - `CONTACT_EMAIL` = Your email address (e.g., `xdrar@gmail.com`)
-   - `FROM_EMAIL` = Email to send from (e.g., `noreply@yourdomain.com` or use Resend's default)
+   - `CONTACT_EMAIL` = `xd.rar@gmail.com`
+   - `FROM_EMAIL` = `noreply@xdrar.xyz` (or use Resend's default domain)
 3. Make sure they're set for **Production**
 
 ### 3.3 How It Works
 
 When someone submits the form:
 - Form data is sent to `/api/contact` (Cloudflare Pages Function)
-- Function sends email to you with their message
+- Function sends email to `xd.rar@gmail.com` with their message
 - Function sends confirmation email to the client
 - Both emails are sent automatically - no email client needed!
 
@@ -161,7 +190,7 @@ When someone submits the form:
 
 1. Deploy your site
 2. Fill out the contact form
-3. Check your email inbox
+3. Check `xd.rar@gmail.com` inbox
 4. Client should receive confirmation email too
 
 ---
@@ -276,3 +305,5 @@ You only pay if you exceed free tier limits (unlikely for a portfolio site).
 5. ✅ Deploy your site
 6. ✅ (Optional) Set up custom domain
 7. ✅ Share your portfolio! 🎉
+
+

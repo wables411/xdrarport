@@ -25,62 +25,6 @@ body {
   touch-action: manipulation;
 }
 
-/* CRT Scanline Background - Very Visible */
-html {
-  position: relative;
-}
-
-html::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: repeating-linear-gradient(
-    0deg,
-    rgba(0, 255, 0, 0.15) 0px,
-    rgba(0, 255, 0, 0.15) 2px,
-    transparent 2px,
-    transparent 4px
-  );
-  pointer-events: none;
-  z-index: 2147483647;
-  animation: scanlines 6s linear infinite;
-  mix-blend-mode: screen;
-}
-
-@keyframes scanlines {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(2px);
-  }
-}
-
-/* Subtle screen flicker effect */
-body::after {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 255, 0, 0.02);
-  pointer-events: none;
-  z-index: 0;
-  animation: flicker 0.2s infinite;
-}
-
-@keyframes flicker {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.97;
-  }
-}
 
 #root {
   min-height: 100vh;

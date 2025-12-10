@@ -26,7 +26,7 @@ export async function onRequestPost(context) {
     
     // Get configuration from environment variables
     const resendApiKey = env.RESEND_API_KEY
-    const yourEmail = env.CONTACT_EMAIL || 'xdrar@gmail.com'
+    const yourEmail = env.CONTACT_EMAIL || 'xd.rar@gmail.com'
     const fromEmail = env.FROM_EMAIL || `noreply@${new URL(request.url).hostname}`
     
     if (!resendApiKey) {
@@ -99,3 +99,5 @@ async function sendEmail({ apiKey, to, from, subject, text, replyTo }) {
   
   return response.json()
 }
+
+

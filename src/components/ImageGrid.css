@@ -25,15 +25,15 @@
   padding: 0;
   width: 100%;
   margin: 0;
-  grid-auto-rows: auto;
+  grid-auto-rows: min-content;
   align-items: start;
 }
 
 .image-item {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
-  background-color: #000;
+  background-color: transparent;
   width: 100%;
   border: 2px solid transparent;
   transition: border-color 0.3s ease;
@@ -42,6 +42,7 @@
   touch-action: manipulation;
   margin: 0;
   padding: 0;
+  line-height: 0;
 }
 
 .image-item img,
@@ -50,9 +51,10 @@
   height: auto;
   display: block;
   transition: transform 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
-  object-fit: contain;
+  object-fit: fill;
   margin: 0;
   padding: 0;
+  vertical-align: bottom;
 }
 
 .image-item:hover {
@@ -88,7 +90,7 @@
   position: absolute;
   top: 50%;
   left: 0;
-  right: 0;
+  width: 100%;
   transform: translateY(-50%);
   font-family: 'Impact', 'Arial Black', sans-serif;
   font-size: 2rem;
@@ -104,41 +106,33 @@
   z-index: 10;
   white-space: nowrap;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-  overflow-x: scroll;
-  overflow-y: hidden;
-  width: 100%;
+  overflow: hidden;
   box-sizing: border-box;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  text-align: left;
   padding: 0 10px;
-  animation: scroll-text 10s linear infinite;
 }
 
-.thumbnail-overlay-text::-webkit-scrollbar {
-  display: none;
-}
-
-@keyframes scroll-text {
-  0% {
-    transform: translateY(-50%) translateX(0);
-  }
-  50% {
-    transform: translateY(-50%) translateX(calc(-100% + 100%));
-  }
-  100% {
-    transform: translateY(-50%) translateX(0);
-  }
+.thumbnail-overlay-text-wrapper {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-text-horizontal 8s linear infinite;
+  padding-left: 100%;
 }
 
 .image-item:hover .thumbnail-overlay-text {
   opacity: 1;
-  overflow-x: auto;
-  animation: none;
 }
 
-.image-item:hover .thumbnail-overlay-text:not(:hover) {
-  animation: scroll-text 10s linear infinite;
+.image-item:hover .thumbnail-overlay-text-wrapper {
+  animation: scroll-text-horizontal 8s linear infinite;
+}
+
+@keyframes scroll-text-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-100% - 200px));
+  }
 }
 
 .image-item:hover .thumbnail-overlay-text {

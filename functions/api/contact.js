@@ -69,8 +69,8 @@ export async function onRequestPost(context) {
       apiKey: resendApiKey,
       to: email,
       from: fromEmail,
-      subject: 'Thank you for contacting me',
-      text: `Hi ${name},\n\nThank you for reaching out! I've received your message and will get back to you soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
+      subject: 'Thanks for reaching out',
+      text: `Hi ${name},\n\nThanks for reaching out, I've received your inquiry and will be in touch soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
     })
     
     return new Response(

@@ -21,10 +21,13 @@
 .image-grid {
   column-count: 5;
   column-gap: 0;
+  column-rule: none;
   column-fill: balance;
   width: 100%;
   margin: 0;
   padding: 0;
+  font-size: 0;
+  line-height: 0;
 }
 
 .image-item {
@@ -36,6 +39,8 @@
   border: 0;
   transition: border-color 0.3s ease;
   display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   margin: 0;
@@ -93,6 +98,7 @@
 .image-item:hover {
   border: 2px solid var(--hover-color);
   margin: -2px;
+  box-sizing: border-box;
 }
 
 .image-item:hover img,

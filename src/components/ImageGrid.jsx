@@ -166,7 +166,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
     }
 
     setFilteredItems(filtered)
-  }, [mediaItems, filters])
+  }, [mediaItems, filters, archiveMode, archiveMediaType])
 
   const handleMediaClick = (item) => {
     // If it's a project, open project page

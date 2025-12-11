@@ -70,15 +70,18 @@ function Lightbox({ image, images, onClose, onNavigate }) {
             <video
               src={image}
               controls
-              autoPlay
               loop={false}
               muted={false}
               style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto' }}
               onError={(e) => {
-                console.error('Failed to load video in lightbox:', image, e)
+                console.error('Failed to load video in lightbox:', image, e.target?.error)
               }}
-              onLoadedData={() => {
+              onLoadedData={(e) => {
                 console.log('Successfully loaded video in lightbox:', image)
+                // Try to play after load, but don't fail if blocked
+                e.target.play().catch(() => {
+                  // Autoplay blocked - user can click play button
+                })
               }}
             >
               Your browser does not support the video tag.

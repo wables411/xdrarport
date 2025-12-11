@@ -171,7 +171,6 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           loop
           playsInline
           preload="auto"
-          autoPlay
           muted
           className="homepage-video"
           onClick={() => {
@@ -200,11 +199,12 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
             // Keep playing and looping
           }}
           onLoadedData={(e) => {
-            // Start playing and looping automatically
+            // Try to play on load, but don't fail if autoplay is blocked
             const video = e.target
             video.muted = true // Start muted
-            video.play().catch(err => {
-              console.error('Video autoplay error:', err)
+            video.play().catch(() => {
+              // Autoplay blocked - user will need to interact first
+              // This is expected behavior and not an error
             })
           }}
         >

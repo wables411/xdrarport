@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "prebuild": "R2_PUBLIC_URL=https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev npm run generate-media",
-    "build": "vite build",
+    "build": "rm -rf dist && vite build",
     "preview": "vite preview",
     "generate-media": "node scripts/generate-media-manifest.js",
     "upload-videos": "node scripts/upload-to-r2.js"

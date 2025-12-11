@@ -25,6 +25,13 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   // Special layout for Text Me Records - organize into sections
   const isTextMeRecords = project.name === 'Text Me Records' || project.folder === 'Text Me Records'
   
+  // State for Text Me Records section spotlighted media indices
+  const [textMeSectionIndices, setTextMeSectionIndices] = useState({
+    rickyLake: 0,
+    mikos: 0,
+    logos: 0
+  })
+  
   if (isTextMeRecords) {
     // Organize files into sections
     let rickyLakeFiles = project.files?.filter(f => 
@@ -54,17 +61,27 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     const sections = [
       {
         title: 'RICKY LAKE FILES',
-        files: rickyLakeFiles
+        files: rickyLakeFiles,
+        key: 'rickyLake'
       },
       {
         title: 'MIKOS DA GAWD FILES',
-        files: mikosFiles
+        files: mikosFiles,
+        key: 'mikos'
       },
       {
         title: 'TEXT ME RECORDS LOGOS',
-        files: logoFiles
+        files: logoFiles,
+        key: 'logos'
       }
     ]
+    
+    const handleTextMeThumbnailClick = (sectionKey, thumbnailIndex) => {
+      setTextMeSectionIndices(prev => ({
+        ...prev,
+        [sectionKey]: thumbnailIndex + 1 // +1 because main asset is at index 0, thumbnails start at 1
+      }))
+    }
     
     return (
       <div className="project-page">
@@ -72,15 +89,17 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
           ×
         </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header">
-            <h1 className="project-title">{project.name}</h1>
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">{project.name}</h1>
           </div>
           
           {sections.map((section, sectionIndex) => {
             if (section.files.length === 0) return null
             
-            const mainAsset = section.files[0]
-            const subAssets = section.files.slice(1)
+            const spotlightIndex = textMeSectionIndices[section.key] || 0
+            const mainAsset = section.files[spotlightIndex]
+            // Create array with all files except the spotlighted one
+            const subAssets = section.files.filter((_, idx) => idx !== spotlightIndex)
             const mainAssetPath = mainAsset.path && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
               ? encodeURI(mainAsset.path)
               : mainAsset.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
@@ -153,6 +172,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                             ? encodeURI(file.path)
                             : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
                           
+                          // Find the original index in section.files
+                          const originalIndex = section.files.findIndex(f => f.path === file.path)
+                          
                           return (
                             <div key={index} className="text-me-sub-asset">
                               {file.type === 'video' ? (
@@ -163,14 +185,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                   preload="metadata"
                                   muted
                                   style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
-                                  onClick={() => {
-                                    const allPaths = section.files.map(f => {
-                                      const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
-                                        ? encodeURI(f.path)
-                                        : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-                                      return p
-                                    })
-                                    onMediaClick(filePath, allPaths)
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleTextMeThumbnailClick(section.key, originalIndex)
                                   }}
                                   onMouseEnter={(e) => {
                                     const video = e.target
@@ -189,14 +206,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                   src={filePath}
                                   alt={file.filename}
                                   style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
-                                  onClick={() => {
-                                    const allPaths = section.files.map(f => {
-                                      const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
-                                        ? encodeURI(f.path)
-                                        : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-                                      return p
-                                    })
-                                    onMediaClick(filePath, allPaths)
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleTextMeThumbnailClick(section.key, originalIndex)
                                   }}
                                 />
                               )}

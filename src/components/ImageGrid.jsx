@@ -166,7 +166,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
       (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
       (item.path && item.path.toUpperCase().includes('XDRAR'))
     )
-    const videoSrc = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mp4'
+    const videoSrc = xdrarVideo ? xdrarVideo.path : '/media/XDRAR.mp4'
     
     return (
       <div className="homepage-video-container">
@@ -183,7 +183,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
               (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
               (item.path && item.path.toUpperCase().includes('XDRAR'))
             )
-            const videoPath = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mp4'
+            const videoPath = xdrarVideo ? xdrarVideo.path : '/media/XDRAR.mp4'
             onProjectClick({
               type: 'video',
               path: videoPath,

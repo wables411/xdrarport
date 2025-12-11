@@ -154,12 +154,13 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   // Check if we should show XDRAR video on homepage (no filters active)
   const hasActiveFilter = (filters?.mediaType && filters.mediaType !== 'all') || 
-                         (filters?.locations && filters.locations.length > 0) ||
-                         (filters?.dates && filters.dates.length > 0)
+                         (filters?.locations && filters.locations && filters.locations.length > 0) ||
+                         (filters?.dates && filters.dates && filters.dates.length > 0)
 
   // If filters are active, show filtered items; otherwise show XDRAR video
   // Always show XDRAR video on homepage when no filters and no items
   if (!hasActiveFilter && filteredItems.length === 0 && mediaItems.length === 0) {
+    console.log('[ImageGrid] Showing XDRAR video - hasActiveFilter:', hasActiveFilter, 'filteredItems:', filteredItems.length, 'mediaItems:', mediaItems.length)
     // Find XDRAR video from manifest
     const xdrarVideo = mediaManifest.find(item => 
       (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 

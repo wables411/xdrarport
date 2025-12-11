@@ -9,8 +9,8 @@ const mediaDir = path.join(__dirname, '../public/media')
 const outputFile = path.join(__dirname, '../src/data/media-manifest.json')
 
 // R2 Configuration - videos will use R2 URLs, images use local paths
-// Default to R2 URL if not set (for production builds)
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || process.env.VITE_R2_PUBLIC_URL || 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev'
+// Set R2_PUBLIC_URL environment variable or it will use local paths
+const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || process.env.VITE_R2_PUBLIC_URL || null
 const USE_R2_FOR_VIDEOS = !!R2_PUBLIC_URL
 
 function getFileExtension(filename) {

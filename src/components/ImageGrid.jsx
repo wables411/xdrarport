@@ -157,12 +157,12 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   // If filters are active, show filtered items; otherwise show XDRAR video
   if (!hasActiveFilter && filteredItems.length === 0 && mediaItems.length === 0) {
-    // Find XDRAR video from manifest - check for both .mp4 and .mov, and R2 URLs
+    // Find XDRAR video from manifest
     const xdrarVideo = mediaManifest.find(item => 
-      (item.filename && item.filename.includes('XDRAR')) || 
-      (item.path && item.path.includes('XDRAR'))
+      (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
+      (item.path && item.path.toUpperCase().includes('XDRAR'))
     )
-    const videoSrc = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mov'
+    const videoSrc = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mp4'
     
     return (
       <div className="homepage-video-container">
@@ -177,14 +177,14 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           onClick={() => {
             // Open in lightbox when clicked
             const xdrarVideo = mediaManifest.find(item => 
-              (item.filename && item.filename.includes('XDRAR')) || 
-              (item.path && item.path.includes('XDRAR'))
+              (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
+              (item.path && item.path.toUpperCase().includes('XDRAR'))
             )
-            const videoPath = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mov'
+            const videoPath = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mp4'
             onProjectClick({
               type: 'video',
               path: videoPath,
-              filename: xdrarVideo?.filename || 'XDRAR.mov',
+              filename: xdrarVideo?.filename || 'XDRAR.mp4',
               lightboxFiles: [videoPath],
               lightboxIndex: 0
             })

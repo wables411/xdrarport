@@ -152,17 +152,39 @@ try {
     }
   }
   
-  // List of folders that should be treated as projects (excluding RBS, already handled above)
+  // Handle CRYBABY folder - it contains sub-projects
+  const crybabyPath = path.join(mediaDir, 'CRYBABY')
+  if (fs.existsSync(crybabyPath) && fs.statSync(crybabyPath).isDirectory()) {
+    const crybabyItems = fs.readdirSync(crybabyPath)
+    for (const item of crybabyItems) {
+      const itemPath = path.join(crybabyPath, item)
+      if (fs.statSync(itemPath).isDirectory()) {
+        // This is a sub-project in CRYBABY (e.g., "Matrix Rave", "Sith rave", "Blade_Rave")
+        const projectFiles = scanDirectoryForFiles(itemPath, `CRYBABY/${item}`)
+        if (projectFiles.length > 0) {
+          const thumbnail = projectFiles[0]
+          allProjects.push({
+            name: item === 'Sith rave' ? 'Sith rave' : item === 'Matrix Rave' ? 'Matrix Rave' : item,
+            folder: `CRYBABY/${item}`,
+            path: `/media/CRYBABY/${item}`,
+            thumbnail: thumbnail.path,
+            thumbnailType: thumbnail.type,
+            files: projectFiles,
+            type: 'project',
+          })
+        }
+      }
+    }
+  }
+  
+  // List of folders that should be treated as projects (excluding RBS and CRYBABY, already handled above)
   const projectFolders = [
     '411 logos',
     'Planeta Pisces logos',
     'petty mart',
     'portion club',
-    'sith rave',
-    'Text me bridge logo',
     'Text Me Records',
     'YNB',
-    'Matrix Rave',
     'The Brooklyn Bussdown',
     'Psyched SF',
     'XTRAFORMS',
@@ -287,12 +309,20 @@ try {
     fs.mkdirSync(outputDir, { recursive: true })
   }
 
-  // Write manifest
-  fs.writeFileSync(
-    outputFile,
-    JSON.stringify(allItems, null, 2),
-    'utf8'
-  )
+  // Write manifest with error handling
+  try {
+    const manifestJson = JSON.stringify(allItems, null, 2)
+    // Validate JSON before writing
+    JSON.parse(manifestJson)
+    fs.writeFileSync(
+      outputFile,
+      manifestJson,
+      'utf8'
+    )
+  } catch (error) {
+    console.error('❌ Error writing manifest:', error.message)
+    throw error
+  }
 
   console.log(`✅ Generated media manifest with ${allItems.length} items`)
   console.log(`   Projects: ${allProjects.length}`)

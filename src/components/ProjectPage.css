@@ -314,28 +314,50 @@
   padding: 40px;
 }
 
-.text-me-section {
-  margin-bottom: 80px;
+.text-me-artist-section {
+  margin-bottom: 60px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.text-me-section:last-child {
+.text-me-artist-section:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-.text-me-section-header {
+.text-me-artist-header {
   margin-bottom: 30px;
 }
 
-.text-me-section-title {
+.text-me-artist-name {
   font-family: 'Impact', 'Arial Black', sans-serif;
-  font-size: 32px;
+  font-size: 28px;
   color: #fff;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+}
+
+.text-me-project {
+  margin-bottom: 50px;
+}
+
+.text-me-project:last-child {
+  margin-bottom: 0;
+}
+
+.text-me-project-header {
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.text-me-project-title {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.5px;
+  font-weight: normal;
 }
 
 .text-me-section-content {

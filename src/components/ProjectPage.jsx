@@ -33,7 +33,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   })
   
   if (isTextMeRecords) {
-    // Organize files into sections
+    // Organize files by artist and project
     let rickyLakeFiles = project.files?.filter(f => 
       f.filename.toLowerCase().includes('ricky') || 
       f.filename.toLowerCase().includes('kizzy')
@@ -46,8 +46,13 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
       return 0
     })
     
-    const mikosFiles = project.files?.filter(f => 
-      f.filename.toLowerCase().includes('mikos') ||
+    // Separate Mikos files into "Oh My Gawd" and "Aloe"
+    const ohMyGawdFiles = project.files?.filter(f => 
+      f.filename.toLowerCase().includes('mikos') &&
+      !f.filename.toLowerCase().includes('aloe')
+    ) || []
+    
+    const aloeFiles = project.files?.filter(f => 
       f.filename.toLowerCase().includes('aloe')
     ) || []
     
@@ -60,18 +65,41 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     const sections = [
       {
-        title: "Promo for Ricky Lake - 'Burdens' Album - 2025",
-        files: rickyLakeFiles,
+        artist: 'Ricky Lake',
+        projects: [
+          {
+            title: "'Burdens' Album - 2025 - promo",
+            files: rickyLakeFiles.filter(f => !f.filename.toLowerCase().includes('logo'))
+          },
+          {
+            title: '3D LOGO',
+            files: rickyLakeFiles.filter(f => f.filename.toLowerCase().includes('logo'))
+          }
+        ],
         key: 'rickyLake'
       },
       {
-        title: 'Cover art and Promo for Mikos Da Gawd, Seiji Oda & Jay Anthony - "Oh My Gawd" - February 2024',
-        files: mikosFiles,
+        artist: 'MIKOS DA GAWD',
+        projects: [
+          {
+            title: 'Mikos Da Gawd, Seiji Oda & Jay Anthony - "Oh My Gawd" - cover art and promo',
+            files: ohMyGawdFiles
+          },
+          {
+            title: 'ALOE - cover art',
+            files: aloeFiles
+          }
+        ],
         key: 'mikos'
       },
       {
-        title: 'TEXT ME RECORDS LOGOS',
-        files: logoFiles,
+        artist: null,
+        projects: [
+          {
+            title: 'Text Me Records Logos',
+            files: logoFiles
+          }
+        ],
         key: 'logos'
       }
     ]
@@ -94,131 +122,143 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
           </div>
           
           {sections.map((section, sectionIndex) => {
-            if (section.files.length === 0) return null
-            
-            const spotlightIndex = textMeSectionIndices[section.key] || 0
-            const mainAsset = section.files[spotlightIndex]
-            // Create array with all files except the spotlighted one
-            const subAssets = section.files.filter((_, idx) => idx !== spotlightIndex)
-            const mainAssetPath = mainAsset.path && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
-              ? encodeURI(mainAsset.path)
-              : mainAsset.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-            
             return (
-              <div key={sectionIndex} className="text-me-section">
-                <div className="text-me-section-header">
-                  <h2 className="text-me-section-title">{section.title}</h2>
-                </div>
-                <div className="text-me-section-content">
-                  <div className="text-me-main-asset">
-                    {mainAsset.type === 'video' ? (
-                      <video
-                        src={mainAssetPath}
-                        loop
-                        playsInline
-                        preload="auto"
-                        autoPlay
-                        muted
-                        style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
-                        onClick={() => {
-                          const allPaths = section.files.map(f => {
-                            const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
-                              ? encodeURI(f.path)
-                              : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-                            return p
-                          })
-                          onMediaClick(mainAssetPath, allPaths)
-                        }}
-                        onLoadedData={(e) => {
-                          const video = e.target
-                          video.muted = true
-                          video.play().catch(err => {
-                            console.error('Video autoplay error:', err)
-                          })
-                        }}
-                        onMouseEnter={(e) => {
-                          const video = e.target
-                          video.muted = false
-                          video.play().catch(err => console.error('Video play error:', err))
-                        }}
-                        onMouseLeave={(e) => {
-                          const video = e.target
-                          video.muted = true
-                          // Keep playing and looping, just muted
-                        }}
-                      />
-                    ) : (
-                      <img
-                        src={mainAssetPath}
-                        alt={mainAsset.filename}
-                        style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
-                        onClick={() => {
-                          const allPaths = section.files.map(f => {
-                            const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
-                              ? encodeURI(f.path)
-                              : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-                            return p
-                          })
-                          onMediaClick(mainAssetPath, allPaths)
-                        }}
-                      />
-                    )}
+              <div key={sectionIndex} className="text-me-artist-section">
+                {section.artist && (
+                  <div className="text-me-artist-header">
+                    <h2 className="text-me-artist-name">Artist: {section.artist}</h2>
                   </div>
-                  {subAssets.length > 0 && (
-                    <div className="text-me-section-right">
-                      <div className="text-me-sub-assets">
-                        {subAssets.map((file, index) => {
-                          const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
-                            ? encodeURI(file.path)
-                            : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-                          
-                          // Find the original index in section.files
-                          const originalIndex = section.files.findIndex(f => f.path === file.path)
-                          
-                          return (
-                            <div key={originalIndex} className="text-me-sub-asset">
-                              {file.type === 'video' ? (
-                                <video
-                                  src={filePath}
-                                  loop
-                                  playsInline
-                                  preload="metadata"
-                                  muted
-                                  style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleTextMeThumbnailClick(section.key, originalIndex)
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    const video = e.target
-                                    video.play().catch(err => {
-                                      console.error('Thumbnail video play error:', err)
-                                    })
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    const video = e.target
-                                    video.pause()
-                                    video.currentTime = 0
-                                  }}
-                                />
-                              ) : (
-                                <img
-                                  src={filePath}
-                                  alt={file.filename}
-                                  style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
-                                  onClick={(e) => {
-                                    e.stopPropagation()
-                                    handleTextMeThumbnailClick(section.key, originalIndex)
-                                  }}
-                                />
-                              )}
+                )}
+                {section.projects.map((project, projectIndex) => {
+                  if (project.files.length === 0) return null
+                  
+                  const projectKey = `${section.key}-${projectIndex}`
+                  const spotlightIndex = textMeSectionIndices[projectKey] || 0
+                  const mainAsset = project.files[spotlightIndex]
+                  // Create array with all files except the spotlighted one
+                  const subAssets = project.files.filter((_, idx) => idx !== spotlightIndex)
+                  const mainAssetPath = mainAsset.path && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+                    ? encodeURI(mainAsset.path)
+                    : mainAsset.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                  
+                  return (
+                    <div key={projectIndex} className="text-me-project">
+                      <div className="text-me-project-header">
+                        <h3 className="text-me-project-title">{project.title}</h3>
+                      </div>
+                      <div className="text-me-section-content">
+                        <div className="text-me-main-asset">
+                          {mainAsset.type === 'video' ? (
+                            <video
+                              src={mainAssetPath}
+                              loop
+                              playsInline
+                              preload="auto"
+                              autoPlay
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={() => {
+                                const allPaths = project.files.map(f => {
+                                  const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                                    ? encodeURI(f.path)
+                                    : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                                  return p
+                                })
+                                onMediaClick(mainAssetPath, allPaths)
+                              }}
+                              onLoadedData={(e) => {
+                                const video = e.target
+                                video.muted = true
+                                video.play().catch(err => {
+                                  console.error('Video autoplay error:', err)
+                                })
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.muted = false
+                                video.play().catch(err => console.error('Video play error:', err))
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.muted = true
+                                // Keep playing and looping, just muted
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={mainAssetPath}
+                              alt={mainAsset.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={() => {
+                                const allPaths = project.files.map(f => {
+                                  const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                                    ? encodeURI(f.path)
+                                    : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                                  return p
+                                })
+                                onMediaClick(mainAssetPath, allPaths)
+                              }}
+                            />
+                          )}
+                        </div>
+                        {subAssets.length > 0 && (
+                          <div className="text-me-section-right">
+                            <div className="text-me-sub-assets">
+                              {subAssets.map((file, index) => {
+                                const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                                  ? encodeURI(file.path)
+                                  : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                                
+                                // Find the original index in project.files
+                                const originalIndex = project.files.findIndex(f => f.path === file.path)
+                                
+                                return (
+                                  <div key={originalIndex} className="text-me-sub-asset">
+                                    {file.type === 'video' ? (
+                                      <video
+                                        src={filePath}
+                                        loop
+                                        playsInline
+                                        preload="metadata"
+                                        muted
+                                        style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          handleTextMeThumbnailClick(projectKey, originalIndex)
+                                        }}
+                                        onMouseEnter={(e) => {
+                                          const video = e.target
+                                          video.play().catch(err => {
+                                            console.error('Thumbnail video play error:', err)
+                                          })
+                                        }}
+                                        onMouseLeave={(e) => {
+                                          const video = e.target
+                                          video.pause()
+                                          video.currentTime = 0
+                                        }}
+                                      />
+                                    ) : (
+                                      <img
+                                        src={filePath}
+                                        alt={file.filename}
+                                        style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          handleTextMeThumbnailClick(projectKey, originalIndex)
+                                        }}
+                                      />
+                                    )}
+                                  </div>
+                                )
+                              })}
                             </div>
-                          )
-                        })}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-                </div>
+                  )
+                })}
               </div>
             )
           })}

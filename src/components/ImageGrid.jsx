@@ -52,6 +52,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
     // Filters active: flatten all files from all projects and filter them
     const allFiles = []
     
+    if (!manifest || manifest.length === 0) return
     manifest.forEach(item => {
       if (item.type === 'project' && item.files) {
         // Add all files from this project
@@ -169,12 +170,12 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   // Always show XDRAR video on homepage when no filters and no items
   if (!hasActiveFilter && filteredItems.length === 0 && mediaItems.length === 0) {
     console.log('[ImageGrid] Showing XDRAR video - hasActiveFilter:', hasActiveFilter, 'filteredItems:', filteredItems.length, 'mediaItems:', mediaItems.length)
-    // Find XDRAR video from manifest
-    const xdrarVideo = manifest.find(item => 
+    // Find XDRAR video from manifest (only if manifest is loaded)
+    const xdrarVideo = manifest && manifest.length > 0 ? manifest.find(item => 
       (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
       (item.path && item.path.toUpperCase().includes('XDRAR'))
-    )
-    console.log('[ImageGrid] XDRAR video lookup:', xdrarVideo ? xdrarVideo.path : 'NOT FOUND', 'Manifest length:', manifest.length)
+    ) : null
+    console.log('[ImageGrid] XDRAR video lookup:', xdrarVideo ? xdrarVideo.path : 'NOT FOUND', 'Manifest length:', manifest ? manifest.length : 0)
     const videoSrc = xdrarVideo ? xdrarVideo.path : '/media/XDRAR.mp4'
     
     return (
@@ -188,10 +189,10 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           className="homepage-video"
           onClick={() => {
             // Open in lightbox when clicked
-            const xdrarVideo = manifest.find(item => 
+            const xdrarVideo = manifest && manifest.length > 0 ? manifest.find(item => 
               (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
               (item.path && item.path.toUpperCase().includes('XDRAR'))
-            )
+            ) : null
             const videoPath = xdrarVideo ? xdrarVideo.path : '/media/XDRAR.mp4'
             onProjectClick({
               type: 'video',

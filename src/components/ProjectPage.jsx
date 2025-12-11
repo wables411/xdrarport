@@ -144,12 +144,12 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     // Clicking showcased media opens it in lightbox
     if (showcasedMedia) {
       const encodedPath = showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://'))
-        ? showcasedMedia.path
+        ? encodeURI(showcasedMedia.path)
         : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
       const encodedPaths = allMediaPaths.map(p => {
         if (!p) return p
         if (p.startsWith('http://') || p.startsWith('https://')) {
-          return p
+          return encodeURI(p)
         }
         return p.split('/').map(segment => encodeURIComponent(segment)).join('/')
       })
@@ -186,7 +186,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                   {showcasedMedia.type === 'video' ? (
                     <video
                       src={showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://')) 
-                        ? showcasedMedia.path
+                        ? encodeURI(showcasedMedia.path)
                         : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                       loop
                       playsInline
@@ -268,7 +268,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                         {file.type === 'video' ? (
                           <video
                             src={file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
-                              ? file.path
+                              ? encodeURI(file.path)
                               : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                             muted
                             loop

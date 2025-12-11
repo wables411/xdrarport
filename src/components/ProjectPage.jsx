@@ -269,6 +269,12 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                             loop
                             playsInline
                             preload="metadata"
+                            onError={(e) => {
+                              console.error('Video load error:', file.filename, file.path, e.target?.error)
+                            }}
+                            onLoadStart={() => {
+                              console.log('Video loading:', file.filename, file.path)
+                            }}
                             style={{ width: '100%', height: 'auto', display: 'block' }}
                             onMouseEnter={(e) => e.target.play()}
                             onMouseLeave={(e) => {

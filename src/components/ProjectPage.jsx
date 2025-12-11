@@ -110,6 +110,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   // Get all media files for the project
   const allMedia = filteredVideos || filteredFiles || []
   
+  // Debug logging
+  console.log('[ProjectPage] Project:', project.name, 'Files:', allMedia.length, 'Videos:', allMedia.filter(f => f.type === 'video').length)
+  
   // Reset showcased media index when filters change or media changes
   useEffect(() => {
     if (allMedia.length > 0) {

@@ -1,4 +1,5 @@
 import './AboutSection.css'
+import SocialButtons from './SocialButtons'
 
 function AboutSection() {
   return (
@@ -22,6 +23,7 @@ function AboutSection() {
             It was only a matter of time before Asa discovered the world of web3 and cryptocurrency, and he quickly saw the potential for using blockchain technology to create truly unique digital art.
           </p>
         </div>
+        <SocialButtons />
       </div>
     </section>
   )

@@ -163,10 +163,13 @@ function App() {
 
   // Handle hash routing for project pages
   useEffect(() => {
-    if (manifest.length === 0) return
-    
     const handleHashChange = () => {
       const hash = window.location.hash
+      if (manifest.length === 0) {
+        // Manifest not loaded yet, wait for it
+        return
+      }
+      
       console.log('[App] Hash change:', hash, 'Manifest length:', manifest.length)
       if (hash && hash.startsWith('#project-')) {
         const projectId = hash.replace('#project-', '')
@@ -182,7 +185,7 @@ function App() {
       }
     }
 
-    // Check hash on mount
+    // Check hash whenever manifest loads or hash changes
     handleHashChange()
 
     // Listen for hash changes

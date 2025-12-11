@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import './FilterModal.css'
-import mediaManifest from '../data/media-manifest.json'
 
 function FilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
   const [selectedLocations, setSelectedLocations] = useState(currentFilters?.locations || [])

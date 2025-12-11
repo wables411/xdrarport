@@ -7,7 +7,6 @@ import SocialButtons from './components/SocialButtons'
 import AboutSection from './components/AboutSection'
 import ProjectPage from './components/ProjectPage'
 import Lightbox from './components/Lightbox'
-import mediaManifest from './data/media-manifest.json'
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -152,14 +151,26 @@ function App() {
     setLightboxImage(lightboxImages[newIndex])
   }
 
+  const [manifest, setManifest] = useState([])
+
+  // Load manifest on mount
+  useEffect(() => {
+    fetch('/media-manifest.json')
+      .then(res => res.json())
+      .then(data => setManifest(data))
+      .catch(err => console.error('Failed to load manifest:', err))
+  }, [])
+
   // Handle hash routing for project pages
   useEffect(() => {
+    if (manifest.length === 0) return
+    
     const handleHashChange = () => {
       const hash = window.location.hash
       if (hash && hash.startsWith('#project-')) {
         const projectId = hash.replace('#project-', '')
         // Find project in manifest
-        const project = mediaManifest.find(p => p.id === projectId && p.type === 'project')
+        const project = manifest.find(p => p.id === projectId && p.type === 'project')
         if (project) {
           setCurrentProject(project)
         }
@@ -174,7 +185,7 @@ function App() {
     // Listen for hash changes
     window.addEventListener('hashchange', handleHashChange)
     return () => window.removeEventListener('hashchange', handleHashChange)
-  }, [])
+  }, [manifest])
 
   return (
     <div className="app">

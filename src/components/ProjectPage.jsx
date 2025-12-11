@@ -172,10 +172,16 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                     })
                                     onMediaClick(filePath, allPaths)
                                   }}
-                                  onMouseEnter={(e) => e.target.play()}
+                                  onMouseEnter={(e) => {
+                                    const video = e.target
+                                    video.play().catch(err => {
+                                      console.error('Thumbnail video play error:', err)
+                                    })
+                                  }}
                                   onMouseLeave={(e) => {
-                                    e.target.pause()
-                                    e.target.currentTime = 0
+                                    const video = e.target
+                                    video.pause()
+                                    video.currentTime = 0
                                   }}
                                 />
                               ) : (

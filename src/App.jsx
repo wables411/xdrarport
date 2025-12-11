@@ -2,12 +2,22 @@ import { useState } from 'react'
 import Header from './components/Header'
 import ImageGrid from './components/ImageGrid'
 import ContactModal from './components/ContactModal'
+import FilterModal from './components/FilterModal'
 import SocialButtons from './components/SocialButtons'
+import AboutSection from './components/AboutSection'
 import ProjectPage from './components/ProjectPage'
 import Lightbox from './components/Lightbox'
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+  const [showSocialButtons, setShowSocialButtons] = useState(false)
+  const [showAboutSection, setShowAboutSection] = useState(false)
+  const [filters, setFilters] = useState({
+    locations: [],
+    dates: [],
+    mediaType: 'all'
+  })
   const [currentProject, setCurrentProject] = useState(null)
   const [lightboxImage, setLightboxImage] = useState(null)
   const [lightboxImages, setLightboxImages] = useState([])
@@ -21,6 +31,8 @@ function App() {
   }
 
   const handleScrollToPortfolio = () => {
+    setShowSocialButtons(false)
+    setShowAboutSection(false)
     const gridElement = document.querySelector('.image-grid-container')
     if (gridElement) {
       gridElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -28,20 +40,82 @@ function App() {
   }
 
   const handleScrollToSocials = () => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    setShowSocialButtons(true)
+    // Scroll to social buttons after a brief delay to ensure they're rendered
+    setTimeout(() => {
+      const socialElement = document.querySelector('.social-buttons')
+      if (socialElement) {
+        socialElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      } else {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+      }
+    }, 100)
+  }
+
+  const handleOpenFilter = () => {
+    setIsFilterModalOpen(true)
+  }
+
+  const handleCloseFilter = () => {
+    setIsFilterModalOpen(false)
+  }
+
+  const handleApplyFilters = (newFilters) => {
+    setFilters(newFilters)
+  }
+
+  const handleScrollToAbout = () => {
+    setShowSocialButtons(false)
+    setShowAboutSection(true)
+    // Scroll to about section after a brief delay to ensure it's rendered
+    setTimeout(() => {
+      const aboutElement = document.getElementById('about')
+      if (aboutElement) {
+        aboutElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+    }, 100)
+  }
+
+  const handleArchiveClick = () => {
+    setShowSocialButtons(false)
+    setShowAboutSection(false)
+    // TODO: Implement archive functionality
+    console.log('Archive clicked')
   }
 
   const handleHomeClick = () => {
     setCurrentProject(null)
+    setShowSocialButtons(false)
+    setShowAboutSection(false)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleProjectClick = (project) => {
+    // Check if this is a filtered file (has lightboxFiles) or a project
+    if (project.lightboxFiles && project.lightboxFiles.length > 0) {
+      // It's a filtered file - open in lightbox
+      setLightboxImages(project.lightboxFiles)
+      setLightboxImage(project.lightboxFiles[project.lightboxIndex] || project.lightboxFiles[0])
+    } else {
+      // It's a project - open project page
+      setCurrentProject(project)
+      // Scroll to top when opening a project
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  const handleProjectSelect = (project) => {
     setCurrentProject(project)
+    setShowSocialButtons(false)
+    setShowAboutSection(false)
+    // Scroll to top when opening a project
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const handleCloseProject = () => {
     setCurrentProject(null)
+    setShowSocialButtons(false)
+    setShowAboutSection(false)
   }
 
   const handleOpenLightbox = (imageSrc, allImages) => {
@@ -72,22 +146,34 @@ function App() {
       <Header
         onContactClick={handleOpenContact}
         onPortfolioClick={handleScrollToPortfolio}
-        onSocialsClick={handleScrollToSocials}
         onHomeClick={handleHomeClick}
+        onAboutClick={handleScrollToAbout}
+        onProjectSelect={handleProjectSelect}
+        onArchiveClick={handleArchiveClick}
       />
       {!currentProject ? (
         <>
-          <ImageGrid onProjectClick={handleProjectClick} />
-          <SocialButtons />
+          <ImageGrid onProjectClick={handleProjectClick} filters={filters} />
+          {showSocialButtons && <SocialButtons />}
+          {showAboutSection && <AboutSection />}
         </>
       ) : (
         <ProjectPage 
           project={currentProject} 
           onClose={handleCloseProject}
           onMediaClick={handleOpenLightbox}
+          filters={filters}
         />
       )}
       {isContactModalOpen && <ContactModal onClose={handleCloseContact} />}
+      {isFilterModalOpen && (
+        <FilterModal
+          isOpen={isFilterModalOpen}
+          onClose={handleCloseFilter}
+          onApplyFilters={handleApplyFilters}
+          currentFilters={filters}
+        />
+      )}
       {lightboxImage && (
         <Lightbox
           image={lightboxImage}

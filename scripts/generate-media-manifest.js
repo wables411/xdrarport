@@ -159,11 +159,25 @@ try {
     'portion club',
     'sith rave',
     'Text me bridge logo',
+    'Text Me Records',
+    'YNB',
+    'Matrix Rave',
+    'The Brooklyn Bussdown',
+    'Psyched SF',
+    'XTRAFORMS',
+    'JOOGMASTER J',
   ]
   
   // Map folder names to project display names
   const projectNameMap = {
     'Text me bridge logo': 'Text Me Records Logo',
+    'Text Me Records': 'Text Me Records',
+    'YNB': 'YNB',
+    'Matrix Rave': 'Matrix Rave',
+    'The Brooklyn Bussdown': 'The Brooklyn Bussdown',
+    'Psyched SF': 'PSYCHED SF',
+    'XTRAFORMS': 'XTRAFORMS',
+    'JOOGMASTER J': 'JOOGMASTER J',
   }
   
   // Scan root media directory

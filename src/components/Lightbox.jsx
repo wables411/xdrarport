@@ -57,7 +57,9 @@ function Lightbox({ image, images, onClose, onNavigate }) {
       )}
       <div className="lightbox-content">
         {(() => {
-          const lowerImage = image.toLowerCase()
+          // Decode URL-encoded path to check extension properly
+          const decodedImage = decodeURIComponent(image)
+          const lowerImage = decodedImage.toLowerCase()
           const isVideo = lowerImage.endsWith('.mp4') || 
                          lowerImage.endsWith('.mov') || 
                          lowerImage.endsWith('.avi') || 
@@ -69,14 +71,27 @@ function Lightbox({ image, images, onClose, onNavigate }) {
               src={image}
               controls
               autoPlay
-              loop
+              loop={false}
               muted={false}
               style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto' }}
+              onError={(e) => {
+                console.error('Failed to load video in lightbox:', image, e)
+              }}
+              onLoadedData={() => {
+                console.log('Successfully loaded video in lightbox:', image)
+              }}
             >
               Your browser does not support the video tag.
             </video>
           ) : (
-            <img src={image} alt="Portfolio" style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto' }} />
+            <img 
+              src={image} 
+              alt="Portfolio" 
+              style={{ maxWidth: '100%', maxHeight: '90vh', width: 'auto', height: 'auto' }}
+              onError={(e) => {
+                console.error('Failed to load image in lightbox:', image, e)
+              }}
+            />
           )
         })()}
       </div>

@@ -18,33 +18,199 @@ const PROJECT_COLORS = [
   '#5DADE2', // Light Blue
 ]
 
-function ImageGrid({ onProjectClick }) {
+function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' } }) {
   const [mediaItems, setMediaItems] = useState([])
+  const [filteredItems, setFilteredItems] = useState([])
 
   useEffect(() => {
-    // Load media files from manifest
-    console.log('Media manifest loaded:', mediaManifest.length, 'items')
-    const planetaProject = mediaManifest.find(item => item.name && item.name.includes('Planeta'))
-    if (planetaProject) {
-      console.log('Planeta Pisces project found:', planetaProject)
-      console.log('Thumbnail path:', planetaProject.thumbnail)
-    }
-    setMediaItems(mediaManifest)
+    // Homepage now shows only XDRAR video, no projects
+    setMediaItems([])
   }, [])
 
+  useEffect(() => {
+    // Check if any filter is active
+    const hasActiveFilter = filters.mediaType !== 'all' || 
+                           (filters.locations && filters.locations.length > 0) ||
+                           (filters.dates && filters.dates.length > 0)
+
+    if (!hasActiveFilter) {
+      // No filters: show only projects (homepage view)
+      setFilteredItems(mediaItems)
+      return
+    }
+
+    // Filters active: flatten all files from all projects and filter them
+    const allFiles = []
+    
+    mediaManifest.forEach(item => {
+      if (item.type === 'project' && item.files) {
+        // Add all files from this project
+        item.files.forEach((file, fileIndex) => {
+          allFiles.push({
+            ...file,
+            id: file.id || `filtered-${item.id}-${fileIndex}`,
+            projectId: item.id,
+            projectName: item.name,
+            projectFolder: item.folder
+          })
+        })
+      } else if (item.type !== 'project') {
+        // Individual files (not in projects)
+        allFiles.push({
+          ...item,
+          id: item.id || `filtered-file-${allFiles.length}`
+        })
+      }
+    })
+
+    let filtered = [...allFiles]
+
+    // Filter by media type
+    if (filters.mediaType !== 'all') {
+      filtered = filtered.filter(file => file.type === filters.mediaType)
+    }
+
+    // Filter by location
+    if (filters.locations && filters.locations.length > 0) {
+      // Map Matrix Rave and Petty Mart to Portion Club
+      const locationMap = {
+        'Matrix Rave': 'Portion Club',
+        'petty mart': 'Portion Club',
+        'portion club': 'Portion Club'
+      }
+      
+      filtered = filtered.filter(file => {
+        // Check if file path contains any selected location
+        if (file.path) {
+          const pathParts = file.path.split('/')
+          const mediaIndex = pathParts.indexOf('media')
+          if (mediaIndex >= 0 && pathParts[mediaIndex + 1]) {
+            const folderName = pathParts[mediaIndex + 1]
+            const mappedLocation = locationMap[folderName] || folderName
+            return filters.locations.some(loc => {
+              // Normalize comparison (case-insensitive)
+              return mappedLocation.toLowerCase() === loc.toLowerCase() ||
+                     folderName.toLowerCase() === loc.toLowerCase()
+            })
+          }
+        }
+        // Also check project folder if available
+        if (file.projectFolder) {
+          const mappedLocation = locationMap[file.projectFolder] || file.projectFolder
+          return filters.locations.some(loc => {
+            return mappedLocation.toLowerCase() === loc.toLowerCase() ||
+                   file.projectFolder.toLowerCase() === loc.toLowerCase()
+          })
+        }
+        return false
+      })
+    }
+
+    // Filter by date
+    if (filters.dates && filters.dates.length > 0) {
+      filtered = filtered.filter(file => {
+        if (file.date) {
+          let fileDate
+          if (typeof file.date === 'string') {
+            fileDate = file.date
+          } else if (file.date && file.date.year) {
+            fileDate = `${file.date.year}-${String(file.date.month || 1).padStart(2, '0')}`
+          }
+          return fileDate && filters.dates.includes(fileDate)
+        }
+        return false
+      })
+    }
+
+    setFilteredItems(filtered)
+  }, [mediaItems, filters])
+
   const handleMediaClick = (item) => {
-    onProjectClick(item)
+    // If it's a project, open project page
+    // If it's a file (from filtered view), open in lightbox
+    if (item.type === 'project') {
+      onProjectClick(item)
+    } else {
+      // For filtered files, use the filteredItems for lightbox navigation
+      // This ensures we only navigate through the filtered results
+      const filteredFilePaths = filteredItems
+        .filter(f => f.type === item.type)
+        .map(f => f.path.split('/').map(segment => encodeURIComponent(segment)).join('/'))
+      
+      const currentPath = item.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+      const currentIndex = filteredFilePaths.indexOf(currentPath)
+      
+      onProjectClick({
+        type: item.type,
+        path: item.path,
+        filename: item.filename,
+        lightboxFiles: filteredFilePaths,
+        lightboxIndex: currentIndex >= 0 ? currentIndex : 0
+      })
+    }
+  }
+
+  // Check if we should show XDRAR video on homepage (no filters active)
+  const hasActiveFilter = filters.mediaType !== 'all' || 
+                         (filters.locations && filters.locations.length > 0) ||
+                         (filters.dates && filters.dates.length > 0)
+
+  // If filters are active, show filtered items; otherwise show XDRAR video
+  if (!hasActiveFilter && filteredItems.length === 0 && mediaItems.length === 0) {
+    return (
+      <div className="homepage-video-container">
+        <video
+          src="/media/XDRAR.mp4"
+          loop
+          playsInline
+          preload="auto"
+          autoPlay
+          muted
+          className="homepage-video"
+          onClick={() => {
+            // Open in lightbox when clicked
+            onProjectClick({
+              type: 'video',
+              path: '/media/XDRAR.mp4',
+              filename: 'XDRAR.mp4',
+              lightboxFiles: ['/media/XDRAR.mp4'],
+              lightboxIndex: 0
+            })
+          }}
+          onMouseEnter={(e) => {
+            const video = e.target
+            video.muted = false // Enable sound on hover
+            video.play().catch(err => console.error('Video play error:', err))
+          }}
+          onMouseLeave={(e) => {
+            const video = e.target
+            video.muted = true // Mute when not hovering
+            // Keep playing and looping
+          }}
+          onLoadedData={(e) => {
+            // Start playing and looping automatically
+            const video = e.target
+            video.muted = true // Start muted
+            video.play().catch(err => {
+              console.error('Video autoplay error:', err)
+            })
+          }}
+        >
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    )
   }
 
   return (
     <div className="image-grid-wrapper">
       <div className="image-grid-container">
         <div className="image-grid">
-          {mediaItems.map((item, index) => {
+          {(filteredItems.length > 0 ? filteredItems : mediaItems).map((item, index) => {
             const hoverColor = PROJECT_COLORS[index % PROJECT_COLORS.length]
             const title = item.type === 'project' 
               ? item.name 
-              : item.filename?.replace(/\.[^/.]+$/, '') || `Item ${item.id}`
+              : item.filename?.replace(/\.[^/.]+$/, '') || item.path?.split('/').pop()?.replace(/\.[^/.]+$/, '') || `Item ${index}`
             
             // #region agent log
             fetch('http://127.0.0.1:7242/ingest/74edaf60-af37-4359-ab5b-b4267d8ddea6',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'ImageGrid.jsx:45',message:'Title computed for item',data:{itemId:item.id,itemType:item.type,title:title,titleLength:title?.length,hasTitle:!!title},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
@@ -57,16 +223,17 @@ function ImageGrid({ onProjectClick }) {
               displayPath = item.thumbnail
               displayType = item.thumbnailType
             } else {
+              // For filtered files, use the file path directly
               displayPath = item.path
               displayType = item.type
             }
             
-            // Encode paths with spaces for proper URL handling
-            const encodedPath = displayPath ? encodeURI(displayPath) : displayPath
+            // Encode paths properly, handling special characters like ? and spaces
+            const encodedPath = displayPath ? displayPath.split('/').map(segment => encodeURIComponent(segment)).join('/') : displayPath
             
             return (
               <div
-                key={item.id}
+                key={item.id || item.path || `item-${index}`}
                 className="image-item"
                 onClick={() => handleMediaClick(item)}
                 style={{ '--hover-color': hoverColor }}
@@ -103,25 +270,17 @@ function ImageGrid({ onProjectClick }) {
                 onTouchStart={(e) => {
                   // For mobile devices - trigger the hover effect on touch
                   const overlayEl = e.currentTarget.querySelector('.thumbnail-overlay-text');
-                  const wrapperEl = e.currentTarget.querySelector('.thumbnail-overlay-text-wrapper');
                   if (overlayEl) {
                     overlayEl.style.opacity = '1';
                     overlayEl.style.visibility = 'visible';
                   }
-                  if (wrapperEl) {
-                    wrapperEl.style.animation = 'scroll-text-horizontal 6s linear infinite';
-                  }
                 }}
                 onTouchEnd={(e) => {
-                  // Stop animation on touch end for mobile
+                  // Hide text on touch end for mobile
                   const overlayEl = e.currentTarget.querySelector('.thumbnail-overlay-text');
-                  const wrapperEl = e.currentTarget.querySelector('.thumbnail-overlay-text-wrapper');
                   if (overlayEl) {
                     overlayEl.style.opacity = '0';
                     overlayEl.style.visibility = 'hidden';
-                  }
-                  if (wrapperEl) {
-                    wrapperEl.style.animation = 'none';
                   }
                 }}
               >
@@ -151,13 +310,40 @@ function ImageGrid({ onProjectClick }) {
                     }}
                     onMouseLeave={(e) => {
                       e.target.pause()
-                      e.target.currentTime = 0
+                      // For Matrix Rave, keep the later frame; for others, reset to start
+                      const isMatrixRave = item.folder && (item.folder.includes('Matrix Rave') || item.folder === 'Matrix Rave')
+                      if (!isMatrixRave) {
+                        e.target.currentTime = 0
+                      } else {
+                        // Keep at 3 seconds for Matrix Rave
+                        if (e.target.duration && e.target.duration > 3) {
+                          e.target.currentTime = 3
+                        }
+                      }
                     }}
                     onError={(e) => {
                       console.error('Failed to load video:', encodedPath, displayPath, e)
                     }}
-                    onLoadedData={() => {
+                    onLoadedData={(e) => {
                       console.log('Successfully loaded video:', encodedPath)
+                      // For Matrix Rave thumbnails, set to a frame 3 seconds later
+                      const isMatrixRave = item.folder && (item.folder.includes('Matrix Rave') || item.folder === 'Matrix Rave')
+                      if (item.type === 'project' && isMatrixRave) {
+                        const video = e.target
+                        if (video.duration && video.duration > 3) {
+                          video.currentTime = 3 // Set to 3 seconds in
+                        }
+                      }
+                    }}
+                    onLoadedMetadata={(e) => {
+                      // Also set on metadata load in case loadedData doesn't fire
+                      const isMatrixRave = item.folder && (item.folder.includes('Matrix Rave') || item.folder === 'Matrix Rave')
+                      if (item.type === 'project' && isMatrixRave) {
+                        const video = e.target
+                        if (video.duration && video.duration > 3) {
+                          video.currentTime = 3 // Set to 3 seconds in
+                        }
+                      }
                     }}
                   />
                 )}

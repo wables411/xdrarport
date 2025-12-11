@@ -248,7 +248,12 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
             }
             
             // Encode paths properly, handling special characters like ? and spaces
-            const encodedPath = displayPath ? displayPath.split('/').map(segment => encodeURIComponent(segment)).join('/') : displayPath
+            // If it's already a full URL (R2), use it as-is. Otherwise encode local paths
+            let encodedPath = displayPath
+            if (displayPath && !displayPath.startsWith('http://') && !displayPath.startsWith('https://')) {
+              // Local path - encode each segment
+              encodedPath = displayPath.split('/').map(segment => encodeURIComponent(segment)).join('/')
+            }
             
             return (
               <div

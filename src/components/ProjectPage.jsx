@@ -76,10 +76,10 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
       }
     ]
     
-    const handleTextMeThumbnailClick = (sectionKey, thumbnailIndex) => {
+    const handleTextMeThumbnailClick = (sectionKey, fileIndex) => {
       setTextMeSectionIndices(prev => ({
         ...prev,
-        [sectionKey]: thumbnailIndex + 1 // +1 because main asset is at index 0, thumbnails start at 1
+        [sectionKey]: fileIndex
       }))
     }
     
@@ -176,7 +176,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                           const originalIndex = section.files.findIndex(f => f.path === file.path)
                           
                           return (
-                            <div key={index} className="text-me-sub-asset">
+                            <div key={originalIndex} className="text-me-sub-asset">
                               {file.type === 'video' ? (
                                 <video
                                   src={filePath}

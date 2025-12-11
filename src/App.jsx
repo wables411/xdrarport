@@ -167,10 +167,13 @@ function App() {
     
     const handleHashChange = () => {
       const hash = window.location.hash
+      console.log('[App] Hash change:', hash, 'Manifest length:', manifest.length)
       if (hash && hash.startsWith('#project-')) {
         const projectId = hash.replace('#project-', '')
+        console.log('[App] Looking for project:', projectId)
         // Find project in manifest
         const project = manifest.find(p => p.id === projectId && p.type === 'project')
+        console.log('[App] Found project:', project ? project.name : 'NOT FOUND')
         if (project) {
           setCurrentProject(project)
         }

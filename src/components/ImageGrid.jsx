@@ -174,7 +174,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
       (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
       (item.path && item.path.toUpperCase().includes('XDRAR'))
     )
-    console.log('[ImageGrid] XDRAR video lookup:', xdrarVideo ? xdrarVideo.path : 'NOT FOUND', 'Manifest length:', mediaManifest.length)
+    console.log('[ImageGrid] XDRAR video lookup:', xdrarVideo ? xdrarVideo.path : 'NOT FOUND', 'Manifest length:', manifest.length)
     const videoSrc = xdrarVideo ? xdrarVideo.path : '/media/XDRAR.mp4'
     
     return (

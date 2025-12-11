@@ -7,6 +7,7 @@ import SocialButtons from './components/SocialButtons'
 import AboutSection from './components/AboutSection'
 import ProjectPage from './components/ProjectPage'
 import Lightbox from './components/Lightbox'
+import mediaManifest from './data/media-manifest.json'
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -157,13 +158,11 @@ function App() {
       const hash = window.location.hash
       if (hash && hash.startsWith('#project-')) {
         const projectId = hash.replace('#project-', '')
-        // Import manifest and find project
-        import('./data/media-manifest.json').then(manifest => {
-          const project = manifest.default.find(p => p.id === projectId && p.type === 'project')
-          if (project) {
-            setCurrentProject(project)
-          }
-        })
+        // Find project in manifest
+        const project = mediaManifest.find(p => p.id === projectId && p.type === 'project')
+        if (project) {
+          setCurrentProject(project)
+        }
       } else if (!hash) {
         setCurrentProject(null)
       }

@@ -200,10 +200,15 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   // In archive mode, show the filtered items
   if (archiveMode) {
+    console.log('[Archive] Rendering:', filteredItems.length, 'items, filter:', archiveMediaType)
     return (
       <div className="image-grid-container archive-grid">
         <div className="image-grid">
-          {filteredItems.map((item, index) => {
+          {filteredItems.length === 0 ? (
+            <div style={{ color: '#fff', padding: '40px', textAlign: 'center' }}>
+              No {archiveMediaType === 'all' ? 'media' : archiveMediaType === 'image' ? 'images' : 'videos'} found
+            </div>
+          ) : filteredItems.map((item, index) => {
             const displayPath = item.path
             const encodedPath = displayPath && (displayPath.startsWith('http://') || displayPath.startsWith('https://')) 
               ? encodeURI(displayPath)

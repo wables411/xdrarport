@@ -1,0 +1,66 @@
+.archive-filter-button {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1000;
+}
+
+.archive-filter-btn {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-family: 'Impact', 'Arial Black', sans-serif;
+}
+
+.archive-filter-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.archive-filter-btn:active {
+  transform: translateY(0);
+}
+
+.archive-grid {
+  padding: 24px;
+}
+
+.archive-grid .image-grid {
+  column-count: 4;
+  column-gap: 0;
+}
+
+@media (max-width: 1200px) {
+  .archive-grid .image-grid {
+    column-count: 3;
+  }
+}
+
+@media (max-width: 768px) {
+  .archive-grid .image-grid {
+    column-count: 2;
+  }
+  
+  .archive-filter-button {
+    bottom: 16px;
+    left: 16px;
+  }
+  
+  .archive-filter-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .archive-grid .image-grid {
+    column-count: 1;
+  }
+}

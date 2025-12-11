@@ -7,6 +7,7 @@ import SocialButtons from './components/SocialButtons'
 import AboutSection from './components/AboutSection'
 import ProjectPage from './components/ProjectPage'
 import Lightbox from './components/Lightbox'
+import './components/ArchiveFilter.css'
 
 function App() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -21,6 +22,8 @@ function App() {
   const [currentProject, setCurrentProject] = useState(null)
   const [lightboxImage, setLightboxImage] = useState(null)
   const [lightboxImages, setLightboxImages] = useState([])
+  const [showArchive, setShowArchive] = useState(false)
+  const [archiveMediaType, setArchiveMediaType] = useState('all') // 'all', 'image', 'video'
 
   const handleOpenContact = () => {
     setIsContactModalOpen(true)
@@ -77,10 +80,13 @@ function App() {
   }
 
   const handleArchiveClick = () => {
+    setCurrentProject(null)
     setShowSocialButtons(false)
     setShowAboutSection(false)
-    // TODO: Implement archive functionality
-    console.log('Archive clicked')
+    setShowArchive(!showArchive)
+    if (!showArchive) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
   }
 
   const handleHomeClick = () => {
@@ -162,11 +168,33 @@ function App() {
         onProjectSelect={handleProjectSelect}
         onArchiveClick={handleArchiveClick}
       />
-      {!currentProject ? (
+      {!currentProject && !showArchive ? (
         <>
           <ImageGrid onProjectClick={handleProjectClick} filters={filters} />
           {showSocialButtons && <SocialButtons />}
           {showAboutSection && <AboutSection />}
+        </>
+      ) : showArchive ? (
+        <>
+          <ImageGrid 
+            onProjectClick={handleProjectClick} 
+            filters={filters}
+            archiveMode={true}
+            archiveMediaType={archiveMediaType}
+          />
+          <div className="archive-filter-button">
+            <button 
+              onClick={() => {
+                const types = ['all', 'image', 'video']
+                const currentIndex = types.indexOf(archiveMediaType)
+                const nextIndex = (currentIndex + 1) % types.length
+                setArchiveMediaType(types[nextIndex])
+              }}
+              className="archive-filter-btn"
+            >
+              Filter: {archiveMediaType === 'all' ? 'All' : archiveMediaType === 'image' ? 'Images' : 'Videos'}
+            </button>
+          </div>
         </>
       ) : (
         <ProjectPage 

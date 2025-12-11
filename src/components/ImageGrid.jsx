@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './ImageGrid.css'
+import './ArchiveFilter.css'
 
 // Color palette for hover effects - each project gets a unique color
 const PROJECT_COLORS = [
@@ -17,7 +18,7 @@ const PROJECT_COLORS = [
   '#5DADE2', // Light Blue
 ]
 
-function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' } }) {
+function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all' }) {
   const [mediaItems, setMediaItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [manifest, setManifest] = useState([])
@@ -31,13 +32,44 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   }, [])
 
   useEffect(() => {
-    // Homepage now shows only XDRAR video, no projects
-    // Don't set mediaItems to empty - we need it for filtering
-    // But homepage should show XDRAR video when no filters
-    setMediaItems([])
-  }, [])
+    if (archiveMode) {
+      // In archive mode, load all media files from manifest
+      if (manifest && manifest.length > 0) {
+        const allMedia = []
+        manifest.forEach(item => {
+          if (item.type === 'project' && item.files) {
+            // Add all files from projects
+            item.files.forEach(file => {
+              allMedia.push({
+                ...file,
+                projectName: item.name,
+                projectFolder: item.folder
+              })
+            })
+          } else if (item.type !== 'project') {
+            // Individual files
+            allMedia.push(item)
+          }
+        })
+        setMediaItems(allMedia)
+      }
+    } else {
+      // Homepage now shows only XDRAR video, no projects
+      setMediaItems([])
+    }
+  }, [archiveMode, manifest])
 
   useEffect(() => {
+    if (archiveMode) {
+      // In archive mode, filter by archiveMediaType
+      let filtered = [...mediaItems]
+      if (archiveMediaType !== 'all') {
+        filtered = filtered.filter(file => file.type === archiveMediaType)
+      }
+      setFilteredItems(filtered)
+      return
+    }
+
     // Check if any filter is active - must match the homepage check exactly
     const hasActiveFilter = (filters?.mediaType && filters.mediaType !== 'all') || 
                            (filters?.locations && filters.locations && filters.locations.length > 0) ||
@@ -159,6 +191,48 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
         lightboxIndex: currentIndex >= 0 ? currentIndex : 0
       })
     }
+  }
+
+  // In archive mode, show the filtered items
+  if (archiveMode) {
+    return (
+      <div className="image-grid-container archive-grid">
+        <div className="image-grid">
+          {filteredItems.map((item, index) => {
+            const displayPath = item.path
+            const encodedPath = displayPath && (displayPath.startsWith('http://') || displayPath.startsWith('https://')) 
+              ? encodeURI(displayPath)
+              : displayPath.split('/').map(segment => encodeURIComponent(segment)).join('/')
+            
+            return (
+              <div key={index} className="grid-item">
+                {item.type === 'video' ? (
+                  <video
+                    src={encodedPath}
+                    loop
+                    playsInline
+                    preload="metadata"
+                    muted
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                    onMouseEnter={(e) => e.target.play()}
+                    onMouseLeave={(e) => {
+                      e.target.pause()
+                      e.target.currentTime = 0
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={encodedPath}
+                    alt={item.filename || `Media ${index + 1}`}
+                    style={{ width: '100%', height: 'auto', display: 'block' }}
+                  />
+                )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
   }
 
   // Check if we should show XDRAR video on homepage (no filters active)

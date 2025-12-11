@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import ImageGrid from './components/ImageGrid'
 import ContactModal from './components/ContactModal'
@@ -99,6 +99,10 @@ function App() {
     } else {
       // It's a project - open project page
       setCurrentProject(project)
+      // Update URL hash
+      if (project.id) {
+        window.location.hash = `#project-${project.id}`
+      }
       // Scroll to top when opening a project
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -108,6 +112,10 @@ function App() {
     setCurrentProject(project)
     setShowSocialButtons(false)
     setShowAboutSection(false)
+    // Update URL hash
+    if (project.id) {
+      window.location.hash = `#project-${project.id}`
+    }
     // Scroll to top when opening a project
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -116,6 +124,8 @@ function App() {
     setCurrentProject(null)
     setShowSocialButtons(false)
     setShowAboutSection(false)
+    // Clear hash
+    window.location.hash = ''
   }
 
   const handleOpenLightbox = (imageSrc, allImages) => {
@@ -140,6 +150,32 @@ function App() {
 
     setLightboxImage(lightboxImages[newIndex])
   }
+
+  // Handle hash routing for project pages
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash
+      if (hash && hash.startsWith('#project-')) {
+        const projectId = hash.replace('#project-', '')
+        // Import manifest and find project
+        import('./data/media-manifest.json').then(manifest => {
+          const project = manifest.default.find(p => p.id === projectId && p.type === 'project')
+          if (project) {
+            setCurrentProject(project)
+          }
+        })
+      } else if (!hash) {
+        setCurrentProject(null)
+      }
+    }
+
+    // Check hash on mount
+    handleHashChange()
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange)
+    return () => window.removeEventListener('hashchange', handleHashChange)
+  }, [])
 
   return (
     <div className="app">

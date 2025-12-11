@@ -98,6 +98,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                         loop
                         playsInline
                         preload="auto"
+                        autoPlay
                         muted
                         style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
                         onClick={() => {
@@ -109,6 +110,13 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                           })
                           onMediaClick(mainAssetPath, allPaths)
                         }}
+                        onLoadedData={(e) => {
+                          const video = e.target
+                          video.muted = true
+                          video.play().catch(err => {
+                            console.error('Video autoplay error:', err)
+                          })
+                        }}
                         onMouseEnter={(e) => {
                           const video = e.target
                           video.muted = false
@@ -117,8 +125,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                         onMouseLeave={(e) => {
                           const video = e.target
                           video.muted = true
-                          video.pause()
-                          video.currentTime = 0
+                          // Keep playing and looping, just muted
                         }}
                       />
                     ) : (

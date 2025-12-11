@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "npm run generate-media",
     "build": "vite build",
     "preview": "vite preview",
     "generate-media": "node scripts/generate-media-manifest.js",

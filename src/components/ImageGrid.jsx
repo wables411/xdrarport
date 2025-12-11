@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import './ImageGrid.css'
-import mediaManifest from '../data/media-manifest.json'
 
 // Color palette for hover effects - each project gets a unique color
 const PROJECT_COLORS = [
@@ -21,6 +20,15 @@ const PROJECT_COLORS = [
 function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' } }) {
   const [mediaItems, setMediaItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
+  const [manifest, setManifest] = useState([])
+
+  // Load manifest on mount
+  useEffect(() => {
+    fetch('/media-manifest.json')
+      .then(res => res.json())
+      .then(data => setManifest(data))
+      .catch(err => console.error('Failed to load manifest:', err))
+  }, [])
 
   useEffect(() => {
     // Homepage now shows only XDRAR video, no projects
@@ -44,7 +52,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
     // Filters active: flatten all files from all projects and filter them
     const allFiles = []
     
-    mediaManifest.forEach(item => {
+    manifest.forEach(item => {
       if (item.type === 'project' && item.files) {
         // Add all files from this project
         item.files.forEach((file, fileIndex) => {
@@ -162,7 +170,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   if (!hasActiveFilter && filteredItems.length === 0 && mediaItems.length === 0) {
     console.log('[ImageGrid] Showing XDRAR video - hasActiveFilter:', hasActiveFilter, 'filteredItems:', filteredItems.length, 'mediaItems:', mediaItems.length)
     // Find XDRAR video from manifest
-    const xdrarVideo = mediaManifest.find(item => 
+    const xdrarVideo = manifest.find(item => 
       (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
       (item.path && item.path.toUpperCase().includes('XDRAR'))
     )
@@ -180,7 +188,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           className="homepage-video"
           onClick={() => {
             // Open in lightbox when clicked
-            const xdrarVideo = mediaManifest.find(item => 
+            const xdrarVideo = manifest.find(item => 
               (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
               (item.path && item.path.toUpperCase().includes('XDRAR'))
             )

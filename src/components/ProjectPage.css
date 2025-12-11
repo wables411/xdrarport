@@ -335,6 +335,10 @@
   align-items: start;
 }
 
+.text-me-section-content:has(.text-me-section-right:empty) {
+  grid-template-columns: 1fr;
+}
+
 .text-me-main-asset {
   width: 100%;
 }

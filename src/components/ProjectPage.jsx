@@ -27,10 +27,17 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   
   if (isTextMeRecords) {
     // Organize files into sections
-    const rickyLakeFiles = project.files?.filter(f => 
+    let rickyLakeFiles = project.files?.filter(f => 
       f.filename.toLowerCase().includes('ricky') || 
       f.filename.toLowerCase().includes('kizzy')
     ) || []
+    
+    // Sort so Ricky_Lake_Logo.mp4 is first (main asset)
+    rickyLakeFiles.sort((a, b) => {
+      if (a.filename.toLowerCase().includes('ricky_lake_logo')) return -1
+      if (b.filename.toLowerCase().includes('ricky_lake_logo')) return 1
+      return 0
+    })
     
     const mikosFiles = project.files?.filter(f => 
       f.filename.toLowerCase().includes('mikos') ||
@@ -47,18 +54,15 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     const sections = [
       {
         title: 'RICKY LAKE FILES',
-        files: rickyLakeFiles,
-        description: 'Ricky Lake content and collaborations'
+        files: rickyLakeFiles
       },
       {
         title: 'MIKOS DA GAWD FILES',
-        files: mikosFiles,
-        description: 'Mikos Da Gawd projects and content'
+        files: mikosFiles
       },
       {
         title: 'TEXT ME RECORDS LOGOS',
-        files: logoFiles,
-        description: 'Text Me Records branding and logos'
+        files: logoFiles
       }
     ]
     
@@ -134,11 +138,8 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                       />
                     )}
                   </div>
-                  <div className="text-me-section-right">
-                    <div className="text-me-description">
-                      <p>{section.description}</p>
-                    </div>
-                    {subAssets.length > 0 && (
+                  {subAssets.length > 0 && (
+                    <div className="text-me-section-right">
                       <div className="text-me-sub-assets">
                         {subAssets.map((file, index) => {
                           const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
@@ -190,8 +191,8 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                           )
                         })}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )

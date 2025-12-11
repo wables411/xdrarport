@@ -22,6 +22,185 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   
   if (!project) return null
 
+  // Special layout for Text Me Records - organize into sections
+  const isTextMeRecords = project.name === 'Text Me Records' || project.folder === 'Text Me Records'
+  
+  if (isTextMeRecords) {
+    // Organize files into sections
+    const rickyLakeFiles = project.files?.filter(f => 
+      f.filename.toLowerCase().includes('ricky') || 
+      f.filename.toLowerCase().includes('kizzy')
+    ) || []
+    
+    const mikosFiles = project.files?.filter(f => 
+      f.filename.toLowerCase().includes('mikos')
+    ) || []
+    
+    const logoFiles = project.files?.filter(f => 
+      f.type === 'image' && (
+        f.filename.toLowerCase().includes('logo') ||
+        f.filename.toLowerCase().includes('text me') ||
+        f.filename.toLowerCase().includes('aloe')
+      )
+    ) || []
+    
+    const sections = [
+      {
+        title: 'RICKY LAKE FILES',
+        files: rickyLakeFiles,
+        description: 'Ricky Lake content and collaborations'
+      },
+      {
+        title: 'MIKOS DA GAWD FILES',
+        files: mikosFiles,
+        description: 'Mikos Da Gawd projects and content'
+      },
+      {
+        title: 'TEXT ME RECORDS LOGOS',
+        files: logoFiles,
+        description: 'Text Me Records branding and logos'
+      }
+    ]
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header">
+            <h1 className="project-title">{project.name}</h1>
+          </div>
+          
+          {sections.map((section, sectionIndex) => {
+            if (section.files.length === 0) return null
+            
+            const mainAsset = section.files[0]
+            const subAssets = section.files.slice(1)
+            const mainAssetPath = mainAsset.path && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+              ? encodeURI(mainAsset.path)
+              : mainAsset.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+            
+            return (
+              <div key={sectionIndex} className="text-me-section">
+                <div className="text-me-section-header">
+                  <h2 className="text-me-section-title">{section.title}</h2>
+                </div>
+                <div className="text-me-section-content">
+                  <div className="text-me-main-asset">
+                    {mainAsset.type === 'video' ? (
+                      <video
+                        src={mainAssetPath}
+                        loop
+                        playsInline
+                        preload="auto"
+                        muted
+                        style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                        onClick={() => {
+                          const allPaths = section.files.map(f => {
+                            const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                              ? encodeURI(f.path)
+                              : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                            return p
+                          })
+                          onMediaClick(mainAssetPath, allPaths)
+                        }}
+                        onMouseEnter={(e) => {
+                          const video = e.target
+                          video.muted = false
+                          video.play().catch(err => console.error('Video play error:', err))
+                        }}
+                        onMouseLeave={(e) => {
+                          const video = e.target
+                          video.muted = true
+                          video.pause()
+                          video.currentTime = 0
+                        }}
+                      />
+                    ) : (
+                      <img
+                        src={mainAssetPath}
+                        alt={mainAsset.filename}
+                        style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                        onClick={() => {
+                          const allPaths = section.files.map(f => {
+                            const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                              ? encodeURI(f.path)
+                              : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                            return p
+                          })
+                          onMediaClick(mainAssetPath, allPaths)
+                        }}
+                      />
+                    )}
+                  </div>
+                  <div className="text-me-section-right">
+                    <div className="text-me-description">
+                      <p>{section.description}</p>
+                    </div>
+                    {subAssets.length > 0 && (
+                      <div className="text-me-sub-assets">
+                        {subAssets.map((file, index) => {
+                          const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                            ? encodeURI(file.path)
+                            : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          
+                          return (
+                            <div key={index} className="text-me-sub-asset">
+                              {file.type === 'video' ? (
+                                <video
+                                  src={filePath}
+                                  loop
+                                  playsInline
+                                  preload="metadata"
+                                  muted
+                                  style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                                  onClick={() => {
+                                    const allPaths = section.files.map(f => {
+                                      const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                                        ? encodeURI(f.path)
+                                        : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                                      return p
+                                    })
+                                    onMediaClick(filePath, allPaths)
+                                  }}
+                                  onMouseEnter={(e) => e.target.play()}
+                                  onMouseLeave={(e) => {
+                                    e.target.pause()
+                                    e.target.currentTime = 0
+                                  }}
+                                />
+                              ) : (
+                                <img
+                                  src={filePath}
+                                  alt={file.filename}
+                                  style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                                  onClick={() => {
+                                    const allPaths = section.files.map(f => {
+                                      const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                                        ? encodeURI(f.path)
+                                        : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                                      return p
+                                    })
+                                    onMediaClick(filePath, allPaths)
+                                  }}
+                                />
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
+
   // Filter project files based on filters
   const getFilteredFiles = () => {
     if (!project.files && !project.videos) return []

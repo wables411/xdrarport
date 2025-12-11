@@ -140,8 +140,14 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   const handleShowcasedMediaClick = () => {
     // Clicking showcased media opens it in lightbox
     if (showcasedMedia) {
-      const encodedPath = showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-      const encodedPaths = allMediaPaths.map(p => p.split('/').map(segment => encodeURIComponent(segment)).join('/'))
+      const encodedPath = showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://'))
+        ? showcasedMedia.path
+        : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+      const encodedPaths = allMediaPaths.map(p => 
+        p && (p.startsWith('http://') || p.startsWith('https://'))
+          ? p
+          : p.split('/').map(segment => encodeURIComponent(segment)).join('/')
+      )
       onMediaClick(encodedPath, encodedPaths)
     }
   }
@@ -174,7 +180,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                 >
                   {showcasedMedia.type === 'video' ? (
                     <video
-                      src={showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
+                      src={showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://')) 
+                        ? showcasedMedia.path 
+                        : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                       loop
                       playsInline
                       preload="auto"
@@ -205,7 +213,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                     </video>
                   ) : (
                     <img
-                      src={showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
+                      src={showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://')) 
+                        ? showcasedMedia.path 
+                        : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                       alt={showcasedMedia.filename || 'Showcased media'}
                       loading="eager"
                       style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
@@ -252,7 +262,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                       >
                         {file.type === 'video' ? (
                           <video
-                            src={file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
+                            src={file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                              ? file.path 
+                              : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                             muted
                             loop
                             playsInline
@@ -295,7 +307,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                           />
                         ) : (
                           <img
-                            src={file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
+                            src={file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                              ? file.path 
+                              : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                             alt={file.filename || `Thumbnail ${index + 1}`}
                             loading="lazy"
                             style={{ width: '100%', height: 'auto', display: 'block' }}

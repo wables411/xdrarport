@@ -153,7 +153,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   }
 
   // Check if we should show XDRAR video on homepage (no filters active)
-  const hasActiveFilter = filters?.mediaType !== 'all' || 
+  const hasActiveFilter = (filters?.mediaType && filters.mediaType !== 'all') || 
                          (filters?.locations && filters.locations.length > 0) ||
                          (filters?.dates && filters.dates.length > 0)
 

@@ -171,10 +171,10 @@ function App() {
       }
       
       console.log('[App] Hash change:', hash, 'Manifest length:', manifest.length)
-      if (hash && hash.startsWith('#project-')) {
-        const projectId = hash.replace('#project-', '')
+      if (hash && hash.startsWith('#')) {
+        const projectId = hash.replace('#', '')
         console.log('[App] Looking for project:', projectId)
-        // Find project in manifest
+        // Find project in manifest (projectId is already "project-10" format)
         const project = manifest.find(p => p.id === projectId && p.type === 'project')
         console.log('[App] Found project:', project ? project.name : 'NOT FOUND')
         if (project) {

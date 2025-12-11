@@ -99,10 +99,6 @@ function App() {
     } else {
       // It's a project - open project page
       setCurrentProject(project)
-      // Update URL hash (project.id already includes "project-" prefix)
-      if (project.id) {
-        window.location.hash = `#${project.id}`
-      }
       // Scroll to top when opening a project
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
@@ -112,10 +108,6 @@ function App() {
     setCurrentProject(project)
     setShowSocialButtons(false)
     setShowAboutSection(false)
-    // Update URL hash (project.id already includes "project-" prefix)
-    if (project.id) {
-      window.location.hash = `#${project.id}`
-    }
     // Scroll to top when opening a project
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -124,8 +116,6 @@ function App() {
     setCurrentProject(null)
     setShowSocialButtons(false)
     setShowAboutSection(false)
-    // Clear hash
-    window.location.hash = ''
   }
 
   const handleOpenLightbox = (imageSrc, allImages) => {
@@ -161,37 +151,6 @@ function App() {
       .catch(err => console.error('Failed to load manifest:', err))
   }, [])
 
-  // Handle hash routing for project pages
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash
-      if (manifest.length === 0) {
-        // Manifest not loaded yet, wait for it
-        return
-      }
-      
-      console.log('[App] Hash change:', hash, 'Manifest length:', manifest.length)
-      if (hash && hash.startsWith('#')) {
-        const projectId = hash.replace('#', '')
-        console.log('[App] Looking for project:', projectId)
-        // Find project in manifest (projectId is already "project-10" format)
-        const project = manifest.find(p => p.id === projectId && p.type === 'project')
-        console.log('[App] Found project:', project ? project.name : 'NOT FOUND')
-        if (project) {
-          setCurrentProject(project)
-        }
-      } else if (!hash) {
-        setCurrentProject(null)
-      }
-    }
-
-    // Check hash whenever manifest loads or hash changes
-    handleHashChange()
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange)
-    return () => window.removeEventListener('hashchange', handleHashChange)
-  }, [manifest])
 
   return (
     <div className="app">

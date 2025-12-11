@@ -30,10 +30,10 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   }, [])
 
   useEffect(() => {
-    // Check if any filter is active
+    // Check if any filter is active - must match the homepage check exactly
     const hasActiveFilter = (filters?.mediaType && filters.mediaType !== 'all') || 
-                           (filters?.locations && filters.locations.length > 0) ||
-                           (filters?.dates && filters.dates.length > 0)
+                           (filters?.locations && filters.locations && filters.locations.length > 0) ||
+                           (filters?.dates && filters.dates && filters.dates.length > 0)
 
     if (!hasActiveFilter) {
       // No filters: show empty (homepage will show XDRAR video)

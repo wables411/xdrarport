@@ -24,6 +24,8 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   useEffect(() => {
     // Homepage now shows only XDRAR video, no projects
+    // Don't set mediaItems to empty - we need it for filtering
+    // But homepage should show XDRAR video when no filters
     setMediaItems([])
   }, [])
 
@@ -34,8 +36,8 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                            (filters.dates && filters.dates.length > 0)
 
     if (!hasActiveFilter) {
-      // No filters: show only projects (homepage view)
-      setFilteredItems(mediaItems)
+      // No filters: show empty (homepage will show XDRAR video)
+      setFilteredItems([])
       return
     }
 

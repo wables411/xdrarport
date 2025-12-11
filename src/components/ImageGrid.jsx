@@ -157,10 +157,17 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   // If filters are active, show filtered items; otherwise show XDRAR video
   if (!hasActiveFilter && filteredItems.length === 0 && mediaItems.length === 0) {
+    // Find XDRAR video from manifest - check for both .mp4 and .mov, and R2 URLs
+    const xdrarVideo = mediaManifest.find(item => 
+      (item.filename && item.filename.includes('XDRAR')) || 
+      (item.path && item.path.includes('XDRAR'))
+    )
+    const videoSrc = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mov'
+    
     return (
       <div className="homepage-video-container">
         <video
-          src="/media/XDRAR.mp4"
+          src={videoSrc}
           loop
           playsInline
           preload="auto"
@@ -169,11 +176,16 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           className="homepage-video"
           onClick={() => {
             // Open in lightbox when clicked
+            const xdrarVideo = mediaManifest.find(item => 
+              (item.filename && item.filename.includes('XDRAR')) || 
+              (item.path && item.path.includes('XDRAR'))
+            )
+            const videoPath = xdrarVideo ? xdrarVideo.path : 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/XDRAR.mov'
             onProjectClick({
               type: 'video',
-              path: '/media/XDRAR.mp4',
-              filename: 'XDRAR.mp4',
-              lightboxFiles: ['/media/XDRAR.mp4'],
+              path: videoPath,
+              filename: xdrarVideo?.filename || 'XDRAR.mov',
+              lightboxFiles: [videoPath],
               lightboxIndex: 0
             })
           }}

@@ -33,15 +33,15 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     ) || []
     
     const mikosFiles = project.files?.filter(f => 
-      f.filename.toLowerCase().includes('mikos')
+      f.filename.toLowerCase().includes('mikos') ||
+      f.filename.toLowerCase().includes('aloe')
     ) || []
     
     const logoFiles = project.files?.filter(f => 
       f.type === 'image' && (
         f.filename.toLowerCase().includes('logo') ||
-        f.filename.toLowerCase().includes('text me') ||
-        f.filename.toLowerCase().includes('aloe')
-      )
+        f.filename.toLowerCase().includes('text me')
+      ) && !f.filename.toLowerCase().includes('aloe')
     ) || []
     
     const sections = [

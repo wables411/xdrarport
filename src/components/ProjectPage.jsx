@@ -60,12 +60,12 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     const sections = [
       {
-        title: 'RICKY LAKE FILES',
+        title: "Promo for Ricky Lake - 'Burdens' Album - 2025",
         files: rickyLakeFiles,
         key: 'rickyLake'
       },
       {
-        title: 'MIKOS DA GAWD FILES',
+        title: 'Cover art and Promo for Mikos Da Gawd, Seiji Oda & Jay Anthony - "Oh My Gawd" - February 2024',
         files: mikosFiles,
         key: 'mikos'
       },

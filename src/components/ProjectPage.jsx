@@ -144,30 +144,12 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     // Clicking showcased media opens it in lightbox
     if (showcasedMedia) {
       const encodedPath = showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://'))
-        ? (() => {
-            // Encode URL path segments but preserve domain
-            try {
-              const url = new URL(showcasedMedia.path)
-              const pathSegments = url.pathname.split('/').filter(s => s).map(s => encodeURIComponent(s))
-              return `${url.origin}/${pathSegments.join('/')}${url.search}${url.hash}`
-            } catch (e) {
-              // Fallback if URL parsing fails
-              return showcasedMedia.path
-            }
-          })()
+        ? showcasedMedia.path
         : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
       const encodedPaths = allMediaPaths.map(p => {
         if (!p) return p
         if (p.startsWith('http://') || p.startsWith('https://')) {
-          // Encode URL path segments but preserve domain
-          try {
-            const url = new URL(p)
-            const pathSegments = url.pathname.split('/').filter(s => s).map(s => encodeURIComponent(s))
-            return `${url.origin}/${pathSegments.join('/')}${url.search}${url.hash}`
-          } catch (e) {
-            // Fallback if URL parsing fails
-            return p
-          }
+          return p
         }
         return p.split('/').map(segment => encodeURIComponent(segment)).join('/')
       })
@@ -204,17 +186,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                   {showcasedMedia.type === 'video' ? (
                     <video
                       src={showcasedMedia.path && (showcasedMedia.path.startsWith('http://') || showcasedMedia.path.startsWith('https://')) 
-                        ? (() => {
-                            // Encode URL path segments but preserve domain
-                            try {
-                              const url = new URL(showcasedMedia.path)
-                              const pathSegments = url.pathname.split('/').filter(s => s).map(s => encodeURIComponent(s))
-                              return `${url.origin}/${pathSegments.join('/')}${url.search}${url.hash}`
-                            } catch (e) {
-                              // Fallback if URL parsing fails
-                              return showcasedMedia.path
-                            }
-                          })()
+                        ? showcasedMedia.path
                         : showcasedMedia.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                       loop
                       playsInline
@@ -296,17 +268,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                         {file.type === 'video' ? (
                           <video
                             src={file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
-                              ? (() => {
-                                  // Encode URL path segments but preserve domain
-                                  try {
-                                    const url = new URL(file.path)
-                                    const pathSegments = url.pathname.split('/').filter(s => s).map(s => encodeURIComponent(s))
-                                    return `${url.origin}/${pathSegments.join('/')}${url.search}${url.hash}`
-                                  } catch (e) {
-                                    // Fallback if URL parsing fails
-                                    return file.path
-                                  }
-                                })()
+                              ? file.path
                               : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')}
                             muted
                             loop

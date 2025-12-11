@@ -168,6 +168,13 @@
     "thumbnailType": "image",
     "files": [
       {
+        "filename": "Blade_Rave.mp4",
+        "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/CRYBABY/Blade_Rave.mp4",
+        "type": "video",
+        "extension": "mp4",
+        "size": 23443231
+      },
+      {
         "filename": "PC PARTY PROMO-1.mov",
         "path": "https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/media/portion club/PC PARTY PROMO-1.mov",
         "type": "video",

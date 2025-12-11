@@ -99,9 +99,9 @@ function App() {
     } else {
       // It's a project - open project page
       setCurrentProject(project)
-      // Update URL hash
+      // Update URL hash (project.id already includes "project-" prefix)
       if (project.id) {
-        window.location.hash = `#project-${project.id}`
+        window.location.hash = `#${project.id}`
       }
       // Scroll to top when opening a project
       window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -112,9 +112,9 @@ function App() {
     setCurrentProject(project)
     setShowSocialButtons(false)
     setShowAboutSection(false)
-    // Update URL hash
+    // Update URL hash (project.id already includes "project-" prefix)
     if (project.id) {
-      window.location.hash = `#project-${project.id}`
+      window.location.hash = `#${project.id}`
     }
     // Scroll to top when opening a project
     window.scrollTo({ top: 0, behavior: 'smooth' })

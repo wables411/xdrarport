@@ -5,6 +5,15 @@ function FilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
   const [selectedLocations, setSelectedLocations] = useState(currentFilters?.locations || [])
   const [selectedDates, setSelectedDates] = useState(currentFilters?.dates || [])
   const [selectedMediaType, setSelectedMediaType] = useState(currentFilters?.mediaType || 'all')
+  const [manifest, setManifest] = useState([])
+
+  // Load manifest on mount
+  useEffect(() => {
+    fetch('/media-manifest.json')
+      .then(res => res.json())
+      .then(data => setManifest(data))
+      .catch(err => console.error('Failed to load manifest:', err))
+  }, [])
 
   // Extract unique locations from manifest
   // Map Matrix Rave and Petty Mart to Portion Club
@@ -14,7 +23,7 @@ function FilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
     'portion club': 'Portion Club'
   }
   
-  const allLocations = mediaManifest
+  const allLocations = manifest
     .filter(item => item.type === 'project' && item.folder)
     .map(item => {
       // Map Matrix Rave and Petty Mart to Portion Club
@@ -22,7 +31,7 @@ function FilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
       return mappedLocation
     })
     .concat(
-      mediaManifest
+      manifest
         .filter(item => item.type === 'project' && item.files)
         .flatMap(item => {
           return item.files.map(file => {
@@ -45,7 +54,7 @@ function FilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
   // Extract unique dates from manifest (both projects and files)
   const allDates = new Set()
   
-  mediaManifest.forEach(item => {
+  manifest.forEach(item => {
     // Check project date
     if (item.date) {
       let dateStr

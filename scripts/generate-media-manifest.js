@@ -207,7 +207,7 @@ try {
   const items = fs.readdirSync(mediaDir)
   for (const item of items) {
     const fullPath = path.join(mediaDir, item)
-    if (fs.statSync(fullPath).isDirectory() && item !== 'RBS') {
+    if (fs.statSync(fullPath).isDirectory() && item !== 'RBS' && item !== 'CRYBABY') {
       // Check if this folder should be a project
       const folderName = item
       const isProjectFolder = projectFolders.some(pf => 

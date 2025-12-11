@@ -63,8 +63,13 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
     if (archiveMode) {
       // In archive mode, filter by archiveMediaType
       let filtered = [...mediaItems]
+      console.log('[Archive] Filtering:', archiveMediaType, 'Total items:', mediaItems.length)
       if (archiveMediaType !== 'all') {
-        filtered = filtered.filter(file => file.type === archiveMediaType)
+        filtered = filtered.filter(file => {
+          const matches = file.type === archiveMediaType
+          return matches
+        })
+        console.log('[Archive] Filtered to:', filtered.length, archiveMediaType)
       }
       setFilteredItems(filtered)
       return

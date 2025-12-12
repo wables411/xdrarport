@@ -227,7 +227,13 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                     onMouseEnter={(e) => e.target.play()}
                     onMouseLeave={(e) => {
                       e.target.pause()
-                      e.target.currentTime = 0
+                      e.target.currentTime = 3
+                    }}
+                    onLoadedMetadata={(e) => {
+                      const video = e.target
+                      if (video.duration && video.duration > 3) {
+                        video.currentTime = 3
+                      }
                     }}
                   />
                 ) : (
@@ -429,39 +435,27 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                     }}
                     onMouseLeave={(e) => {
                       e.target.pause()
-                      // For Matrix Rave, keep the later frame; for others, reset to start
-                      const isMatrixRave = item.folder && (item.folder.includes('Matrix Rave') || item.folder === 'Matrix Rave')
-                      if (!isMatrixRave) {
-                        e.target.currentTime = 0
-                      } else {
-                        // Keep at 3 seconds for Matrix Rave
-                        if (e.target.duration && e.target.duration > 3) {
-                          e.target.currentTime = 3
-                        }
+                      // Set all thumbnails to frame 3
+                      if (e.target.duration && e.target.duration > 3) {
+                        e.target.currentTime = 3
                       }
                     }}
                     onError={(e) => {
                       console.error('Failed to load video:', encodedPath, displayPath, e)
                     }}
-                    onLoadedData={(e) => {
-                      console.log('Successfully loaded video:', encodedPath)
-                      // For Matrix Rave thumbnails, set to a frame 3 seconds later
-                      const isMatrixRave = item.folder && (item.folder.includes('Matrix Rave') || item.folder === 'Matrix Rave')
-                      if (item.type === 'project' && isMatrixRave) {
-                        const video = e.target
-                        if (video.duration && video.duration > 3) {
-                          video.currentTime = 3 // Set to 3 seconds in
-                        }
+                    onLoadedMetadata={(e) => {
+                      // Set all video thumbnails to start at frame 3
+                      const video = e.target
+                      if (video.duration && video.duration > 3) {
+                        video.currentTime = 3
                       }
                     }}
-                    onLoadedMetadata={(e) => {
-                      // Also set on metadata load in case loadedData doesn't fire
-                      const isMatrixRave = item.folder && (item.folder.includes('Matrix Rave') || item.folder === 'Matrix Rave')
-                      if (item.type === 'project' && isMatrixRave) {
-                        const video = e.target
-                        if (video.duration && video.duration > 3) {
-                          video.currentTime = 3 // Set to 3 seconds in
-                        }
+                    onLoadedData={(e) => {
+                      console.log('Successfully loaded video:', encodedPath)
+                      // Also set on loadedData in case metadata doesn't fire
+                      const video = e.target
+                      if (video.duration && video.duration > 3) {
+                        video.currentTime = 3
                       }
                     }}
                   />

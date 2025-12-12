@@ -233,7 +233,15 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                         onMouseLeave={(e) => {
                                           const video = e.target
                                           video.pause()
-                                          video.currentTime = 0
+                                          if (video.duration && video.duration > 3) {
+                                            video.currentTime = 3
+                                          }
+                                        }}
+                                        onLoadedMetadata={(e) => {
+                                          const video = e.target
+                                          if (video.duration && video.duration > 3) {
+                                            video.currentTime = 3
+                                          }
                                         }}
                                       />
                                     ) : (
@@ -535,7 +543,15 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                               onMouseLeave={(e) => {
                                 const video = e.target
                                 video.pause()
-                                video.currentTime = 0
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
                               }}
                             />
                           ) : (
@@ -827,35 +843,23 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                             onMouseEnter={(e) => e.target.play()}
                             onMouseLeave={(e) => {
                               e.target.pause()
-                              // For Matrix Rave, keep the later frame; for others, reset to start
-                              const isMatrixRave = project.folder && (project.folder.includes('Matrix Rave') || project.folder === 'Matrix Rave')
-                              if (!isMatrixRave) {
-                                e.target.currentTime = 0
-                              } else {
-                                // Keep at 3 seconds for Matrix Rave
-                                if (e.target.duration && e.target.duration > 3) {
-                                  e.target.currentTime = 3
-                                }
-                              }
-                            }}
-                            onLoadedData={(e) => {
-                              // For Matrix Rave thumbnails, set to a frame 3 seconds later
-                              const isMatrixRave = project.folder && (project.folder.includes('Matrix Rave') || project.folder === 'Matrix Rave')
-                              if (isMatrixRave) {
-                                const video = e.target
-                                if (video.duration && video.duration > 3) {
-                                  video.currentTime = 3 // Set to 3 seconds in
-                                }
+                              // Set all thumbnails to frame 3
+                              if (e.target.duration && e.target.duration > 3) {
+                                e.target.currentTime = 3
                               }
                             }}
                             onLoadedMetadata={(e) => {
-                              // Also set on metadata load in case loadedData doesn't fire
-                              const isMatrixRave = project.folder && (project.folder.includes('Matrix Rave') || project.folder === 'Matrix Rave')
-                              if (isMatrixRave) {
-                                const video = e.target
-                                if (video.duration && video.duration > 3) {
-                                  video.currentTime = 3 // Set to 3 seconds in
-                                }
+                              // Set all video thumbnails to start at frame 3
+                              const video = e.target
+                              if (video.duration && video.duration > 3) {
+                                video.currentTime = 3
+                              }
+                            }}
+                            onLoadedData={(e) => {
+                              // Also set on loadedData in case metadata doesn't fire
+                              const video = e.target
+                              if (video.duration && video.duration > 3) {
+                                video.currentTime = 3
                               }
                             }}
                           />

@@ -21,15 +21,6 @@ const PROJECT_COLORS = [
 function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all', manifest = [] }) {
   const [mediaItems, setMediaItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
-  const [manifest, setManifest] = useState([])
-
-  // Load manifest on mount
-  useEffect(() => {
-    fetch('/media-manifest.json')
-      .then(res => res.json())
-      .then(data => setManifest(data))
-      .catch(err => console.error('Failed to load manifest:', err))
-  }, [])
 
   useEffect(() => {
     if (archiveMode) {

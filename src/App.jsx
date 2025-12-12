@@ -156,16 +156,6 @@ function App() {
     setLightboxImage(lightboxImages[newIndex])
   }
 
-  const [manifest, setManifest] = useState([])
-
-  // Load manifest on mount
-  useEffect(() => {
-    fetch('/media-manifest.json')
-      .then(res => res.json())
-      .then(data => setManifest(data))
-      .catch(err => console.error('Failed to load manifest:', err))
-  }, [])
-
 
   return (
     <div className="app">

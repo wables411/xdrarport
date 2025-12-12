@@ -28,6 +28,12 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   const isJoogmaster = project.folder === 'JOOGMASTER J' || project.name === 'JOOGMASTER J' || project.name === "Promo for JoogMaster J's BDAY BASH - December 2025"
   const isPortionClub = project.folder === 'portion club' || project.name === 'portion club' || project.name === 'Portion Club'
   const isLawbnexus = project.folder === 'LAWBNEXUS' || project.name === 'LAWBNEXUS NFT Collection' || project.name === 'LAWBNEXUS'
+  const isYNB = project.folder === 'YNB' || project.name === 'YNB'
+  const isBussdown = project.folder === 'The Brooklyn Bussdown' || project.name === 'The Brooklyn Bussdown'
+  const isPsyched = project.folder === 'Psyched SF' || project.name === 'PSYCHED SF'
+  const isXtraforms = project.folder === 'XTRAFORMS' || project.name === 'XTRAFORMS'
+  const is411 = project.folder === '411 logos' || project.name === '411 Oak Branding'
+  const isPlaneta = project.folder === 'Planeta Pisces logos' || project.name === 'Planeta Pisces'
   
   // State for client page project spotlighted media indices
   const [textMeSectionIndices, setTextMeSectionIndices] = useState({})
@@ -68,7 +74,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
         artist: 'Ricky Lake',
         projects: [
           {
-            title: "'Burdens' Album - 2025 - promo",
+            title: "Promo for Ricky Lake - 'Burdens' Album - 2025",
             files: rickyLakeFiles.filter(f => !f.filename.toLowerCase().includes('logo'))
           },
           {
@@ -82,11 +88,11 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
         artist: 'MIKOS DA GAWD',
         projects: [
           {
-            title: 'Mikos Da Gawd, Seiji Oda & Jay Anthony - "Oh My Gawd" - cover art and promo',
+            title: 'Cover and Promo for Mikos Da Gawd, Seiji Oda & Jay Anthony - "Oh My Gawd" - February 2024',
             files: ohMyGawdFiles
           },
           {
-            title: 'ALOE - cover art',
+            title: 'Cover art for Mikos Da Gawd - "Aloe" - February 2024',
             files: aloeFiles
           }
         ],
@@ -96,7 +102,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
         artist: null,
         projects: [
           {
-            title: 'Text Me Records Logos',
+            title: 'Text Me Records Logo/Branding - August 2025',
             files: logoFiles
           }
         ],
@@ -278,8 +284,13 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   
   // Client page layout for CRYBABY OAKLAND
   if (isCrybaby && project.subProjects) {
+    const crybabyTitles = {
+      'Promo for Matrix Rave - August 2022': 'Promo for Matrix Rave - August 2022',
+      'Promo for Sith Rave - September 2022': 'Promo for Sith Rave - September 2022',
+      'Visuals for Blade Rave - December 2022': 'Visuals for Blade Rave - December 2022'
+    }
     const sections = project.subProjects.map((subProject, index) => ({
-      title: subProject.name,
+      title: crybabyTitles[subProject.name] || subProject.name,
       files: subProject.files || [],
       key: `crybaby-${index}`
     }))
@@ -963,6 +974,930 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                   </div>
                 )}
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for YNB
+  if (isYNB) {
+    const spotlightIndex = textMeSectionIndices['ynb'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">YNB</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">Cover/ Album Art art and Promo for YNB - "Who TF is YNB?" - March 2023</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'ynb': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'ynb': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for The Brooklyn Bussdown
+  if (isBussdown) {
+    const spotlightIndex = textMeSectionIndices['bussdown'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">THE BROOKLYN BUSSDOWN</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">Promo for The Brooklyn Bussdown: Fashion Week Edition - September 2023</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'bussdown': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'bussdown': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for PSYCHED SF
+  if (isPsyched) {
+    const spotlightIndex = textMeSectionIndices['psyched'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">PSYCHED SF</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">Louie El Ser / Psyched! Radio SF Promo for IMTRL WORLD - January 2023</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'psyched': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'psyched': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for XTRAFORMS
+  if (isXtraforms) {
+    const spotlightIndex = textMeSectionIndices['xtraforms'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">XTRAFORMS</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">XTRAFORMS NFT Collection - August 2025</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'xtraforms': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'xtraforms': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for 411
+  if (is411) {
+    const spotlightIndex = textMeSectionIndices['411'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">411 OAK</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">411 Oak Branding - August 2025</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  '411': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  '411': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for Planeta Pisces
+  if (isPlaneta) {
+    const spotlightIndex = textMeSectionIndices['planeta'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">PLANETA PISCES</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">Planeta Pisces Branding - November 2025</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'planeta': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'planeta': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

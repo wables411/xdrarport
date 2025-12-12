@@ -396,7 +396,15 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                   onMouseLeave={(e) => {
                                     const video = e.target
                                     video.pause()
-                                    video.currentTime = 0
+                                    if (video.duration && video.duration > 3) {
+                                      video.currentTime = 3
+                                    }
+                                  }}
+                                  onLoadedMetadata={(e) => {
+                                    const video = e.target
+                                    if (video.duration && video.duration > 3) {
+                                      video.currentTime = 3
+                                    }
                                   }}
                                 />
                               ) : (

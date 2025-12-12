@@ -1,21 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import './Header.css'
 
-function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, onProjectSelect, onArchiveClick }) {
+function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, onProjectSelect, onArchiveClick, manifest = [] }) {
   const [isClientsDropdownOpen, setIsClientsDropdownOpen] = useState(false)
   const [isPersonalProjectsDropdownOpen, setIsPersonalProjectsDropdownOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null) // Track which client's submenu is shown
   const clientsDropdownRef = useRef(null)
   const personalProjectsDropdownRef = useRef(null)
-  const [manifest, setManifest] = useState([])
-
-  // Load manifest on mount
-  useEffect(() => {
-    fetch('/media-manifest.json')
-      .then(res => res.json())
-      .then(data => setManifest(data))
-      .catch(err => console.error('Failed to load manifest:', err))
-  }, [])
 
   // Get all projects from manifest
   const allProjects = manifest.filter(item => item.type === 'project')

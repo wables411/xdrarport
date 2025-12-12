@@ -24,6 +24,15 @@ function App() {
   const [lightboxImages, setLightboxImages] = useState([])
   const [showArchive, setShowArchive] = useState(false)
   const [archiveMediaType, setArchiveMediaType] = useState('all') // 'all', 'image', 'video'
+  const [manifest, setManifest] = useState([])
+  
+  // Load manifest for client page aggregation
+  useEffect(() => {
+    fetch('/media-manifest.json')
+      .then(res => res.json())
+      .then(data => setManifest(data))
+      .catch(err => console.error('Failed to load manifest:', err))
+  }, [])
 
   const handleOpenContact = () => {
     setIsContactModalOpen(true)

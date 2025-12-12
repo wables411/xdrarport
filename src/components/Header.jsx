@@ -66,10 +66,19 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
     let subProjects = []
 
     if (structure.mainProject) {
-      mainProject = allProjects.find(p => 
-        p.name === structure.mainProject || 
-        p.name.toUpperCase() === structure.mainProject.toUpperCase()
-      )
+      // For JOOGMASTER J, find by folder since name changed
+      if (clientName === 'JOOGMASTER J') {
+        mainProject = allProjects.find(p => 
+          p.folder === 'JOOGMASTER J' || 
+          p.name === structure.mainProject || 
+          p.name.toUpperCase() === structure.mainProject.toUpperCase()
+        )
+      } else {
+        mainProject = allProjects.find(p => 
+          p.name === structure.mainProject || 
+          p.name.toUpperCase() === structure.mainProject.toUpperCase()
+        )
+      }
     }
 
     if (structure.subProjects && structure.subProjects.length > 0) {
@@ -189,7 +198,26 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
 
   const handleClientClick = (client, e) => {
     e.stopPropagation()
-    if (client.hasSubProjects) {
+    if (client.name === 'CRYBABY') {
+      // For CRYBABY, create a virtual client project that aggregates all CRYBABY sub-projects
+      if (onProjectSelect) {
+        // Find all CRYBABY projects from manifest
+        const allProjects = manifest.filter(item => item.type === 'project')
+        const crybabyProjects = allProjects.filter(p => 
+          p.folder && p.folder.includes('CRYBABY')
+        )
+        
+        // Create virtual client project
+        const crybabyClient = {
+          name: 'CRYBABY OAKLAND',
+          folder: 'CRYBABY',
+          isCrybabyClient: true,
+          subProjects: crybabyProjects,
+          type: 'project'
+        }
+        onProjectSelect(crybabyClient)
+      }
+    } else if (client.hasSubProjects) {
       // Show sub-projects in a new dropdown
       setSelectedClient(client.name)
     } else {

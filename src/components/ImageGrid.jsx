@@ -381,39 +381,14 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           playsInline
           preload="auto"
           muted
+          autoPlay
           className="homepage-video"
-          onClick={() => {
-            // Open in lightbox when clicked
-            const xdrarVideo = manifest && manifest.length > 0 ? manifest.find(item => 
-              (item.filename && item.filename.toUpperCase().includes('XDRAR')) || 
-              (item.path && item.path.toUpperCase().includes('XDRAR'))
-            ) : null
-            const videoPath = xdrarVideo ? xdrarVideo.path : '/media/XDRAR.mp4'
-            onProjectClick({
-              type: 'video',
-              path: videoPath,
-              filename: xdrarVideo?.filename || 'XDRAR.mp4',
-              lightboxFiles: [videoPath],
-              lightboxIndex: 0
-            })
-          }}
-          onMouseEnter={(e) => {
-            const video = e.target
-            video.muted = false // Enable sound on hover
-            video.play().catch(err => console.error('Video play error:', err))
-          }}
-          onMouseLeave={(e) => {
-            const video = e.target
-            video.muted = true // Mute when not hovering
-            // Keep playing and looping
-          }}
           onLoadedData={(e) => {
-            // Try to play on load, but don't fail if autoplay is blocked
+            // Auto-play on load
             const video = e.target
-            video.muted = true // Start muted
+            video.muted = true
             video.play().catch(() => {
-              // Autoplay blocked - user will need to interact first
-              // This is expected behavior and not an error
+              // Autoplay blocked - this is expected in some browsers
             })
           }}
         >

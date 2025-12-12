@@ -32,6 +32,18 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
       mainProject: 'JOOGMASTER J',
       subProjects: []
     },
+    'PORTION CLUB': {
+      mainProject: 'portion club',
+      subProjects: []
+    },
+    '411': {
+      mainProject: '411 logos',
+      subProjects: []
+    },
+    'PLANETA PISCES': {
+      mainProject: 'Planeta Pisces',
+      subProjects: []
+    },
     'BUSSDOWN': {
       mainProject: 'The Brooklyn Bussdown',
       subProjects: []

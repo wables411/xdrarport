@@ -92,8 +92,9 @@ function App() {
     setCurrentProject(null)
     setShowSocialButtons(false)
     setShowAboutSection(false)
-    setShowArchive(!showArchive)
-    if (!showArchive) {
+    const newArchiveState = !showArchive
+    setShowArchive(newArchiveState)
+    if (newArchiveState) {
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }

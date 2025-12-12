@@ -225,8 +225,92 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
             
             const filename = item.filename || item.path?.split('/').pop() || `Media ${index + 1}`
             
+            // Find the project/client this media belongs to
+            const findProjectForMedia = () => {
+              if (!manifest || manifest.length === 0) return null
+              
+              // Use stored project info if available
+              if (item.projectFolder || item.projectName) {
+                let project = manifest.find(p => 
+                  p.type === 'project' && (
+                    p.folder === item.projectFolder ||
+                    p.name === item.projectName
+                  )
+                )
+                
+                // Special handling for CRYBABY - create virtual client project
+                if (project && project.folder && project.folder.includes('CRYBABY')) {
+                  const allCrybabyProjects = manifest.filter(p => 
+                    p.folder && p.folder.includes('CRYBABY')
+                  )
+                  return {
+                    name: 'CRYBABY OAKLAND',
+                    folder: 'CRYBABY',
+                    isCrybabyClient: true,
+                    subProjects: allCrybabyProjects,
+                    type: 'project'
+                  }
+                }
+                
+                return project
+              }
+              
+              // Try to find project by path
+              if (item.path) {
+                const pathParts = item.path.split('/')
+                const mediaIndex = pathParts.indexOf('media')
+                if (mediaIndex >= 0 && pathParts[mediaIndex + 1]) {
+                  const folderName = pathParts[mediaIndex + 1]
+                  
+                  // Special cases
+                  if (folderName === 'portion club') {
+                    return manifest.find(p => p.folder === 'portion club' || p.name === 'portion club')
+                  }
+                  
+                  if (folderName === 'RBS') {
+                    return manifest.find(p => p.folder === 'RBS' || p.name === 'Rare Bet Sports Clips')
+                  }
+                  
+                  if (folderName === 'CRYBABY') {
+                    const allCrybabyProjects = manifest.filter(p => 
+                      p.folder && p.folder.includes('CRYBABY')
+                    )
+                    return {
+                      name: 'CRYBABY OAKLAND',
+                      folder: 'CRYBABY',
+                      isCrybabyClient: true,
+                      subProjects: allCrybabyProjects,
+                      type: 'project'
+                    }
+                  }
+                  
+                  // Find project by folder name
+                  return manifest.find(p => 
+                    p.type === 'project' && (
+                      p.folder === folderName ||
+                      p.folder?.includes(folderName) ||
+                      p.name?.toLowerCase() === folderName.toLowerCase()
+                    )
+                  )
+                }
+              }
+              
+              return null
+            }
+            
+            const parentProject = findProjectForMedia()
+            
             return (
-              <div key={index} className="image-item archive-media-item">
+              <div 
+                key={index} 
+                className="image-item archive-media-item"
+                onClick={() => {
+                  if (parentProject) {
+                    onProjectClick(parentProject)
+                  }
+                }}
+                style={{ cursor: parentProject ? 'pointer' : 'default' }}
+              >
                 {item.type === 'video' ? (
                   <video
                     src={encodedPath}

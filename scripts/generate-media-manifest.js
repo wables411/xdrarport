@@ -231,8 +231,9 @@ try {
         const thumbnail = projectImages[0] || projectVideos[0]
         
         if (thumbnail && projectFiles.length > 0) {
+          const displayName = projectNameMap[folderName] || folderName
           allProjects.push({
-            name: projectNameMap[folderName] || folderName,
+            name: displayName,
             folder: item,
             path: `/media/${item}`,
             thumbnail: thumbnail.path,

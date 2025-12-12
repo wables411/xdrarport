@@ -991,8 +991,8 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                       )
                     })}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>

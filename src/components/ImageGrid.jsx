@@ -324,7 +324,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   if (itemsToShow.length > 0) {
     return (
       <div className="image-grid-wrapper">
-        <div className="image-grid-container">
+        <div className={`image-grid-container ${archiveMode ? 'archive-grid' : ''}`}>
           <div className="image-grid">
             {itemsToShow.map((item, index) => {
             const hoverColor = PROJECT_COLORS[index % PROJECT_COLORS.length]

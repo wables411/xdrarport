@@ -75,7 +75,8 @@
 
 .project-title {
   color: #fff;
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
   font-size: 32px;
   font-weight: bold;
   text-transform: uppercase;
@@ -330,7 +331,8 @@
 }
 
 .text-me-artist-name {
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
   font-size: 28px;
   color: #fff;
   margin: 0;
@@ -352,7 +354,8 @@
 }
 
 .text-me-project-title {
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
   font-size: 20px;
   color: #fff;
   margin: 0;

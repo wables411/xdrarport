@@ -90,7 +90,7 @@
 
 .image-grid {
   column-count: 5;
-  column-gap: 2px;
+  column-gap: 1px;
   column-rule: none;
   column-fill: balance;
   width: 100%;
@@ -171,7 +171,7 @@
 }
 
 .image-item:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
   outline: 2px solid #fff;
   outline-offset: 0;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 40px rgba(255, 255, 255, 0.4);
@@ -194,7 +194,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
   font-size: clamp(0.8rem, 2.5vw, 2rem);
   font-weight: bold;
   color: #fff;

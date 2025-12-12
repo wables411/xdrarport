@@ -15,7 +15,8 @@
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s ease;
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
 }
 
 .archive-filter-btn:hover {
@@ -29,7 +30,7 @@
 }
 
 .archive-grid {
-  padding: 24px;
+  padding: 40px;
 }
 
 .archive-grid .image-grid {

@@ -178,7 +178,7 @@ function App() {
       />
       {!currentProject && !showArchive ? (
         <>
-          <ImageGrid onProjectClick={handleProjectClick} filters={filters} />
+          <ImageGrid onProjectClick={handleProjectClick} filters={filters} manifest={manifest} />
           {showSocialButtons && <SocialButtons />}
           {showAboutSection && <AboutSection />}
         </>

@@ -97,3 +97,6 @@ After deployment, check:
 - Videos load in browser
 - Network tab shows requests to your R2 URL
 - No 404 errors for videos
+
+
+

@@ -66,3 +66,6 @@ Once verified, update your Cloudflare Pages environment variables:
 - Contact Resend support with your domain name and DNS screenshots
 - Check Resend docs: https://resend.com/docs/dashboard/domains/introduction
 
+
+
+

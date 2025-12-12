@@ -871,61 +871,61 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                   )}
                 </div>
               )}
-              {subAssets.length > 0 && (
-                <div className="text-me-section-right">
-                  {/* Magic Eden Widget */}
-                  <div className="magic-eden-widget" style={{
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '8px',
-                    padding: '20px',
-                    marginBottom: '30px'
+              <div className="text-me-section-right">
+                {/* Magic Eden Widget */}
+                <div className="magic-eden-widget" style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  marginBottom: '30px'
+                }}>
+                  <h3 style={{
+                    fontFamily: "'Neuebit', sans-serif",
+                    fontWeight: 'bold',
+                    fontSize: '18px',
+                    color: '#fff',
+                    margin: '0 0 15px 0',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
                   }}>
-                    <h3 style={{
+                    View on Magic Eden
+                  </h3>
+                  <a
+                    href="https://magiceden.us/marketplace/lawbnexus"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-block',
+                      padding: '12px 24px',
+                      background: '#fff',
+                      color: '#000',
+                      textDecoration: 'none',
+                      borderRadius: '4px',
                       fontFamily: "'Neuebit', sans-serif",
                       fontWeight: 'bold',
-                      fontSize: '18px',
-                      color: '#fff',
-                      margin: '0 0 15px 0',
+                      fontSize: '14px',
                       textTransform: 'uppercase',
-                      letterSpacing: '0.5px'
-                    }}>
-                      View on Magic Eden
-                    </h3>
-                    <a
-                      href="https://magiceden.us/marketplace/lawbnexus"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'inline-block',
-                        padding: '12px 24px',
-                        background: '#fff',
-                        color: '#000',
-                        textDecoration: 'none',
-                        borderRadius: '4px',
-                        fontFamily: "'Neuebit', sans-serif",
-                        fontWeight: 'bold',
-                        fontSize: '14px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        transition: 'opacity 0.2s ease'
-                      }}
-                      onMouseEnter={(e) => e.target.style.opacity = '0.8'}
-                      onMouseLeave={(e) => e.target.style.opacity = '1'}
-                    >
-                      Open Marketplace →
-                    </a>
-                    <p style={{
-                      fontFamily: "'Neuebit', sans-serif",
-                      fontSize: '12px',
-                      color: 'rgba(255, 255, 255, 0.7)',
-                      margin: '15px 0 0 0',
-                      lineHeight: '1.5'
-                    }}>
-                      Check floor price, listings, and collection stats on Magic Eden
-                    </p>
-                  </div>
-                  
+                      letterSpacing: '0.5px',
+                      transition: 'opacity 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                    onMouseLeave={(e) => e.target.style.opacity = '1'}
+                  >
+                    Open Marketplace →
+                  </a>
+                  <p style={{
+                    fontFamily: "'Neuebit', sans-serif",
+                    fontSize: '12px',
+                    color: 'rgba(255, 255, 255, 0.7)',
+                    margin: '15px 0 0 0',
+                    lineHeight: '1.5'
+                  }}>
+                    Check floor price, listings, and collection stats on Magic Eden
+                  </p>
+                </div>
+                
+                {subAssets.length > 0 && (
                   <div className="text-me-sub-assets">
                     {subAssets.map((file, index) => {
                       const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 

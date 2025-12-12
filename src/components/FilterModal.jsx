@@ -235,3 +235,6 @@ function FilterModal({ isOpen, onClose, onApplyFilters, currentFilters }) {
 }
 
 export default FilterModal
+
+
+

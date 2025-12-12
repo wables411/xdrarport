@@ -215,7 +215,7 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
               : displayPath.split('/').map(segment => encodeURIComponent(segment)).join('/')
             
             return (
-              <div key={index} className="grid-item">
+              <div key={index} className="image-item">
                 {item.type === 'video' ? (
                   <video
                     src={encodedPath}

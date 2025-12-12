@@ -35,7 +35,7 @@
 
 .archive-grid .image-grid {
   column-count: 4;
-  column-gap: 0;
+  column-gap: 1px;
 }
 
 @media (max-width: 1200px) {

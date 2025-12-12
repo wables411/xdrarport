@@ -884,6 +884,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                             style={{ width: '100%', height: 'auto', display: 'block' }}
                           />
                         )}
+                        <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || `Thumbnail ${index + 1}`}</div>
                       </div>
                     )
                   })}

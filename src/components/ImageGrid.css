@@ -127,6 +127,11 @@
   transform-origin: center center;
 }
 
+.archive-grid .image-item {
+  padding: 2px;
+  margin-bottom: 2px;
+}
+
 .image-item img,
 .image-item video {
   width: 100%;

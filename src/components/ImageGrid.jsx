@@ -227,34 +227,36 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
             
             return (
               <div key={index} className="image-item">
-                {item.type === 'video' ? (
-                  <video
-                    src={encodedPath}
-                    loop
-                    playsInline
-                    preload="metadata"
-                    muted
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                    onMouseEnter={(e) => e.target.play()}
-                    onMouseLeave={(e) => {
-                      e.target.pause()
-                      e.target.currentTime = 3
-                    }}
-                    onLoadedMetadata={(e) => {
-                      const video = e.target
-                      if (video.duration && video.duration > 3) {
-                        video.currentTime = 3
-                      }
-                    }}
-                  />
-                ) : (
-                  <img
-                    src={encodedPath}
-                    alt={filename}
-                    style={{ width: '100%', height: 'auto', display: 'block' }}
-                  />
-                )}
-                <div className="thumbnail-filename-overlay">{filename}</div>
+                <div style={{ width: '100%', height: '100%', padding: '2px' }}>
+                  {item.type === 'video' ? (
+                    <video
+                      src={encodedPath}
+                      loop
+                      playsInline
+                      preload="metadata"
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block' }}
+                      onMouseEnter={(e) => e.target.play()}
+                      onMouseLeave={(e) => {
+                        e.target.pause()
+                        e.target.currentTime = 3
+                      }}
+                      onLoadedMetadata={(e) => {
+                        const video = e.target
+                        if (video.duration && video.duration > 3) {
+                          video.currentTime = 3
+                        }
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={encodedPath}
+                      alt={filename}
+                      style={{ width: '100%', height: 'auto', display: 'block' }}
+                    />
+                  )}
+                  <div className="thumbnail-filename-overlay">{filename}</div>
+                </div>
               </div>
             )
           })}

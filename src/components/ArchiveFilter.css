@@ -38,6 +38,17 @@
   column-gap: 2px;
 }
 
+.archive-grid .image-item {
+  padding: 2px;
+  margin-bottom: 2px;
+}
+
+.archive-grid .image-item > div {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
 @media (max-width: 1200px) {
   .archive-grid .image-grid {
     column-count: 3;

@@ -25,12 +25,8 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   // Special layout for Text Me Records - organize into sections
   const isTextMeRecords = project.name === 'Text Me Records' || project.folder === 'Text Me Records'
   
-  // State for Text Me Records section spotlighted media indices
-  const [textMeSectionIndices, setTextMeSectionIndices] = useState({
-    rickyLake: 0,
-    mikos: 0,
-    logos: 0
-  })
+  // State for Text Me Records project spotlighted media indices
+  const [textMeSectionIndices, setTextMeSectionIndices] = useState({})
   
   if (isTextMeRecords) {
     // Organize files by artist and project

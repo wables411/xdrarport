@@ -156,15 +156,20 @@ try {
   const crybabyPath = path.join(mediaDir, 'CRYBABY')
   if (fs.existsSync(crybabyPath) && fs.statSync(crybabyPath).isDirectory()) {
     const crybabyItems = fs.readdirSync(crybabyPath)
+    const crybabyProjectNames = {
+      'Matrix Rave': "Promo for Matrix Rave - August 2022",
+      'Sith rave': 'Promo for Sith Rave - September 2022',
+      'BLADE RAVE': 'Visuals for Blade Rave - December 2022'
+    }
     for (const item of crybabyItems) {
       const itemPath = path.join(crybabyPath, item)
       if (fs.statSync(itemPath).isDirectory()) {
-        // This is a sub-project in CRYBABY (e.g., "Matrix Rave", "Sith rave", "Blade_Rave")
+        // This is a sub-project in CRYBABY (e.g., "Matrix Rave", "Sith rave", "BLADE RAVE")
         const projectFiles = scanDirectoryForFiles(itemPath, `CRYBABY/${item}`)
         if (projectFiles.length > 0) {
           const thumbnail = projectFiles[0]
           allProjects.push({
-            name: item === 'Sith rave' ? 'Sith rave' : item === 'Matrix Rave' ? 'Matrix Rave' : item,
+            name: crybabyProjectNames[item] || item,
             folder: `CRYBABY/${item}`,
             path: `/media/CRYBABY/${item}`,
             thumbnail: thumbnail.path,
@@ -200,7 +205,8 @@ try {
     'The Brooklyn Bussdown': 'The Brooklyn Bussdown',
     'Psyched SF': 'PSYCHED SF',
     'XTRAFORMS': 'XTRAFORMS',
-    'JOOGMASTER J': 'JOOGMASTER J',
+    'JOOGMASTER J': "Promo for JoogMaster J's BDAY BASH - December 2025",
+    'Planeta Pisces logos': 'Planeta Pisces',
   }
   
   // Scan root media directory

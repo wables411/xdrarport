@@ -257,24 +257,24 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
               
               // Try to find project by path
               if (item.path) {
+                // Check if path contains CRYBABY (handles subfolders like BLADE RAVE)
+                if (item.path.includes('CRYBABY') || item.path.includes('Blade') || item.path.includes('BLADE')) {
+                  const allCrybabyProjects = manifest.filter(p => 
+                    p.folder && p.folder.includes('CRYBABY')
+                  )
+                  return {
+                    name: 'CRYBABY OAKLAND',
+                    folder: 'CRYBABY',
+                    isCrybabyClient: true,
+                    subProjects: allCrybabyProjects,
+                    type: 'project'
+                  }
+                }
+                
                 const pathParts = item.path.split('/')
                 const mediaIndex = pathParts.indexOf('media')
                 if (mediaIndex >= 0 && pathParts[mediaIndex + 1]) {
                   const folderName = pathParts[mediaIndex + 1]
-                  
-                  // Check if it's a CRYBABY sub-project (BLADE RAVE, Matrix Rave, Sith rave)
-                  if (folderName === 'CRYBABY' || (pathParts[mediaIndex + 2] && pathParts[mediaIndex + 1] === 'CRYBABY')) {
-                    const allCrybabyProjects = manifest.filter(p => 
-                      p.folder && p.folder.includes('CRYBABY')
-                    )
-                    return {
-                      name: 'CRYBABY OAKLAND',
-                      folder: 'CRYBABY',
-                      isCrybabyClient: true,
-                      subProjects: allCrybabyProjects,
-                      type: 'project'
-                    }
-                  }
                   
                   // Special cases
                   if (folderName === 'portion club') {

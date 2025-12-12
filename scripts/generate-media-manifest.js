@@ -148,6 +148,7 @@ try {
         files: rbsFiles,
         videos: videosWithNames,
         type: 'project',
+        date: null, // RBS doesn't have a specific date
       })
     }
   }
@@ -160,6 +161,11 @@ try {
       'Matrix Rave': "Promo for Matrix Rave - August 2022",
       'Sith rave': 'Promo for Sith Rave - September 2022',
       'BLADE RAVE': 'Visuals for Blade Rave - December 2022'
+    }
+    const crybabyDates = {
+      'Matrix Rave': '2022-08',
+      'Sith rave': '2022-09',
+      'BLADE RAVE': '2022-12'
     }
     for (const item of crybabyItems) {
       const itemPath = path.join(crybabyPath, item)
@@ -176,6 +182,7 @@ try {
             thumbnailType: thumbnail.type,
             files: projectFiles,
             type: 'project',
+            date: crybabyDates[item] || null,
           })
         }
       }
@@ -194,6 +201,7 @@ try {
     'Psyched SF',
     'XTRAFORMS',
     'JOOGMASTER J',
+    'LAWBNEXUS',
   ]
   
   // Map folder names to project display names
@@ -207,6 +215,29 @@ try {
     'XTRAFORMS': 'XTRAFORMS',
     'JOOGMASTER J': "Promo for JoogMaster J's BDAY BASH - December 2025",
     'Planeta Pisces logos': 'Planeta Pisces',
+    '411 logos': '411 Oak Branding',
+    'LAWBNEXUS': 'LAWBNEXUS NFT Collection',
+  }
+  
+  // Map folder names to dates (YYYY-MM format for sorting)
+  const projectDateMap = {
+    'Text Me Records': '2025-08', // Text Me Records Logo/Branding - August 2025 (main project date, sub-projects have their own dates in titles)
+    'YNB': '2023-03', // Cover/ Album Art art and Promo for YNB - "Who TF is YNB?" - March 2023
+    'The Brooklyn Bussdown': '2023-09', // Promo for The Brooklyn Bussdown: Fashion Week Edition - September 2023 (or June 2023 for other)
+    'Psyched SF': '2023-01', // Louie El Ser / Psyched! Radio SF Promo for IMTRL WORLD - January 2023
+    'XTRAFORMS': '2025-08', // XTRAFORMS NFT Collection - August 2025
+    'JOOGMASTER J': '2025-12', // Promo for JoogMaster J's BDAY BASH - December 2025
+    'Planeta Pisces logos': '2025-11', // Planeta Pisces Branding - November 2025
+    '411 logos': '2025-08', // 411 Oak Branding - August 2025
+    'LAWBNEXUS': '2025-08', // LAWBNEXUS NFT Collection - August 2025
+  }
+  
+  // Add sub-project dates to Text Me Records files (for archive filtering)
+  // These dates will be stored in file metadata
+  const textMeSubProjectDates = {
+    'ricky': '2025-01', // Promo for Ricky Lake - 'Burdens' Album - 2025 (using January as default for 2025)
+    'mikos': '2024-02', // Cover and Promo for Mikos Da Gawd, Seiji Oda & Jay Anthony - "Oh My Gawd" - February 2024
+    'aloe': '2024-02', // Cover art for Mikos Da Gawd - "Aloe" - February 2024
   }
   
   // Scan root media directory
@@ -232,14 +263,38 @@ try {
         
         if (thumbnail && projectFiles.length > 0) {
           const displayName = projectNameMap[folderName] || folderName
+          
+          // Add date metadata to files for Text Me Records sub-projects
+          let filesWithDates = projectFiles
+          if (folderName === 'Text Me Records') {
+            filesWithDates = projectFiles.map(file => {
+              const filenameLower = file.filename.toLowerCase()
+              let fileDate = null
+              
+              if (filenameLower.includes('ricky') || filenameLower.includes('kizzy')) {
+                fileDate = textMeSubProjectDates['ricky']
+              } else if (filenameLower.includes('aloe')) {
+                fileDate = textMeSubProjectDates['aloe']
+              } else if (filenameLower.includes('mikos')) {
+                fileDate = textMeSubProjectDates['mikos']
+              }
+              
+              return {
+                ...file,
+                date: fileDate
+              }
+            })
+          }
+          
           allProjects.push({
             name: displayName,
             folder: item,
             path: `/media/${item}`,
             thumbnail: thumbnail.path,
             thumbnailType: thumbnail.type,
-            files: projectFiles,
+            files: filesWithDates,
             type: 'project',
+            date: projectDateMap[folderName] || null,
           })
         }
       } else {

@@ -27,6 +27,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
   const isCrybaby = project.folder === 'CRYBABY' || project.name === 'CRYBABY OAKLAND' || project.isCrybabyClient
   const isJoogmaster = project.folder === 'JOOGMASTER J' || project.name === 'JOOGMASTER J' || project.name === "Promo for JoogMaster J's BDAY BASH - December 2025"
   const isPortionClub = project.folder === 'portion club' || project.name === 'portion club' || project.name === 'Portion Club'
+  const isLawbnexus = project.folder === 'LAWBNEXUS' || project.name === 'LAWBNEXUS NFT Collection' || project.name === 'LAWBNEXUS'
   
   // State for client page project spotlighted media indices
   const [textMeSectionIndices, setTextMeSectionIndices] = useState({})
@@ -786,6 +787,214 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
               </div>
             )
           })}
+        </div>
+      </div>
+    )
+  }
+  
+  // Client page layout for LAWBNEXUS
+  if (isLawbnexus) {
+    const spotlightIndex = textMeSectionIndices['lawbnexus'] || 0
+    const mainAsset = project.files?.[spotlightIndex]
+    const subAssets = project.files?.filter((_, idx) => idx !== spotlightIndex) || []
+    const mainAssetPath = mainAsset && (mainAsset.path.startsWith('http://') || mainAsset.path.startsWith('https://')) 
+      ? encodeURI(mainAsset.path)
+      : mainAsset?.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+    
+    return (
+      <div className="project-page">
+        <button className="project-close" onClick={onClose}>
+          ×
+        </button>
+        <div className="project-content text-me-records-layout">
+          <div className="project-header text-me-header">
+            <h1 className="project-title text-me-title">LAWBNEXUS NFT Collection</h1>
+          </div>
+          
+          <div className="text-me-section">
+            <div className="text-me-section-header">
+              <h2 className="text-me-section-title">LAWBNEXUS NFT Collection - August 2025</h2>
+            </div>
+            <div className="text-me-section-content">
+              {mainAsset && (
+                <div className="text-me-main-asset">
+                  {mainAsset.type === 'video' ? (
+                    <video
+                      src={mainAssetPath}
+                      loop
+                      playsInline
+                      preload="auto"
+                      autoPlay
+                      muted
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                      onLoadedData={(e) => {
+                        const video = e.target
+                        video.muted = true
+                        video.play().catch(err => {
+                          console.error('Video autoplay error:', err)
+                        })
+                      }}
+                      onMouseEnter={(e) => {
+                        const video = e.target
+                        video.muted = false
+                        video.play().catch(err => console.error('Video play error:', err))
+                      }}
+                      onMouseLeave={(e) => {
+                        const video = e.target
+                        video.muted = true
+                      }}
+                    />
+                  ) : (
+                    <img
+                      src={mainAssetPath}
+                      alt={mainAsset.filename}
+                      style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                      onClick={() => {
+                        const allPaths = project.files.map(f => {
+                          const p = f.path && (f.path.startsWith('http://') || f.path.startsWith('https://')) 
+                            ? encodeURI(f.path)
+                            : f.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                          return p
+                        })
+                        onMediaClick(mainAssetPath, allPaths)
+                      }}
+                    />
+                  )}
+                </div>
+              )}
+              {subAssets.length > 0 && (
+                <div className="text-me-section-right">
+                  {/* Magic Eden Widget */}
+                  <div className="magic-eden-widget" style={{
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '8px',
+                    padding: '20px',
+                    marginBottom: '30px'
+                  }}>
+                    <h3 style={{
+                      fontFamily: "'Neuebit', sans-serif",
+                      fontWeight: 'bold',
+                      fontSize: '18px',
+                      color: '#fff',
+                      margin: '0 0 15px 0',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}>
+                      View on Magic Eden
+                    </h3>
+                    <a
+                      href="https://magiceden.us/marketplace/lawbnexus"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-block',
+                        padding: '12px 24px',
+                        background: '#fff',
+                        color: '#000',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                        fontFamily: "'Neuebit', sans-serif",
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        transition: 'opacity 0.2s ease'
+                      }}
+                      onMouseEnter={(e) => e.target.style.opacity = '0.8'}
+                      onMouseLeave={(e) => e.target.style.opacity = '1'}
+                    >
+                      Open Marketplace →
+                    </a>
+                    <p style={{
+                      fontFamily: "'Neuebit', sans-serif",
+                      fontSize: '12px',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      margin: '15px 0 0 0',
+                      lineHeight: '1.5'
+                    }}>
+                      Check floor price, listings, and collection stats on Magic Eden
+                    </p>
+                  </div>
+                  
+                  <div className="text-me-sub-assets">
+                    {subAssets.map((file, index) => {
+                      const filePath = file.path && (file.path.startsWith('http://') || file.path.startsWith('https://')) 
+                        ? encodeURI(file.path)
+                        : file.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+                      
+                      // Find the original index in project.files
+                      const originalIndex = project.files.findIndex(f => f.path === file.path)
+                      
+                      return (
+                        <div key={originalIndex} className="text-me-sub-asset">
+                          {file.type === 'video' ? (
+                            <video
+                              src={filePath}
+                              loop
+                              playsInline
+                              preload="metadata"
+                              muted
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'lawbnexus': originalIndex
+                                }))
+                              }}
+                              onMouseEnter={(e) => {
+                                const video = e.target
+                                video.play().catch(err => {
+                                  console.error('Thumbnail video play error:', err)
+                                })
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.target
+                                video.pause()
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                              onLoadedMetadata={(e) => {
+                                const video = e.target
+                                if (video.duration && video.duration > 3) {
+                                  video.currentTime = 3
+                                }
+                              }}
+                            />
+                          ) : (
+                            <img
+                              src={filePath}
+                              alt={file.filename}
+                              style={{ width: '100%', height: 'auto', display: 'block', cursor: 'pointer' }}
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                setTextMeSectionIndices(prev => ({
+                                  ...prev,
+                                  'lawbnexus': originalIndex
+                                }))
+                              }}
+                            />
+                          )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     )

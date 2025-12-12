@@ -139,7 +139,7 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
   const personalProjectMatches = [
     { search: 'XTRAFORMS', exact: 'XTRAFORMS' },
     { search: 'PORTION CLUB', exact: 'portion club' },
-    { search: 'NEXUS', exact: null }, // Placeholder
+    { search: 'LAWBNEXUS', exact: 'LAWBNEXUS NFT Collection' },
     { search: 'FREQUENT FLYERS', exact: null } // Placeholder
   ]
   

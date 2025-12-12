@@ -176,6 +176,7 @@ function App() {
         onAboutClick={handleScrollToAbout}
         onProjectSelect={handleProjectSelect}
         onArchiveClick={handleArchiveClick}
+        manifest={manifest}
       />
       {!currentProject && !showArchive ? (
         <>
@@ -211,6 +212,7 @@ function App() {
           onClose={handleCloseProject}
           onMediaClick={handleOpenLightbox}
           filters={filters}
+          manifest={manifest}
         />
       )}
       {isContactModalOpen && <ContactModal onClose={handleCloseContact} />}

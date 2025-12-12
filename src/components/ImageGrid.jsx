@@ -262,16 +262,8 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                 if (mediaIndex >= 0 && pathParts[mediaIndex + 1]) {
                   const folderName = pathParts[mediaIndex + 1]
                   
-                  // Special cases
-                  if (folderName === 'portion club') {
-                    return manifest.find(p => p.folder === 'portion club' || p.name === 'portion club')
-                  }
-                  
-                  if (folderName === 'RBS') {
-                    return manifest.find(p => p.folder === 'RBS' || p.name === 'Rare Bet Sports Clips')
-                  }
-                  
-                  if (folderName === 'CRYBABY') {
+                  // Check if it's a CRYBABY sub-project (BLADE RAVE, Matrix Rave, Sith rave)
+                  if (folderName === 'CRYBABY' || (pathParts[mediaIndex + 2] && pathParts[mediaIndex + 1] === 'CRYBABY')) {
                     const allCrybabyProjects = manifest.filter(p => 
                       p.folder && p.folder.includes('CRYBABY')
                     )
@@ -282,6 +274,23 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                       subProjects: allCrybabyProjects,
                       type: 'project'
                     }
+                  }
+                  
+                  // Special cases
+                  if (folderName === 'portion club') {
+                    return manifest.find(p => p.folder === 'portion club' || p.name === 'portion club')
+                  }
+                  
+                  if (folderName === 'RBS') {
+                    return manifest.find(p => p.folder === 'RBS' || p.name === 'Rare Bet Sports Clips')
+                  }
+                  
+                  if (folderName === '411 logos') {
+                    return manifest.find(p => p.folder === '411 logos' || p.name === '411 logos')
+                  }
+                  
+                  if (folderName === 'Planeta Pisces logos') {
+                    return manifest.find(p => p.folder === 'Planeta Pisces logos' || p.name === 'Planeta Pisces')
                   }
                   
                   // Find project by folder name

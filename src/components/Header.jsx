@@ -64,10 +64,29 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
           p.name === structure.mainProject || 
           p.name.toUpperCase() === structure.mainProject.toUpperCase()
         )
+      } else if (clientName === 'PORTION CLUB') {
+        mainProject = allProjects.find(p => 
+          p.folder === 'portion club' || 
+          p.name === 'portion club' ||
+          p.name === structure.mainProject
+        )
+      } else if (clientName === '411') {
+        mainProject = allProjects.find(p => 
+          p.folder === '411 logos' || 
+          p.name === '411 logos' ||
+          p.name === structure.mainProject
+        )
+      } else if (clientName === 'PLANETA PISCES') {
+        mainProject = allProjects.find(p => 
+          p.folder === 'Planeta Pisces logos' || 
+          p.name === 'Planeta Pisces' ||
+          p.name === structure.mainProject
+        )
       } else {
         mainProject = allProjects.find(p => 
           p.name === structure.mainProject || 
-          p.name.toUpperCase() === structure.mainProject.toUpperCase()
+          p.name.toUpperCase() === structure.mainProject.toUpperCase() ||
+          p.folder === structure.mainProject
         )
       }
     }

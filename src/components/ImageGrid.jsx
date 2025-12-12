@@ -18,7 +18,7 @@ const PROJECT_COLORS = [
   '#5DADE2', // Light Blue
 ]
 
-function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all' }) {
+function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all', manifest = [] }) {
   const [mediaItems, setMediaItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
   const [manifest, setManifest] = useState([])
@@ -70,9 +70,11 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   useEffect(() => {
     if (archiveMode) {
-      // In archive mode, filter by archiveMediaType
+      // In archive mode, filter by archiveMediaType and dates
       let filtered = [...mediaItems]
       console.log('[Archive] Filtering:', archiveMediaType, 'Total items:', mediaItems.length)
+      
+      // Filter by media type
       if (archiveMediaType !== 'all') {
         filtered = filtered.filter(file => {
           const matches = file.type === archiveMediaType
@@ -80,6 +82,49 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
         })
         console.log('[Archive] Filtered to:', filtered.length, archiveMediaType)
       }
+      
+      // Filter by dates
+      if (filters.dates && filters.dates.length > 0) {
+        filtered = filtered.filter(file => {
+          // Check if file has a date
+          if (file.date) {
+            let fileDate
+            if (typeof file.date === 'string') {
+              fileDate = file.date
+            } else if (file.date && file.date.year) {
+              fileDate = `${file.date.year}-${String(file.date.month || 1).padStart(2, '0')}`
+            }
+            if (fileDate && filters.dates.includes(fileDate)) {
+              return true
+            }
+          }
+          
+          // Check project date if file belongs to a project
+          if (file.projectFolder || file.projectName) {
+            const project = manifest.find(p => 
+              p.type === 'project' && (
+                p.folder === file.projectFolder ||
+                p.name === file.projectName
+              )
+            )
+            if (project && project.date) {
+              let projectDate
+              if (typeof project.date === 'string') {
+                projectDate = project.date
+              } else if (project.date && project.date.year) {
+                projectDate = `${project.date.year}-${String(project.date.month || 1).padStart(2, '0')}`
+              }
+              if (projectDate && filters.dates.includes(projectDate)) {
+                return true
+              }
+            }
+          }
+          
+          return false
+        })
+        console.log('[Archive] After date filter:', filtered.length)
+      }
+      
       setFilteredItems(filtered)
       return
     }

@@ -189,6 +189,7 @@ function App() {
             filters={filters}
             archiveMode={true}
             archiveMediaType={archiveMediaType}
+            manifest={manifest}
           />
           <div className="archive-filter-button">
             <button 

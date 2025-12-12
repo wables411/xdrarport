@@ -18,7 +18,7 @@ const PROJECT_COLORS = [
   '#5DADE2', // Light Blue
 ]
 
-function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all', manifest = [] }) {
+function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all', manifest = [], archiveDateFilter = null }) {
   const [mediaItems, setMediaItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
 

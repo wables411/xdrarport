@@ -24,6 +24,7 @@ function App() {
   const [lightboxImages, setLightboxImages] = useState([])
   const [showArchive, setShowArchive] = useState(false)
   const [archiveMediaType, setArchiveMediaType] = useState('all') // 'all', 'image', 'video'
+  const [archiveDateFilter, setArchiveDateFilter] = useState(null) // null or 'YYYY-MM'
   const [manifest, setManifest] = useState([])
   
   // Load manifest for client page aggregation
@@ -190,6 +191,7 @@ function App() {
             archiveMode={true}
             archiveMediaType={archiveMediaType}
             manifest={manifest}
+            archiveDateFilter={archiveDateFilter}
           />
           <div className="archive-filter-button">
             <button 
@@ -200,8 +202,18 @@ function App() {
                 setArchiveMediaType(types[nextIndex])
               }}
               className="archive-filter-btn"
+              style={{ marginBottom: '8px', display: 'block', width: '100%' }}
             >
-              Filter: {archiveMediaType === 'all' ? 'All' : archiveMediaType === 'image' ? 'Images' : 'Videos'}
+              Type: {archiveMediaType === 'all' ? 'All' : archiveMediaType === 'image' ? 'Images' : 'Videos'}
+            </button>
+            <button
+              onClick={() => {
+                setIsFilterModalOpen(true)
+              }}
+              className="archive-filter-btn"
+              style={{ display: 'block', width: '100%' }}
+            >
+              Filter by Date
             </button>
           </div>
         </>

@@ -872,57 +872,27 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                 </div>
               )}
               <div className="text-me-section-right">
-                {/* Magic Eden Widget */}
+                {/* Magic Eden Collection Widget - Using iframe since Magic Eden doesn't provide an official widget API */}
                 <div className="magic-eden-widget" style={{
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: '8px',
-                  padding: '20px',
-                  marginBottom: '30px'
+                  padding: '0',
+                  marginBottom: '30px',
+                  overflow: 'hidden',
+                  height: '600px'
                 }}>
-                  <h3 style={{
-                    fontFamily: "'Neuebit', sans-serif",
-                    fontWeight: 'bold',
-                    fontSize: '18px',
-                    color: '#fff',
-                    margin: '0 0 15px 0',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    View on Magic Eden
-                  </h3>
-                  <a
-                    href="https://magiceden.us/marketplace/lawbnexus"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <iframe
+                    src="https://magiceden.us/marketplace/lawbnexus"
                     style={{
-                      display: 'inline-block',
-                      padding: '12px 24px',
-                      background: '#fff',
-                      color: '#000',
-                      textDecoration: 'none',
-                      borderRadius: '4px',
-                      fontFamily: "'Neuebit', sans-serif",
-                      fontWeight: 'bold',
-                      fontSize: '14px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                      transition: 'opacity 0.2s ease'
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      display: 'block'
                     }}
-                    onMouseEnter={(e) => e.target.style.opacity = '0.8'}
-                    onMouseLeave={(e) => e.target.style.opacity = '1'}
-                  >
-                    Open Marketplace →
-                  </a>
-                  <p style={{
-                    fontFamily: "'Neuebit', sans-serif",
-                    fontSize: '12px',
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    margin: '15px 0 0 0',
-                    lineHeight: '1.5'
-                  }}>
-                    Check floor price, listings, and collection stats on Magic Eden
-                  </p>
+                    title="LAWBNEXUS Magic Eden Marketplace"
+                    allow="clipboard-read; clipboard-write"
+                  />
                 </div>
                 
                 {subAssets.length > 0 && (

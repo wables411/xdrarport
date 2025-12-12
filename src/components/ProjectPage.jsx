@@ -255,6 +255,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                         }}
                                       />
                                     )}
+                                    <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
                                   </div>
                                 )
                               })}
@@ -421,6 +422,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                                   }}
                                 />
                               )}
+                              <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
                             </div>
                           )
                         })}
@@ -576,6 +578,7 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
                               }}
                             />
                           )}
+                          <div className="thumbnail-filename-overlay">{file.filename || file.path?.split('/').pop() || 'File'}</div>
                         </div>
                       )
                     })}

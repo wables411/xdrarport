@@ -33,21 +33,30 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
 
   useEffect(() => {
     if (archiveMode) {
-      // In archive mode, load all media files from manifest
+      // In archive mode, load only one highlight media from each client/project
       if (manifest && manifest.length > 0) {
         const allMedia = []
+        const processedProjects = new Set()
+        
         manifest.forEach(item => {
-          if (item.type === 'project' && item.files) {
-            // Add all files from projects
-            item.files.forEach(file => {
-              allMedia.push({
-                ...file,
-                projectName: item.name,
-                projectFolder: item.folder
-              })
-            })
+          if (item.type === 'project' && item.files && item.files.length > 0) {
+            // Only add one file per project (prefer video, then first file)
+            const projectKey = item.folder || item.name
+            if (!processedProjects.has(projectKey)) {
+              processedProjects.add(projectKey)
+              
+              // Prefer video, otherwise use first file
+              const highlightFile = item.files.find(f => f.type === 'video') || item.files[0]
+              if (highlightFile) {
+                allMedia.push({
+                  ...highlightFile,
+                  projectName: item.name,
+                  projectFolder: item.folder
+                })
+              }
+            }
           } else if (item.type !== 'project') {
-            // Individual files
+            // Individual files (not in projects)
             allMedia.push(item)
           }
         })
@@ -214,6 +223,8 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
               ? encodeURI(displayPath)
               : displayPath.split('/').map(segment => encodeURIComponent(segment)).join('/')
             
+            const filename = item.filename || item.path?.split('/').pop() || `Media ${index + 1}`
+            
             return (
               <div key={index} className="image-item">
                 {item.type === 'video' ? (
@@ -239,10 +250,11 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                 ) : (
                   <img
                     src={encodedPath}
-                    alt={item.filename || `Media ${index + 1}`}
+                    alt={filename}
                     style={{ width: '100%', height: 'auto', display: 'block' }}
                   />
                 )}
+                <div className="thumbnail-filename-overlay">{filename}</div>
               </div>
             )
           })}

@@ -107,6 +107,11 @@ function App() {
   }
 
   const handleProjectClick = (project) => {
+    // If archive is open, close it first
+    if (showArchive) {
+      setShowArchive(false)
+    }
+    
     // Check if this is a filtered file (has lightboxFiles) or a project
     if (project.lightboxFiles && project.lightboxFiles.length > 0) {
       // It's a filtered file - open in lightbox
@@ -115,6 +120,8 @@ function App() {
     } else {
       // It's a project - open project page
       setCurrentProject(project)
+      setShowSocialButtons(false)
+      setShowAboutSection(false)
       // Scroll to top when opening a project
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }

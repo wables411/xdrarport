@@ -42,12 +42,13 @@
   padding: 2px;
   margin-bottom: 2px;
   box-sizing: border-box;
+  background-color: #000;
 }
 
 .archive-grid .image-item img,
 .archive-grid .image-item video {
-  width: calc(100% - 4px);
-  margin: 2px;
+  width: 100%;
+  display: block;
   box-sizing: border-box;
 }
 

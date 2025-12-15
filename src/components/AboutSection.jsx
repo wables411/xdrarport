@@ -3,7 +3,7 @@ import SocialButtons from './SocialButtons'
 
 function AboutSection() {
   return (
-    <section id="about" className="about-section">
+    <section className="about-section">
       <div className="about-content">
         <h2 className="about-title">About</h2>
         <div className="about-bio">

@@ -4,6 +4,7 @@ import Header from './components/Header'
 import ContactModal from './components/ContactModal'
 import HomePage from './pages/HomePage'
 import ArchivePage from './pages/ArchivePage'
+import AboutPage from './pages/AboutPage'
 import ClientPage from './pages/ClientPage'
 import PersonalProjectPage from './pages/PersonalProjectPage'
 import './components/ArchiveFilter.css'
@@ -28,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/archive" element={<ArchivePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/:slug" element={<ClientPage />} />
         </Routes>
         {isContactModalOpen && <ContactModal onClose={handleCloseContact} />}

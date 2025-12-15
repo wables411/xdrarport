@@ -16,8 +16,8 @@ function ClientPage() {
     console.log('[ClientPage] Loading project for slug:', slug)
     
     // Don't try to load reserved routes as projects
-    if (slug === 'archive') {
-      navigate('/archive', { replace: true })
+    if (slug === 'archive' || slug === 'about') {
+      navigate(`/${slug}`, { replace: true })
       return
     }
 

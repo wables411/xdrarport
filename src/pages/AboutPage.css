@@ -1,0 +1,11 @@
+.about-page {
+  padding-top: 60px; /* Account for fixed header */
+  min-height: 100vh;
+  background-color: #000;
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    padding-top: 50px;
+  }
+}

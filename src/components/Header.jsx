@@ -348,21 +348,9 @@ function Header({ onContactClick }) {
           <Link to="/archive" className="header-button">
             Archive
           </Link>
-          <button 
-            className="header-button" 
-            onClick={(e) => {
-              if (location.pathname !== '/') {
-                navigate('/#about')
-              } else {
-                const aboutElement = document.getElementById('about')
-                if (aboutElement) {
-                  aboutElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
-                }
-              }
-            }}
-          >
+          <Link to="/about" className="header-button">
             About
-          </button>
+          </Link>
           <button className="header-button" onClick={onContactClick}>
             Contact
           </button>

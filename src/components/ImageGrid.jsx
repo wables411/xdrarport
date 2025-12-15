@@ -432,7 +432,6 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
           autoPlay
           className="homepage-video"
           onLoadedData={(e) => {
-            // Auto-play on load
             const video = e.target
             video.muted = true
             video.play().catch(() => {

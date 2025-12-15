@@ -119,12 +119,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">{project.name}</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">{project.name}</h1>
           </div>
           
           {sections.map((section, sectionIndex) => {
@@ -297,12 +294,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">CRYBABY OAKLAND</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">CRYBABY OAKLAND</h1>
           </div>
           
           {sections.map((section, sectionIndex) => {
@@ -462,12 +456,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">JOOGMASTER J</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">JOOGMASTER J</h1>
           </div>
           
           <div className="text-me-section">
@@ -649,12 +640,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">PORTION CLUB</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">PORTION CLUB</h1>
           </div>
           
           {sections.map((section, sectionIndex) => {
@@ -814,12 +802,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">LAWBNEXUS NFT Collection</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">LAWBNEXUS NFT Collection</h1>
           </div>
           
           <div className="text-me-section">
@@ -992,12 +977,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">YNB</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">YNB</h1>
           </div>
           
           <div className="text-me-section">
@@ -1146,12 +1128,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">THE BROOKLYN BUSSDOWN</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">THE BROOKLYN BUSSDOWN</h1>
           </div>
           
           <div className="text-me-section">
@@ -1300,12 +1279,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">PSYCHED SF</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">PSYCHED SF</h1>
           </div>
           
           <div className="text-me-section">
@@ -1454,12 +1430,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">XTRAFORMS</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">XTRAFORMS</h1>
           </div>
           
           <div className="text-me-section">
@@ -1608,12 +1581,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">411 OAK</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">411 OAK</h1>
           </div>
           
           <div className="text-me-section">
@@ -1762,12 +1732,9 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
     
     return (
       <div className="project-page">
-        <button className="project-close" onClick={onClose}>
-          ×
-        </button>
         <div className="project-content text-me-records-layout">
-          <div className="project-header text-me-header">
-            <h1 className="project-title text-me-title">PLANETA PISCES</h1>
+          <div className="project-header client-name-header">
+            <h1 className="client-name">PLANETA PISCES</h1>
           </div>
           
           <div className="text-me-section">
@@ -2047,9 +2014,6 @@ function ProjectPage({ project, onClose, onMediaClick, filters = { locations: []
 
   return (
     <div className="project-page">
-      <button className="project-close" onClick={onClose}>
-        ×
-      </button>
       <div className="project-content">
         <div className="project-header">
           <h1 className="project-title">

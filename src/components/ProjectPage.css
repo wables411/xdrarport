@@ -1,11 +1,11 @@
 .project-page {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
+  min-height: 100vh;
   background-color: #000;
-  z-index: 1500;
+  z-index: 0;
   overflow-y: auto;
   animation: fadeIn 0.3s ease;
 }
@@ -52,9 +52,10 @@
 }
 
 .project-content {
-  margin-top: 60px;
+  margin-top: 0;
   padding: 0;
   width: 100%;
+  padding-top: 60px; /* Account for fixed header */
 }
 
 .project-header {
@@ -70,6 +71,24 @@
 
 .text-me-title {
   text-align: center;
+}
+
+.client-name-header {
+  text-align: left;
+  padding: 0 24px;
+  margin-bottom: 20px;
+  margin-top: 40px;
+}
+
+.client-name {
+  color: #fff;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
+  font-size: 32px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+  text-align: left;
 }
 
 
@@ -400,6 +419,22 @@
   color: #fff;
   margin: 0;
   letter-spacing: 0.5px;
+}
+
+.text-me-section-header {
+  padding: 0 24px;
+  margin-bottom: 20px;
+}
+
+.text-me-section-title {
+  color: #fff;
+  font-family: 'Neuebit', sans-serif;
+  font-weight: bold;
+  font-size: 28px;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  margin: 0;
+  text-align: left;
 }
 
 .text-me-section-content {

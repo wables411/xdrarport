@@ -1,12 +1,25 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import './Header.css'
+import { clientNameToSlug, nameToSlug } from '../utils/urlSlug'
 
-function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, onProjectSelect, onArchiveClick, manifest = [] }) {
+function Header({ onContactClick }) {
+  const navigate = useNavigate()
+  const location = useLocation()
   const [isClientsDropdownOpen, setIsClientsDropdownOpen] = useState(false)
   const [isPersonalProjectsDropdownOpen, setIsPersonalProjectsDropdownOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState(null) // Track which client's submenu is shown
+  const [manifest, setManifest] = useState([])
   const clientsDropdownRef = useRef(null)
   const personalProjectsDropdownRef = useRef(null)
+
+  // Load manifest
+  useEffect(() => {
+    fetch('/media-manifest.json')
+      .then(res => res.json())
+      .then(data => setManifest(data))
+      .catch(err => console.error('Failed to load manifest:', err))
+  }, [])
 
   // Get all projects from manifest
   const allProjects = manifest.filter(item => item.type === 'project')
@@ -213,32 +226,20 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
     setIsClientsDropdownOpen(false)
     setIsPersonalProjectsDropdownOpen(false)
     setSelectedClient(null)
-    if (onProjectSelect) {
-      onProjectSelect(project)
-    }
+    
+    // Navigate to project page
+    const slug = project.isCrybabyClient 
+      ? 'crybaby-oakland'
+      : clientNameToSlug(project.name) || nameToSlug(project.name)
+    console.log('[Header] Navigating to project:', project.name, 'slug:', slug)
+    navigate(`/${slug}`)
   }
 
   const handleClientClick = (client, e) => {
     e.stopPropagation()
     if (client.name === 'CRYBABY') {
-      // For CRYBABY, create a virtual client project that aggregates all CRYBABY sub-projects
-      if (onProjectSelect) {
-        // Find all CRYBABY projects from manifest
-        const allProjects = manifest.filter(item => item.type === 'project')
-        const crybabyProjects = allProjects.filter(p => 
-          p.folder && p.folder.includes('CRYBABY')
-        )
-        
-        // Create virtual client project
-        const crybabyClient = {
-          name: 'CRYBABY OAKLAND',
-          folder: 'CRYBABY',
-          isCrybabyClient: true,
-          subProjects: crybabyProjects,
-          type: 'project'
-        }
-        onProjectSelect(crybabyClient)
-      }
+      // For CRYBABY, navigate to crybaby-oakland page
+      navigate('/crybaby-oakland')
     } else if (client.hasSubProjects) {
       // Show sub-projects in a new dropdown
       setSelectedClient(client.name)
@@ -264,9 +265,9 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
     <header className="header">
       <div className="header-content">
         <div className="header-left">
-          <button className="header-name" onClick={onHomeClick}>
+          <Link to="/" className="header-name">
             XD.RAR
-          </button>
+          </Link>
         </div>
         <div className="header-right">
           <div className="header-dropdown-container" ref={clientsDropdownRef}>
@@ -344,10 +345,22 @@ function Header({ onContactClick, onPortfolioClick, onHomeClick, onAboutClick, o
               </div>
             )}
           </div>
-          <button className="header-button" onClick={onArchiveClick}>
+          <Link to="/archive" className="header-button">
             Archive
-          </button>
-          <button className="header-button" onClick={onAboutClick}>
+          </Link>
+          <button 
+            className="header-button" 
+            onClick={(e) => {
+              if (location.pathname !== '/') {
+                navigate('/#about')
+              } else {
+                const aboutElement = document.getElementById('about')
+                if (aboutElement) {
+                  aboutElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                }
+              }
+            }}
+          >
             About
           </button>
           <button className="header-button" onClick={onContactClick}>

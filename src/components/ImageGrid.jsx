@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './ImageGrid.css'
 import './ArchiveFilter.css'
+import { clientNameToSlug, nameToSlug } from '../utils/urlSlug'
 
 // Color palette for hover effects - each project gets a unique color
 const PROJECT_COLORS = [
@@ -19,6 +21,7 @@ const PROJECT_COLORS = [
 ]
 
 function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], mediaType: 'all' }, archiveMode = false, archiveMediaType = 'all', manifest = [], archiveDateFilter = null }) {
+  const navigate = useNavigate()
   const [mediaItems, setMediaItems] = useState([])
   const [filteredItems, setFilteredItems] = useState([])
 
@@ -219,27 +222,33 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
   }, [mediaItems, filters, archiveMode, archiveMediaType])
 
   const handleMediaClick = (item) => {
-    // If it's a project, open project page
+    // If it's a project, navigate to project page
     // If it's a file (from filtered view), open in lightbox
-    if (item.type === 'project') {
-      onProjectClick(item)
+    if (item.type === 'project' || item.isCrybabyClient) {
+      // Navigate to project page
+      const slug = item.isCrybabyClient 
+        ? 'crybaby-oakland'
+        : clientNameToSlug(item.name) || nameToSlug(item.name)
+      navigate(`/${slug}`)
     } else {
       // For filtered files, use the filteredItems for lightbox navigation
       // This ensures we only navigate through the filtered results
-      const filteredFilePaths = filteredItems
-        .filter(f => f.type === item.type)
-        .map(f => f.path.split('/').map(segment => encodeURIComponent(segment)).join('/'))
-      
-      const currentPath = item.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
-      const currentIndex = filteredFilePaths.indexOf(currentPath)
-      
-      onProjectClick({
-        type: item.type,
-        path: item.path,
-        filename: item.filename,
-        lightboxFiles: filteredFilePaths,
-        lightboxIndex: currentIndex >= 0 ? currentIndex : 0
-      })
+      if (onProjectClick) {
+        const filteredFilePaths = filteredItems
+          .filter(f => f.type === item.type)
+          .map(f => f.path.split('/').map(segment => encodeURIComponent(segment)).join('/'))
+        
+        const currentPath = item.path.split('/').map(segment => encodeURIComponent(segment)).join('/')
+        const currentIndex = filteredFilePaths.indexOf(currentPath)
+        
+        onProjectClick({
+          type: item.type,
+          path: item.path,
+          filename: item.filename,
+          lightboxFiles: filteredFilePaths,
+          lightboxIndex: currentIndex >= 0 ? currentIndex : 0
+        })
+      }
     }
   }
 
@@ -351,7 +360,10 @@ function ImageGrid({ onProjectClick, filters = { locations: [], dates: [], media
                 className="image-item archive-media-item"
                 onClick={() => {
                   if (parentProject) {
-                    onProjectClick(parentProject)
+                    const slug = parentProject.isCrybabyClient 
+                      ? 'crybaby-oakland'
+                      : clientNameToSlug(parentProject.name) || nameToSlug(parentProject.name)
+                    navigate(`/${slug}`)
                   }
                 }}
                 style={{ cursor: parentProject ? 'pointer' : 'default' }}

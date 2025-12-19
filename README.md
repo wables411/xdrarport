@@ -1,21 +1,22 @@
 # XDRAR Portfolio
 
-Artist portfolio website built with React and Vite.
+Static HTML portfolio website.
 
 ## Tech Stack
 
-- **React** + **Vite** - Frontend framework
+- **Static HTML/CSS/JS** - Frontend
 - **GitHub** - Code repository
 - **Cloudflare Pages** - Static site hosting
-- **Cloudflare R2** - Video file storage
+- **Cloudflare R2** - Media file storage
+- **Resend API** - Contact form email service
 
 ## Setup
 
 ### Prerequisites
 
-- Node.js 18+ 
-- npm or yarn
+- Node.js 18+ (for media upload scripts)
 - Cloudflare account (free)
+- Resend account (for contact form)
 
 ### Installation
 
@@ -29,75 +30,67 @@ npm install
 npm run dev
 ```
 
-### Building
-
-```bash
-npm run build
-```
+This starts a local HTTP server on port 8000. Open `http://localhost:8000` in your browser.
 
 ## Media Management
 
-### Adding Videos
+### Uploading Media to R2
 
-1. Place video files in `public/media/` (they're gitignored)
+1. Place media files in the `Crybaby_Oakland/` directory structure
 2. Upload to Cloudflare R2:
    ```bash
-   npm run upload-videos
+   npm run upload-xdrar2-media
    ```
-3. Generate/update media manifest:
-   ```bash
-   npm run generate-media
-   ```
-4. Commit the updated manifest:
-   ```bash
-   git add src/data/media-manifest.json
-   git commit -m "Add new video"
-   ```
+3. Update `window.R2_PUBLIC_URL` in `index.html` with your R2 public URL
 
-### Adding Images
+## Contact Form
 
-Images can be committed to git (they're small). Just add them to `public/media/` and run:
+The contact form uses Cloudflare Pages Functions with Resend API.
 
-```bash
-npm run generate-media
-```
+### Setup
 
-## Deployment
+1. See [FORM_SETUP.md](./FORM_SETUP.md) for detailed instructions
+2. See [RESEND_DOMAIN_SETUP.md](./RESEND_DOMAIN_SETUP.md) for domain verification
 
-See [CLOUDFLARE_SETUP.md](./CLOUDFLARE_SETUP.md) for complete deployment instructions.
+### Environment Variables (Cloudflare Pages)
 
-**Quick summary:**
-1. Set up Cloudflare R2 bucket and upload videos
-2. Connect GitHub repo to Cloudflare Pages
-3. Auto-deploys on every push to main
+- `RESEND_API_KEY` - Your Resend API key
+- `CONTACT_EMAIL` - Email address to receive form submissions
+- `FROM_EMAIL` - Sender email (must use verified domain)
 
 ## Project Structure
 
 ```
 xdrarport/
+├── functions/
+│   └── api/
+│       └── contact.js          # Contact form handler
 ├── public/
-│   ├── media/              # Media files (images in git, videos not)
-│   └── _redirects          # SPA routing
-├── src/
-│   ├── components/         # React components
-│   ├── data/
-│   │   └── media-manifest.json  # Auto-generated
-│   └── utils/
+│   ├── fonts/                  # Custom fonts
+│   └── _redirects              # Cloudflare Pages routing
 ├── scripts/
-│   ├── generate-media-manifest.js
-│   └── upload-to-r2.js
-└── dist/                   # Build output (gitignored)
+│   └── upload-xdrar2-media.js  # R2 media upload script
+├── index.html                  # Main HTML file
+├── script.js                   # Main JavaScript
+└── styles.css                  # Main stylesheet
 ```
 
 ## Scripts
 
-- `npm run dev` - Start dev server
-- `npm run build` - Build for production
+- `npm run dev` - Start local development server
 - `npm run preview` - Preview production build
-- `npm run generate-media` - Generate media manifest
-- `npm run upload-videos` - Upload videos to R2
+- `npm run upload-xdrar2-media` - Upload media files to R2
+
+## Deployment
+
+1. Push to GitHub
+2. Connect repository to Cloudflare Pages
+3. Configure build settings:
+   - **Build command:** (leave empty)
+   - **Build output directory:** `/`
+4. Add environment variables for contact form
+5. Deploy
 
 ## License
 
 Private project.
-

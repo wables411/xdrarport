@@ -1,16 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <title>Artist Portfolio</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTFOLIO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // R2 Public URL - Media is hosted on Cloudflare R2
+        window.R2_PUBLIC_URL = 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev';
+    </script>
+</head>
+<body data-theme="dark">
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+    
+    <!-- Header with Navigation -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="#hero" class="logo" data-parallax="0.1">XD.RAR</a>
+            <nav class="nav">
+                <div class="nav-link-wrapper">
+                    <a href="#clients" class="nav-link" data-text="CLIENTS" id="clientsLink">CLIENTS</a>
+                    <div class="clients-dropdown" id="clientsDropdown">
+                        <a href="#" class="client-item" data-client="crybaby-oakland">Crybaby Oakland</a>
+                    </div>
+                </div>
+                <a href="#personal" class="nav-link" data-text="PERSONAL PROJECTS">PERSONAL PROJECTS</a>
+                <a href="#archive" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
+                <a href="#about" class="nav-link" data-text="ABOUT">ABOUT</a>
+                <a href="#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
+            </nav>
+            <div class="theme-toggle-wrapper">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">☀</span>
+                </button>
+            </div>
+        </div>
+    </header>
 
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <video class="hero-video" data-parallax="0.3" autoplay muted loop playsinline>
+                <source src="XDRAR.mp4" type="video/mp4">
+            </video>
+            <div class="hero-meta" data-parallax="0.2">
+                <span class="meta-item">2025</span>
+                <span class="meta-item">GRAPHIC DESIGN</span>
+            </div>
+        </div>
+        <div class="hero-bg" data-parallax="0.1"></div>
+    </section>
+
+    <!-- Projects Section - Viewable on Home -->
+    <section class="projects" id="work">
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be dynamically filtered by breadcrumb -->
+            <div class="project-item" data-category="identity" data-index="0">
+                <div class="project-info">
+                    <h3 class="project-title">IDENTITY SYSTEM</h3>
+                    <p class="project-description">Brand identity design for experimental music label featuring custom typography and geometric compositions.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">TYPOGRAPHY</span>
+                        <span class="project-tag">BRANDING</span>
+                    </div>
+                </div>
+                <div class="project-thumbnail-wrapper">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <div class="thumbnail-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="digital" data-index="1">
+                <div class="project-info">
+                    <h3 class="project-title">EDITORIAL DESIGN</h3>
+                    <p class="project-description">Experimental magazine layout exploring the intersection of text and image through dynamic grid systems.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">EDITORIAL</span>
+                        <span class="project-tag">LAYOUT</span>
+                    </div>
+                </div>
+                <div class="project-thumbnail-wrapper">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <div class="thumbnail-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="print" data-index="2">
+                <div class="project-info">
+                    <h3 class="project-title">DIGITAL EXPERIENCE</h3>
+                    <p class="project-description">Interactive web platform with brutalist design principles and experimental navigation patterns.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">WEB</span>
+                        <span class="project-tag">INTERACTION</span>
+                    </div>
+                </div>
+                <div class="project-thumbnail-wrapper">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <div class="thumbnail-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item" data-category="identity" data-index="3">
+                <div class="project-info">
+                    <h3 class="project-title">PRINT COLLECTION</h3>
+                    <p class="project-description">Series of posters exploring typographic hierarchies and spatial relationships in physical formats.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">PRINT</span>
+                        <span class="project-tag">POSTER</span>
+                    </div>
+                </div>
+                <div class="project-thumbnail-wrapper">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <div class="thumbnail-placeholder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section - Slightly Separate but Viewable -->
+    <section class="about" id="about">
+        <div class="about-content" data-parallax="0.2">
+            <p class="about-text">
+                Working at the intersection of graphic design, typography, and digital culture. 
+                Specializing in experimental visual identities, custom type design, and complex 
+                editorial compositions.
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section - Slightly Separate but Viewable -->
+    <section class="contact" id="contact">
+        <div class="contact-content" data-parallax="0.2">
+            <a href="mailto:hello@portfolio.com" class="contact-link">hello@portfolio.com</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span>© 2025</span>
+        </div>
+    </footer>
+
+    <!-- Client Modal -->
+    <div class="client-modal" id="clientModal">
+        <div class="client-modal-overlay"></div>
+        <div class="client-modal-content">
+            <button class="client-modal-close" id="closeModal">&times;</button>
+            <div class="client-modal-header">
+                <h2 class="client-modal-title" id="clientModalTitle"></h2>
+            </div>
+            <div class="client-modal-projects" id="clientModalProjects">
+                <!-- Projects will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Media Viewer -->
+    <div class="media-fullscreen" id="mediaFullscreen">
+        <button class="media-fullscreen-close" id="closeFullscreen">&times;</button>
+        <div class="media-fullscreen-content" id="mediaFullscreenContent">
+            <!-- Media will be inserted here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

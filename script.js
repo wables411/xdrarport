@@ -849,4 +849,64 @@ if (modalContentEl) {
     setTimeout(updateModalProjectScaling, 100);
 }
 
+// Contact Form Handler
+function initContactForm() {
+    const contactForm = document.getElementById('contactForm');
+    const contactStatus = document.getElementById('contactStatus');
+    
+    if (!contactForm) return;
+    
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const submitButton = contactForm.querySelector('.contact-submit');
+        const name = document.getElementById('contactName').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const comment = document.getElementById('contactComment').value.trim();
+        
+        // Clear previous status
+        contactStatus.textContent = '';
+        contactStatus.className = 'contact-status';
+        
+        // Disable submit button
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+        
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, comment }),
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                contactStatus.textContent = data.message || 'Thank you! Your message has been sent.';
+                contactStatus.className = 'contact-status success';
+                contactForm.reset();
+            } else {
+                contactStatus.textContent = data.error || 'Failed to send message. Please try again.';
+                contactStatus.className = 'contact-status error';
+            }
+        } catch (error) {
+            console.error('Contact form error:', error);
+            contactStatus.textContent = 'Failed to send message. Please try again.';
+            contactStatus.className = 'contact-status error';
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Send Message';
+        }
+    });
+}
+
+// Initialize contact form when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initContactForm);
+} else {
+    initContactForm();
+}
+
 

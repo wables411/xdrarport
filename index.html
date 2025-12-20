@@ -149,7 +149,23 @@
     <!-- Contact Section - Slightly Separate but Viewable -->
     <section class="contact" id="contact">
         <div class="contact-content" data-parallax="0.2">
-            <a href="mailto:hello@portfolio.com" class="contact-link">hello@portfolio.com</a>
+            <h2 class="contact-title">Get in Touch</h2>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="contactName">Name</label>
+                    <input type="text" id="contactName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactComment">Message</label>
+                    <textarea id="contactComment" name="comment" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="contact-submit">Send Message</button>
+                <div id="contactStatus" class="contact-status"></div>
+            </form>
         </div>
     </section>
 

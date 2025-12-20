@@ -199,5 +199,129 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Direct form handler - runs after script.js
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 DOMContentLoaded - setting up form handler');
+            const form = document.getElementById('contactForm');
+            if (!form) {
+                console.error('❌ Form not found!');
+                return;
+            }
+            console.log('✅ Form found, attaching handler');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('📤 Form submitted');
+                
+                const submitBtn = form.querySelector('.contact-submit');
+                const status = document.getElementById('contactStatus');
+                const name = document.getElementById('contactName').value.trim();
+                const email = document.getElementById('contactEmail').value.trim();
+                const comment = document.getElementById('contactComment').value.trim();
+                
+                if (!name || !email || !comment) {
+                    status.textContent = 'Please fill in all fields';
+                    status.className = 'contact-status error';
+                    return;
+                }
+                
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending...';
+                status.textContent = '';
+                status.className = 'contact-status';
+                
+                try {
+                    console.log('🌐 Sending to /api/contact');
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, comment })
+                    });
+                    
+                    console.log('📥 Status:', response.status);
+                    const data = await response.json();
+                    console.log('📥 Data:', data);
+                    
+                    if (response.ok && data.success) {
+                        status.textContent = data.message || 'Thank you! Your message has been sent.';
+                        status.className = 'contact-status success';
+                        form.reset();
+                    } else {
+                        status.textContent = data.error || 'Failed to send message.';
+                        status.className = 'contact-status error';
+                    }
+                } catch (error) {
+                    console.error('❌ Error:', error);
+                    status.textContent = 'Error: ' + error.message;
+                    status.className = 'contact-status error';
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                }
+            });
+        });
+        
+        // Also try immediately if DOM is already ready
+        if (document.readyState !== 'loading') {
+            console.log('🔍 DOM already ready, setting up form handler');
+            const form = document.getElementById('contactForm');
+            if (form) {
+                console.log('✅ Form found immediately');
+                form.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('📤 Form submitted');
+                    
+                    const submitBtn = form.querySelector('.contact-submit');
+                    const status = document.getElementById('contactStatus');
+                    const name = document.getElementById('contactName').value.trim();
+                    const email = document.getElementById('contactEmail').value.trim();
+                    const comment = document.getElementById('contactComment').value.trim();
+                    
+                    if (!name || !email || !comment) {
+                        status.textContent = 'Please fill in all fields';
+                        status.className = 'contact-status error';
+                        return;
+                    }
+                    
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Sending...';
+                    status.textContent = '';
+                    status.className = 'contact-status';
+                    
+                    try {
+                        console.log('🌐 Sending to /api/contact');
+                        const response = await fetch('/api/contact', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name, email, comment })
+                        });
+                        
+                        console.log('📥 Status:', response.status);
+                        const data = await response.json();
+                        console.log('📥 Data:', data);
+                        
+                        if (response.ok && data.success) {
+                            status.textContent = data.message || 'Thank you! Your message has been sent.';
+                            status.className = 'contact-status success';
+                            form.reset();
+                        } else {
+                            status.textContent = data.error || 'Failed to send message.';
+                            status.className = 'contact-status error';
+                        }
+                    } catch (error) {
+                        console.error('❌ Error:', error);
+                        status.textContent = 'Error: ' + error.message;
+                        status.className = 'contact-status error';
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Send Message';
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>

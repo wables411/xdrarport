@@ -851,18 +851,27 @@ if (modalContentEl) {
 
 // Contact Form Handler
 function initContactForm() {
+    console.log('🔍 Initializing contact form...');
     const contactForm = document.getElementById('contactForm');
     const contactStatus = document.getElementById('contactStatus');
     
-    if (!contactForm) return;
+    if (!contactForm) {
+        console.error('❌ Contact form not found!');
+        return;
+    }
+    
+    console.log('✅ Contact form found, adding submit listener');
     
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        console.log('📤 Form submitted');
         
         const submitButton = contactForm.querySelector('.contact-submit');
         const name = document.getElementById('contactName').value.trim();
         const email = document.getElementById('contactEmail').value.trim();
         const comment = document.getElementById('contactComment').value.trim();
+        
+        console.log('📝 Form data:', { name, email, comment: comment.substring(0, 50) + '...' });
         
         // Clear previous status
         contactStatus.textContent = '';
@@ -873,7 +882,10 @@ function initContactForm() {
         submitButton.textContent = 'Sending...';
         
         try {
-            const response = await fetch('/api/contact', {
+            const apiUrl = '/api/contact';
+            console.log('🌐 Sending request to:', apiUrl);
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -881,19 +893,30 @@ function initContactForm() {
                 body: JSON.stringify({ name, email, comment }),
             });
             
+            console.log('📥 Response status:', response.status);
+            console.log('📥 Response headers:', Object.fromEntries(response.headers.entries()));
+            
             const data = await response.json();
+            console.log('📥 Response data:', data);
             
             if (response.ok && data.success) {
+                console.log('✅ Form submitted successfully');
                 contactStatus.textContent = data.message || 'Thank you! Your message has been sent.';
                 contactStatus.className = 'contact-status success';
                 contactForm.reset();
             } else {
+                console.error('❌ Form submission failed:', data.error);
                 contactStatus.textContent = data.error || 'Failed to send message. Please try again.';
                 contactStatus.className = 'contact-status error';
             }
         } catch (error) {
-            console.error('Contact form error:', error);
-            contactStatus.textContent = 'Failed to send message. Please try again.';
+            console.error('❌ Contact form error:', error);
+            console.error('❌ Error details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
+            contactStatus.textContent = `Failed to send message: ${error.message}`;
             contactStatus.className = 'contact-status error';
         } finally {
             submitButton.disabled = false;

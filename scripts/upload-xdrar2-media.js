@@ -138,15 +138,32 @@ async function main() {
   console.log(`🌐 Public URL: ${R2_PUBLIC_URL || 'Not set'}`)
   console.log('')
 
-  // Check if media directory exists
-  if (!fs.existsSync(mediaDir)) {
-    console.error(`❌ Media directory not found: ${mediaDir}`)
-    process.exit(1)
+  const mediaFiles = []
+
+  // Check if media directory exists and scan it
+  if (fs.existsSync(mediaDir)) {
+    // Scan for media files in Crybaby_Oakland directory
+    console.log('📂 Scanning for media files in Crybaby_Oakland...')
+    const crybabyMedia = scanForMedia(mediaDir)
+    mediaFiles.push(...crybabyMedia)
+  } else {
+    console.warn(`⚠️  Media directory not found: ${mediaDir}`)
   }
 
-  // Scan for media files
-  console.log('📂 Scanning for media files...')
-  const mediaFiles = scanForMedia(mediaDir)
+  // Also check for XDRAR.mp4 in root directory
+  const rootDir = path.join(__dirname, '..')
+  const xdrarPath = path.join(rootDir, 'XDRAR.mp4')
+  if (fs.existsSync(xdrarPath)) {
+    const stat = fs.statSync(xdrarPath)
+    mediaFiles.push({
+      localPath: xdrarPath,
+      r2Key: 'XDRAR.mp4',
+      relativePath: 'XDRAR.mp4',
+      size: stat.size,
+    })
+    console.log('📂 Found XDRAR.mp4 in root directory')
+  }
+
   console.log(`   Found ${mediaFiles.length} media files\n`)
 
   if (mediaFiles.length === 0) {

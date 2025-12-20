@@ -8,6 +8,10 @@ function getMediaUrl(relativePath) {
     if (!relativePath) return '';
     
     if (R2_PUBLIC_URL && relativePath) {
+        // XDRAR.mp4 is at root level, not in Crybaby_Oakland/
+        if (relativePath === 'XDRAR.mp4' || relativePath.endsWith('/XDRAR.mp4')) {
+            return `${R2_PUBLIC_URL}/XDRAR.mp4`;
+        }
         // Ensure path starts with Crybaby_Oakland/
         const path = relativePath.startsWith('Crybaby_Oakland/') 
             ? relativePath 
@@ -47,6 +51,29 @@ if (themeToggle) {
         localStorage.setItem('theme', currentTheme);
         updateThemeIcon();
     });
+}
+
+// Set hero video source from R2
+function initHeroVideo() {
+    const heroVideoSource = document.getElementById('heroVideoSource');
+    if (heroVideoSource && R2_PUBLIC_URL) {
+        heroVideoSource.src = getMediaUrl('XDRAR.mp4');
+        // Trigger video load
+        const video = heroVideoSource.parentElement;
+        if (video && video.tagName === 'VIDEO') {
+            video.load();
+        }
+    } else if (heroVideoSource && !R2_PUBLIC_URL) {
+        // Fallback to local file
+        heroVideoSource.src = 'XDRAR.mp4';
+    }
+}
+
+// Initialize hero video when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroVideo);
+} else {
+    initHeroVideo();
 }
 
 // Custom Cursor

@@ -212,6 +212,76 @@
         } else {
             console.error('❌ R2_PUBLIC_URL variable NOT found - script.js may not have loaded');
         }
+        
+        // Direct form handler as fallback
+        console.log('🔍 Setting up direct form handler...');
+        function setupContactFormDirectly() {
+            const form = document.getElementById('contactForm');
+            const status = document.getElementById('contactStatus');
+            
+            if (!form) {
+                console.error('❌ Contact form not found in direct handler');
+                return;
+            }
+            
+            console.log('✅ Found form, attaching direct handler');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                console.log('📤 Form submitted (direct handler)');
+                
+                const submitButton = form.querySelector('.contact-submit');
+                const name = document.getElementById('contactName').value.trim();
+                const email = document.getElementById('contactEmail').value.trim();
+                const comment = document.getElementById('contactComment').value.trim();
+                
+                console.log('📝 Form data:', { name, email, comment: comment.substring(0, 30) + '...' });
+                
+                status.textContent = '';
+                status.className = 'contact-status';
+                submitButton.disabled = true;
+                submitButton.textContent = 'Sending...';
+                
+                try {
+                    console.log('🌐 Sending to /api/contact...');
+                    const response = await fetch('/api/contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, email, comment })
+                    });
+                    
+                    console.log('📥 Response status:', response.status);
+                    const data = await response.json();
+                    console.log('📥 Response data:', data);
+                    
+                    if (response.ok && data.success) {
+                        status.textContent = data.message || 'Thank you! Your message has been sent.';
+                        status.className = 'contact-status success';
+                        form.reset();
+                    } else {
+                        status.textContent = data.error || 'Failed to send message. Please try again.';
+                        status.className = 'contact-status error';
+                    }
+                } catch (error) {
+                    console.error('❌ Form error:', error);
+                    status.textContent = 'Failed to send message: ' + error.message;
+                    status.className = 'contact-status error';
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Send Message';
+                }
+            });
+        }
+        
+        // Try immediately and on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupContactFormDirectly);
+        } else {
+            setupContactFormDirectly();
+        }
+        
+        // Also try after a delay
+        setTimeout(setupContactFormDirectly, 500);
     </script>
 </body>
 </html>

@@ -86,9 +86,12 @@ xdrarport/
 1. Push to GitHub
 2. Connect repository to Cloudflare Pages
 3. Configure build settings:
-   - **Build command:** (leave empty)
-   - **Build output directory:** `/`
-4. Add environment variables for contact form
+   - **Build command:** `npm run build` (or leave empty - both work)
+   - **Build output directory:** `/` (root directory)
+4. Add environment variables for contact form:
+   - `RESEND_API_KEY` - Your Resend API key
+   - `CONTACT_EMAIL` - Email to receive form submissions
+   - `FROM_EMAIL` - Sender email (must use verified domain)
 5. Deploy
 
 ## License

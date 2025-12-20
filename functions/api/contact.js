@@ -46,8 +46,16 @@ export async function onRequestPost(context) {
       fromEmail = `noreply@${hostname}`
     }
     
+    console.log('📧 Contact form submission:', { name, email, commentLength: comment.length })
+    console.log('🔑 Config check:', { 
+      hasApiKey: !!resendApiKey, 
+      apiKeyPrefix: resendApiKey ? resendApiKey.substring(0, 10) + '...' : 'missing',
+      yourEmail,
+      fromEmail 
+    })
+    
     if (!resendApiKey) {
-      console.error('RESEND_API_KEY not configured')
+      console.error('❌ RESEND_API_KEY not configured')
       return new Response(
         JSON.stringify({ error: 'Email service not configured' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -55,23 +63,38 @@ export async function onRequestPost(context) {
     }
     
     // Send email to you
-    await sendEmail({
-      apiKey: resendApiKey,
-      to: yourEmail,
-      from: fromEmail,
-      subject: `Contact from Portfolio: ${name}`,
-      text: `New contact form submission:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${comment}`,
-      replyTo: email,
-    })
+    console.log(`📤 Sending email to ${yourEmail}...`)
+    try {
+      await sendEmail({
+        apiKey: resendApiKey,
+        to: yourEmail,
+        from: fromEmail,
+        subject: `Contact from Portfolio: ${name}`,
+        text: `New contact form submission:\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${comment}`,
+        replyTo: email,
+      })
+      console.log(`✅ Email sent to ${yourEmail}`)
+    } catch (error) {
+      console.error(`❌ Failed to send email to ${yourEmail}:`, error.message)
+      throw error
+    }
     
     // Send confirmation to client
-    await sendEmail({
-      apiKey: resendApiKey,
-      to: email,
-      from: fromEmail,
-      subject: 'Thanks for reaching out',
-      text: `Hi ${name},\n\nThanks for reaching out, I've received your inquiry and will be in touch soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
-    })
+    console.log(`📤 Sending confirmation email to ${email}...`)
+    try {
+      await sendEmail({
+        apiKey: resendApiKey,
+        to: email,
+        from: fromEmail,
+        subject: 'Thanks for reaching out',
+        text: `Hi ${name},\n\nThanks for reaching out, I've received your inquiry and will be in touch soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
+      })
+      console.log(`✅ Confirmation email sent to ${email}`)
+    } catch (error) {
+      console.error(`❌ Failed to send confirmation to ${email}:`, error.message)
+      // Don't throw here - we already sent the main email
+      console.warn('⚠️ Continuing despite confirmation email failure')
+    }
     
     return new Response(
       JSON.stringify({ 

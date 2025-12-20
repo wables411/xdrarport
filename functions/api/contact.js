@@ -37,7 +37,7 @@ export async function onRequestPost(context) {
     
     // Get configuration from environment variables
     const resendApiKey = env.RESEND_API_KEY
-    const yourEmail = env.CONTACT_EMAIL || 'xdrar@gmail.com'
+    const yourEmail = env.CONTACT_EMAIL || 'contactxd.rar@gmail.com'
     // Force use of verified domain - must use xdrar.xyz domain, not onboarding@resend.dev
     const hostname = new URL(request.url).hostname
     // Always use the verified domain, ignore env var if it's still the test email

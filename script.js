@@ -954,23 +954,41 @@ function initContactForm() {
 // Initialize contact form when DOM is ready
 console.log('🔍 Setting up contact form initialization...');
 console.log('📄 Document ready state:', document.readyState);
-console.log('🔍 Contact form element exists?', document.getElementById('contactForm') ? 'YES' : 'NO');
 
-// Try immediate initialization
-setTimeout(() => {
-    console.log('⏰ Delayed initialization attempt...');
-    initContactForm();
-}, 100);
+// Multiple initialization attempts to ensure it runs
+function tryInitContactForm() {
+    console.log('🔍 Attempting to initialize contact form...');
+    const contactForm = document.getElementById('contactForm');
+    console.log('🔍 Contact form element exists?', contactForm ? 'YES' : 'NO');
+    if (contactForm) {
+        console.log('✅ Found contact form, initializing...');
+        initContactForm();
+        return true;
+    }
+    return false;
+}
 
+// Try immediately
+if (!tryInitContactForm()) {
+    console.log('⏳ Form not found, will retry...');
+}
+
+// Try on DOMContentLoaded
 if (document.readyState === 'loading') {
     console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
     document.addEventListener('DOMContentLoaded', () => {
-        console.log('✅ DOMContentLoaded fired, initializing contact form...');
-        initContactForm();
+        console.log('✅ DOMContentLoaded fired');
+        tryInitContactForm();
     });
 } else {
-    console.log('✅ Document already ready, initializing contact form immediately...');
-    initContactForm();
+    console.log('✅ Document already ready');
+    setTimeout(() => tryInitContactForm(), 100);
 }
+
+// Also try after a delay as fallback
+setTimeout(() => {
+    console.log('⏰ Delayed fallback initialization attempt...');
+    tryInitContactForm();
+}, 500);
 
 

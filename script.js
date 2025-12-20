@@ -2,6 +2,8 @@
 // Set this to your R2 public URL after uploading media
 // Can be set via window.R2_PUBLIC_URL in index.html or directly here
 console.log('🚀 script.js loaded');
+console.log('🔍 Window object:', typeof window !== 'undefined' ? 'exists' : 'undefined');
+console.log('🔍 R2_PUBLIC_URL from window:', typeof window !== 'undefined' ? window.R2_PUBLIC_URL : 'N/A');
 const R2_PUBLIC_URL = (typeof window !== 'undefined' && window.R2_PUBLIC_URL) || '';
 console.log('🌐 R2_PUBLIC_URL:', R2_PUBLIC_URL || 'Not set');
 
@@ -57,17 +59,39 @@ if (themeToggle) {
 
 // Set hero video source from R2
 function initHeroVideo() {
+    console.log('🎥 Initializing hero video...');
     const heroVideoSource = document.getElementById('heroVideoSource');
+    console.log('🎥 heroVideoSource element:', heroVideoSource ? 'found' : 'NOT FOUND');
+    console.log('🎥 R2_PUBLIC_URL:', R2_PUBLIC_URL);
+    
     if (heroVideoSource && R2_PUBLIC_URL) {
-        heroVideoSource.src = getMediaUrl('XDRAR.mp4');
+        const videoUrl = getMediaUrl('XDRAR.mp4');
+        console.log('🎥 Setting video URL to:', videoUrl);
+        heroVideoSource.src = videoUrl;
         // Trigger video load
+        const video = heroVideoSource.parentElement;
+        if (video && video.tagName === 'VIDEO') {
+            console.log('🎥 Video element found, calling load()');
+            video.load();
+            video.addEventListener('loadeddata', () => {
+                console.log('✅ Video loaded successfully');
+            });
+            video.addEventListener('error', (e) => {
+                console.error('❌ Video load error:', e);
+            });
+        } else {
+            console.error('❌ Video parent element not found or not a video tag');
+        }
+    } else if (heroVideoSource && !R2_PUBLIC_URL) {
+        // Fallback to local file
+        console.log('🎥 R2_PUBLIC_URL not set, using local file fallback');
+        heroVideoSource.src = 'XDRAR.mp4';
         const video = heroVideoSource.parentElement;
         if (video && video.tagName === 'VIDEO') {
             video.load();
         }
-    } else if (heroVideoSource && !R2_PUBLIC_URL) {
-        // Fallback to local file
-        heroVideoSource.src = 'XDRAR.mp4';
+    } else {
+        console.error('❌ heroVideoSource element not found!');
     }
 }
 

@@ -79,6 +79,7 @@ xdrarport/
 
 - `npm run dev` - Start local development server
 - `npm run preview` - Preview production build
+- `npm run build` - Build static site (copies files to `dist/` directory)
 - `npm run upload-xdrar2-media` - Upload media files to R2
 
 ## Deployment
@@ -86,8 +87,8 @@ xdrarport/
 1. Push to GitHub
 2. Connect repository to Cloudflare Pages
 3. Configure build settings:
-   - **Build command:** `npm run build` (or leave empty - both work)
-   - **Build output directory:** `/` (root directory)
+   - **Build command:** `npm run build`
+   - **Build output directory:** `dist`
 4. Add environment variables for contact form:
    - `RESEND_API_KEY` - Your Resend API key
    - `CONTACT_EMAIL` - Email to receive form submissions

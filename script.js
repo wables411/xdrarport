@@ -1,7 +1,9 @@
 // R2 Media Configuration
 // Set this to your R2 public URL after uploading media
 // Can be set via window.R2_PUBLIC_URL in index.html or directly here
+console.log('🚀 script.js loaded');
 const R2_PUBLIC_URL = (typeof window !== 'undefined' && window.R2_PUBLIC_URL) || '';
+console.log('🌐 R2_PUBLIC_URL:', R2_PUBLIC_URL || 'Not set');
 
 // Helper function to get R2 media URL
 function getMediaUrl(relativePath) {
@@ -926,9 +928,17 @@ function initContactForm() {
 }
 
 // Initialize contact form when DOM is ready
+console.log('🔍 Setting up contact form initialization...');
+console.log('📄 Document ready state:', document.readyState);
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initContactForm);
+    console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('✅ DOMContentLoaded fired, initializing contact form...');
+        initContactForm();
+    });
 } else {
+    console.log('✅ Document already ready, initializing contact form immediately...');
     initContactForm();
 }
 

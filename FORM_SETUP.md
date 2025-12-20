@@ -1,48 +1,63 @@
 # Contact Form Setup Guide
 
-This portfolio uses EmailJS for form submissions. Here are setup instructions and alternatives.
+This portfolio uses **Resend API** for form submissions via Cloudflare Pages Functions.
 
-## Current Setup: EmailJS (Recommended)
+## Current Setup: Resend API
 
-EmailJS is free for up to 200 emails/month and works on any hosting platform.
+Resend is free for up to 3,000 emails/month and works seamlessly with Cloudflare Pages.
 
 ### Setup Steps:
 
-1. **Sign up at [emailjs.com](https://www.emailjs.com/)**
+1. **Sign up at [resend.com](https://resend.com)** (free account)
 
-2. **Create an Email Service:**
-   - Go to "Email Services" → "Add New Service"
-   - Choose your email provider (Gmail, Outlook, etc.)
-   - Follow the connection steps
+2. **Get Your API Key:**
+   - Go to Resend Dashboard → **API Keys**
+   - Click **"Create API Key"**
+   - Copy your API key (starts with `re_`)
 
-3. **Create an Email Template:**
-   - Go to "Email Templates" → "Create New Template"
-   - Use these variables in your template:
-     - `{{from_name}}` - Sender's name
-     - `{{from_email}}` - Sender's email
-     - `{{message}}` - Message content
-   - Set your email subject and body
-   - Save the template
+3. **Verify Your Domain (Required for production):**
+   - See [RESEND_DOMAIN_SETUP.md](./RESEND_DOMAIN_SETUP.md) for detailed instructions
+   - You need to verify `xdrar.xyz` in Resend to send emails
+   - Add DNS records in Cloudflare DNS
 
-4. **Get Your Keys:**
-   - Go to "Account" → "General"
-   - Copy your **Public Key**
-   - Go to "Email Services" and copy your **Service ID**
-   - Go to "Email Templates" and copy your **Template ID**
-
-5. **Configure the App:**
-   - Create a `.env` file in the project root
-   - Add your keys (Vite uses `VITE_` prefix):
+4. **Configure Cloudflare Pages Environment Variables:**
+   - Go to Cloudflare Dashboard → **Pages** → Your site → **Settings** → **Environment variables**
+   - Add these variables:
      ```
-     VITE_EMAILJS_SERVICE_ID=your_service_id
-     VITE_EMAILJS_TEMPLATE_ID=your_template_id
-     VITE_EMAILJS_PUBLIC_KEY=your_public_key
+     RESEND_API_KEY=re_your_api_key_here
+     CONTACT_EMAIL=xd.rar@gmail.com
+     FROM_EMAIL=noreply@xdrar.xyz
      ```
-   - Restart your dev server
+   - **Note:** `FROM_EMAIL` must use your verified domain (e.g., `noreply@xdrar.xyz`)
+   - Save and redeploy your site
 
-6. **For Production:**
-   - Add these environment variables to your hosting platform (Vercel, Netlify, etc.)
-   - They'll be available as `import.meta.env.VITE_EMAILJS_*`
+5. **How It Works:**
+   - Contact form submits to `/api/contact` (Cloudflare Pages Function)
+   - Function at `functions/api/contact.js` handles the submission
+   - Sends two emails:
+     - One to you (`CONTACT_EMAIL`) with the form submission
+     - One to the user confirming their message was received
+
+---
+
+## Testing
+
+After setup, test the form:
+1. Fill out all fields (Name, Email, Message)
+2. Submit the form
+3. Check your email inbox (`CONTACT_EMAIL`)
+4. Verify you received the submission
+5. Check that the user received a confirmation email
+
+## Troubleshooting
+
+- **Form not submitting?** Check browser console for errors
+- **"Email service not configured" error?** Make sure `RESEND_API_KEY` is set in Cloudflare Pages environment variables
+- **Not receiving emails?** 
+  - Check spam folder
+  - Verify domain is verified in Resend (see RESEND_DOMAIN_SETUP.md)
+  - Check Resend dashboard for email logs
+- **CORS errors?** The function already handles CORS, but check that it's deployed correctly
 
 ---
 

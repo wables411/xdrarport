@@ -954,6 +954,13 @@ function initContactForm() {
 // Initialize contact form when DOM is ready
 console.log('🔍 Setting up contact form initialization...');
 console.log('📄 Document ready state:', document.readyState);
+console.log('🔍 Contact form element exists?', document.getElementById('contactForm') ? 'YES' : 'NO');
+
+// Try immediate initialization
+setTimeout(() => {
+    console.log('⏰ Delayed initialization attempt...');
+    initContactForm();
+}, 100);
 
 if (document.readyState === 'loading') {
     console.log('⏳ Document still loading, waiting for DOMContentLoaded...');

@@ -198,6 +198,20 @@
         </div>
     </div>
 
+    <script>
+        // Immediate test to verify scripts are loading
+        console.log('✅ HTML script tag executed');
+        console.log('🔍 Testing script.js load...');
+    </script>
     <script src="script.js"></script>
+    <script>
+        // Verify script.js loaded
+        console.log('✅ After script.js tag');
+        if (typeof R2_PUBLIC_URL !== 'undefined') {
+            console.log('✅ R2_PUBLIC_URL variable exists:', R2_PUBLIC_URL);
+        } else {
+            console.error('❌ R2_PUBLIC_URL variable NOT found - script.js may not have loaded');
+        }
+    </script>
 </body>
 </html>

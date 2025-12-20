@@ -952,43 +952,44 @@ function initContactForm() {
 }
 
 // Initialize contact form when DOM is ready
-console.log('🔍 Setting up contact form initialization...');
-console.log('📄 Document ready state:', document.readyState);
-
-// Multiple initialization attempts to ensure it runs
-function tryInitContactForm() {
-    console.log('🔍 Attempting to initialize contact form...');
-    const contactForm = document.getElementById('contactForm');
-    console.log('🔍 Contact form element exists?', contactForm ? 'YES' : 'NO');
-    if (contactForm) {
-        console.log('✅ Found contact form, initializing...');
-        initContactForm();
-        return true;
+(function() {
+    console.log('🔍 Setting up contact form initialization...');
+    console.log('📄 Document ready state:', document.readyState);
+    
+    function tryInitContactForm() {
+        console.log('🔍 Attempting to initialize contact form...');
+        const contactForm = document.getElementById('contactForm');
+        console.log('🔍 Contact form element exists?', contactForm ? 'YES' : 'NO');
+        if (contactForm) {
+            console.log('✅ Found contact form, initializing...');
+            initContactForm();
+            return true;
+        }
+        return false;
     }
-    return false;
-}
-
-// Try immediately
-if (!tryInitContactForm()) {
-    console.log('⏳ Form not found, will retry...');
-}
-
-// Try on DOMContentLoaded
-if (document.readyState === 'loading') {
-    console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('✅ DOMContentLoaded fired');
+    
+    // Try immediately
+    if (!tryInitContactForm()) {
+        console.log('⏳ Form not found, will retry...');
+    }
+    
+    // Try on DOMContentLoaded
+    if (document.readyState === 'loading') {
+        console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('✅ DOMContentLoaded fired');
+            tryInitContactForm();
+        });
+    } else {
+        console.log('✅ Document already ready');
+        setTimeout(() => tryInitContactForm(), 100);
+    }
+    
+    // Also try after a delay as fallback
+    setTimeout(() => {
+        console.log('⏰ Delayed fallback initialization attempt...');
         tryInitContactForm();
-    });
-} else {
-    console.log('✅ Document already ready');
-    setTimeout(() => tryInitContactForm(), 100);
-}
-
-// Also try after a delay as fallback
-setTimeout(() => {
-    console.log('⏰ Delayed fallback initialization attempt...');
-    tryInitContactForm();
-}, 500);
+    }, 500);
+})();
 
 

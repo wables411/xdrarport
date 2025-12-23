@@ -23,7 +23,12 @@ function getMediaUrl(relativePath) {
         const hasClientDir = clientDirs.some(dir => relativePath.startsWith(dir));
         
         const path = hasClientDir ? relativePath : relativePath;
-        return `${R2_PUBLIC_URL}/${path}`;
+        // URL encode each path segment separately to handle special characters like quotes
+        // while preserving slashes
+        const pathSegments = path.split('/');
+        const encodedSegments = pathSegments.map(segment => encodeURIComponent(segment));
+        const encodedPath = encodedSegments.join('/');
+        return `${R2_PUBLIC_URL}/${encodedPath}`;
     }
     // Fallback to local path (for development)
     return relativePath;
@@ -886,7 +891,7 @@ window.openClientModal = function(clientId) {
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline data-video-src="${video}">
+                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
                         </div>
@@ -927,26 +932,76 @@ window.openClientModal = function(clientId) {
         const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
         
         videoElements.forEach((video, videoIndex) => {
+            // Add error handling first
+            video.addEventListener('error', (e) => {
+                console.error('Video load error:', video.src, video.error);
+                // Try to reload if there was an error
+                if (video.error && video.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
+                    console.error('Video format not supported or URL incorrect:', video.src);
+                }
+            });
+            
             // Ensure video loads and plays (especially for .mov files)
             video.load();
             
+            // Set video to show first frame immediately
+            video.addEventListener('loadeddata', () => {
+                // Seek to frame 3 (assuming 30fps: 3/30 = 0.1 seconds) to show a frame
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                }
+            });
+            
             video.addEventListener('loadedmetadata', () => {
                 // Set to frame 3 (assuming 30fps: 3/30 = 0.1 seconds)
-                video.currentTime = 3 / 30;
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                    // Try to play after seeking
+                    video.play().catch(() => {
+                        // If autoplay fails, at least we've shown the frame
+                    });
+                }
+            });
+            
+            // Once video can play, ensure it's visible and playing
+            video.addEventListener('canplay', () => {
+                // Ensure we're at the right frame
+                if (video.duration > 0 && video.currentTime < 0.05) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+                video.play().catch(err => {
+                    // Ignore autoplay errors
+                });
             });
             
             // Limit video playback to 5 seconds max, then loop back to frame 3
             video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5) {
-                    video.currentTime = 3 / 30; // Loop back to frame 3
+                if (video.currentTime >= 5 && video.duration > 0) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1); // Loop back to frame 3
                 }
             });
             
             // Try to play the video (autoplay might be blocked by browser)
             video.play().catch(err => {
                 // Autoplay was prevented, but that's okay - it will play when user interacts
-                console.log('Video autoplay prevented:', err);
             });
+            
+            // Force load and seek to show frame after a short delay
+            setTimeout(() => {
+                if (video.readyState >= 2) { // HAVE_CURRENT_DATA or higher
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                    video.play().catch(() => {
+                        // Ignore autoplay errors, but frame should be visible
+                    });
+                } else {
+                    video.load();
+                }
+            }, 300);
             
             // Add click handler for fullscreen
             const handleMediaClick = (e) => {

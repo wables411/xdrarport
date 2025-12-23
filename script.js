@@ -796,7 +796,7 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'September 2023',
                 videos: [
-                    getMediaUrl('Bussdown/The_Brooklyn Bussdown_Fashion_Week_Edition_Reel_-_September 2023.mp4')
+                    getMediaUrl('Bussdown/The_Brooklyn_Bussdown_Fashion_Week_Edition_Reel_-_September_2023.mp4')
                 ]
             }
         ]
@@ -826,11 +826,11 @@ window.clientsData = {
                 tags: ['ALBUM', 'VISUALS', 'VIDEO'],
                 date: 'June 2023',
                 videos: [
-                    getMediaUrl('YNB/"Who_TF_is_YNB"_Visuals_-_June_2023/"Who_TF_is_YNB"_Reel.mp4')
+                    getMediaUrl('YNB/“Who_TF_is_YNB”_Visuals_-_June_2023/“Who_TF_is_YNB”_Reel.mp4')
                 ],
                 images: [
-                    getMediaUrl('YNB/"Who_TF_is_YNB"_Visuals_-_June_2023/"Who_TF_is_YNB"_Album_Cover.png'),
-                    getMediaUrl('YNB/"Who_TF_is_YNB"_Visuals_-_June_2023/"Who_TF_is_YNB"_Album_BackCover.png')
+                    getMediaUrl('YNB/“Who_TF_is_YNB”_Visuals_-_June_2023/“Who_TF_is_YNB”_Album_Cover.png'),
+                    getMediaUrl('YNB/“Who_TF_is_YNB”_Visuals_-_June_2023/“Who_TF_is_YNB”_Album_BackCover.png')
                 ]
             }
         ]
@@ -852,6 +852,24 @@ window.clientsData = {
             }
         ]
     }
+};
+
+// Debug function to log all media URLs (call from console: window.logAllMediaUrls())
+window.logAllMediaUrls = function() {
+    console.log('=== All Media URLs ===');
+    Object.keys(window.clientsData).forEach(clientId => {
+        const client = window.clientsData[clientId];
+        console.log(`\n${client.name}:`);
+        client.projects.forEach(project => {
+            console.log(`  ${project.title}:`);
+            if (project.videos) {
+                project.videos.forEach(video => console.log(`    Video: ${video}`));
+            }
+            if (project.images) {
+                project.images.forEach(image => console.log(`    Image: ${image}`));
+            }
+        });
+    });
 };
 
 // Open client modal (make globally accessible)
@@ -932,13 +950,25 @@ window.openClientModal = function(clientId) {
         const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
         
         videoElements.forEach((video, videoIndex) => {
+            // Log the video source for debugging
+            console.log('Loading video:', video.src);
+            
             // Add error handling first
             video.addEventListener('error', (e) => {
-                console.error('Video load error:', video.src, video.error);
+                console.error('❌ Video load error:', {
+                    src: video.src,
+                    error: video.error,
+                    errorCode: video.error ? video.error.code : 'unknown',
+                    errorMessage: video.error ? video.error.message : 'unknown'
+                });
                 // Try to reload if there was an error
                 if (video.error && video.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
                     console.error('Video format not supported or URL incorrect:', video.src);
                 }
+            });
+            
+            video.addEventListener('loadeddata', () => {
+                console.log('✅ Video loaded successfully:', video.src);
             });
             
             // Ensure video loads and plays (especially for .mov files)
@@ -1019,6 +1049,20 @@ window.openClientModal = function(clientId) {
         
         // Add click handlers for images
         imageElements.forEach((image, imageIndex) => {
+            // Log image source for debugging
+            console.log('Loading image:', image.src);
+            
+            image.addEventListener('error', (e) => {
+                console.error('❌ Image load error:', {
+                    src: image.src,
+                    error: 'Failed to load image'
+                });
+            });
+            
+            image.addEventListener('load', () => {
+                console.log('✅ Image loaded successfully:', image.src);
+            });
+            
             const handleMediaClick = (e) => {
                 e.stopPropagation();
                 toggleMediaFullscreen(image);

@@ -21,6 +21,7 @@ async function build() {
     // Files and directories to copy
     const filesToCopy = [
       'index.html',
+      'clients.html',
       'script.js',
       'styles.css',
       'XDRAR.mp4',

@@ -21,22 +21,13 @@
     <!-- Header with Navigation -->
     <header class="header" id="header">
         <div class="header-inner">
-            <a href="#hero" class="logo" data-parallax="0.1">XD.RAR</a>
+            <a href="index.html" class="logo" data-parallax="0.1">XD.RAR</a>
             <nav class="nav">
-                <div class="nav-link-wrapper">
-                    <a href="#clients" class="nav-link" data-text="CLIENTS" id="clientsLink">CLIENTS</a>
-                    <div class="clients-dropdown" id="clientsDropdown">
-                        <a href="#" class="client-item" data-client="crybaby-oakland">Crybaby Oakland</a>
-                        <a href="#" class="client-item" data-client="bussdown">Bussdown</a>
-                        <a href="#" class="client-item" data-client="planeta-pisces">Planeta Pisces</a>
-                        <a href="#" class="client-item" data-client="ynb">YNB</a>
-                        <a href="#" class="client-item" data-client="zmo">ZMO</a>
-                    </div>
-                </div>
-                <a href="#personal" class="nav-link" data-text="PERSONAL PROJECTS">PERSONAL PROJECTS</a>
-                <a href="#archive" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
+                <a href="#work" class="nav-link" data-text="WORK">WORK</a>
+                <a href="clients.html" class="nav-link" data-text="CLIENTS">CLIENTS</a>
                 <a href="#about" class="nav-link" data-text="ABOUT">ABOUT</a>
                 <a href="#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
+                <a href="#archive" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
             </nav>
             <div class="theme-toggle-wrapper">
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -53,9 +44,12 @@
             <video class="hero-video" data-parallax="0.3" autoplay muted loop playsinline>
                 <source src="https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/XDRAR.mp4" id="heroVideoSource" type="video/mp4">
             </video>
-            <div class="hero-meta" data-parallax="0.2">
-                <span class="meta-item">2025</span>
-                <span class="meta-item">GRAPHIC DESIGN</span>
+            <div class="hero-marquee-container">
+                <div class="hero-marquee">
+                    <span class="marquee-content">Creative Direction · Visual Systems · Identity Design · Art Direction · Motion Design · Generative AI · Image-to-Video · Experimental Branding · 3D & Spatial Graphics · Typography · Logotypes & Marks · Brand Architecture · Campaign Assets · Digital Design · Web Visuals · UI Fragments · Design as a Service (Emotionally) · Interactive Concepts · Prompt Engineering · Worldbuilding ·  Visual Lore · Aesthetic Research · Style Development · Creative Tooling · Prototyping · Rapid Iteration · Conceptual Design · Visual Storytelling · Systems Thinking · Image Curation · Visual Editing · Cultural Referencing · Internet-Native Design · Experimental Media · Asset Creation · Creative R&D · Speculative Design · Graphic Experiments · Mixed Media · Creative Consulting · Visual Language Development · Design for Screens · Design for Motion · Design for Atmosphere · Vibes Calibration · Unlicensed Futurism · Brand Alchemy · Post-Rational Design · Soft Science · Hard Opinions · Serious Graphics · Totally Normal Processes · Unverified Methodologies · Controlled Chaos · Overthinking Aesthetics · Underthinking Strategy · Strategic Confusion · Visual Gaslighting · Taste Arbitration · Trend Avoidance · Trend Acceleration · Legibility Debates · Ethical Ambiguity · Market Awareness (Vibes Only)</span>
+                    <span class="marquee-content" aria-hidden="true">Creative Direction · Visual Systems · Identity Design · Art Direction · Motion Design · Generative AI · Image-to-Video · Experimental Branding · 3D & Spatial Graphics · Typography · Logotypes & Marks · Brand Architecture · Campaign Assets · Digital Design · Web Visuals · UI Fragments · Design as a Service (Emotionally) · Interactive Concepts · Prompt Engineering · Worldbuilding ·  Visual Lore · Aesthetic Research · Style Development · Creative Tooling · Prototyping · Rapid Iteration · Conceptual Design · Visual Storytelling · Systems Thinking · Image Curation · Visual Editing · Cultural Referencing · Internet-Native Design · Experimental Media · Asset Creation · Creative R&D · Speculative Design · Graphic Experiments · Mixed Media · Creative Consulting · Visual Language Development · Design for Screens · Design for Motion · Design for Atmosphere · Vibes Calibration · Unlicensed Futurism · Brand Alchemy · Post-Rational Design · Soft Science · Hard Opinions · Serious Graphics · Totally Normal Processes · Unverified Methodologies · Controlled Chaos · Overthinking Aesthetics · Underthinking Strategy · Strategic Confusion · Visual Gaslighting · Taste Arbitration · Trend Avoidance · Trend Acceleration · Legibility Debates · Ethical Ambiguity · Market Awareness (Vibes Only)</span>
+                </div>
+                <div class="scroll-arrow" id="scrollArrow" data-arrow-section="hero" data-arrow-target="work">↓</div>
             </div>
         </div>
         <div class="hero-bg" data-parallax="0.1"></div>
@@ -67,8 +61,8 @@
             <!-- Projects will be dynamically filtered by breadcrumb -->
             <div class="project-item" data-category="identity" data-index="0">
                 <div class="project-info">
-                    <h3 class="project-title">IDENTITY SYSTEM</h3>
-                    <p class="project-description">Brand identity design for experimental music label featuring custom typography and geometric compositions.</p>
+                    <h3 class="project-title">BRANDING & IDENTITY</h3>
+                    <p class="project-description">Logos, visual direction, and brand worlds (including merch).</p>
                     <div class="project-tags">
                         <span class="project-tag">TYPOGRAPHY</span>
                         <span class="project-tag">BRANDING</span>
@@ -85,8 +79,8 @@
 
             <div class="project-item" data-category="digital" data-index="1">
                 <div class="project-info">
-                    <h3 class="project-title">EDITORIAL DESIGN</h3>
-                    <p class="project-description">Experimental magazine layout exploring the intersection of text and image through dynamic grid systems.</p>
+                    <h3 class="project-title">MOTION & VISUAL MEDIA</h3>
+                    <p class="project-description">Public-facing visuals tied to nightlife, releases, live moments, and digital platforms.</p>
                     <div class="project-tags">
                         <span class="project-tag">EDITORIAL</span>
                         <span class="project-tag">LAYOUT</span>
@@ -103,8 +97,8 @@
 
             <div class="project-item" data-category="print" data-index="2">
                 <div class="project-info">
-                    <h3 class="project-title">DIGITAL EXPERIENCE</h3>
-                    <p class="project-description">Interactive web platform with brutalist design principles and experimental navigation patterns.</p>
+                    <h3 class="project-title">PERSONAL PROJECTS</h3>
+                    <p class="project-description">Public-facing visuals tied to nightlife, releases, and live moments.</p>
                     <div class="project-tags">
                         <span class="project-tag">WEB</span>
                         <span class="project-tag">INTERACTION</span>
@@ -118,24 +112,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="project-item" data-category="identity" data-index="3">
-                <div class="project-info">
-                    <h3 class="project-title">PRINT COLLECTION</h3>
-                    <p class="project-description">Series of posters exploring typographic hierarchies and spatial relationships in physical formats.</p>
-                    <div class="project-tags">
-                        <span class="project-tag">PRINT</span>
-                        <span class="project-tag">POSTER</span>
-                    </div>
-                </div>
-                <div class="project-thumbnail-wrapper">
-                    <div class="project-thumbnail-frame">
-                        <div class="project-thumbnail">
-                            <div class="thumbnail-placeholder"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        </div>
+        <div class="section-arrow-container">
+            <div class="scroll-arrow" data-arrow-section="work" data-arrow-target="about">↓</div>
         </div>
     </section>
 
@@ -147,6 +126,9 @@
                 Specializing in experimental visual identities, custom type design, and complex 
                 editorial compositions.
             </p>
+        </div>
+        <div class="section-arrow-container">
+            <div class="scroll-arrow" data-arrow-section="about" data-arrow-target="contact">↓</div>
         </div>
     </section>
 

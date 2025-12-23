@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIENTS - PORTFOLIO</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        // R2 Public URL - Media is hosted on Cloudflare R2
+        window.R2_PUBLIC_URL = 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev';
+    </script>
+</head>
+<body data-theme="dark">
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+    
+    <!-- Header with Navigation -->
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="index.html" class="logo" data-parallax="0.1">XD.RAR</a>
+            <nav class="nav">
+                <a href="index.html#work" class="nav-link" data-text="WORK">WORK</a>
+                <a href="clients.html" class="nav-link" data-text="CLIENTS">CLIENTS</a>
+                <a href="index.html#about" class="nav-link" data-text="ABOUT">ABOUT</a>
+                <a href="index.html#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
+                <a href="index.html#archive" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
+            </nav>
+            <div class="theme-toggle-wrapper">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">☀</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Client Modal -->
+    <div class="client-modal" id="clientModal">
+        <div class="client-modal-overlay"></div>
+        <div class="client-modal-content">
+            <button class="client-modal-close" id="closeModal">&times;</button>
+            <div class="client-modal-header">
+                <h2 class="client-modal-title" id="clientModalTitle"></h2>
+            </div>
+            <div class="client-modal-projects" id="clientModalProjects">
+                <!-- Projects will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Clients Page Content -->
+    <section class="clients-page" style="padding-top: 8rem; min-height: 100vh;">
+        <div class="clients-page-content">
+            <h1 class="clients-page-title">CLIENTS</h1>
+            <div class="clients-horizontal-list" id="clientsList">
+                <!-- Clients will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Fullscreen Media Viewer -->
+    <div class="media-fullscreen" id="mediaFullscreen">
+        <button class="media-fullscreen-close" id="closeFullscreen">&times;</button>
+        <div class="media-fullscreen-content" id="mediaFullscreenContent">
+            <!-- Media will be inserted here -->
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Clients page specific script
+        document.addEventListener('DOMContentLoaded', function() {
+            const clientsList = document.getElementById('clientsList');
+            
+            // Get clientsData from script.js (it's in global scope)
+            if (typeof window.clientsData !== 'undefined') {
+                Object.keys(window.clientsData).forEach((clientId, index) => {
+                    const client = window.clientsData[clientId];
+                    const clientItem = document.createElement('div');
+                    clientItem.className = 'client-list-item';
+                    clientItem.setAttribute('data-client', clientId);
+                    clientItem.textContent = client.name;
+                    
+                    // Add click handler to open modal
+                    clientItem.addEventListener('click', () => {
+                        if (typeof openClientModal === 'function') {
+                            openClientModal(clientId);
+                        }
+                    });
+                    
+                    clientsList.appendChild(clientItem);
+                });
+            }
+            
+            // Set up modal close handlers
+            const closeModal = document.getElementById('closeModal');
+            const clientModal = document.getElementById('clientModal');
+            
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    if (typeof closeClientModal === 'function') {
+                        closeClientModal();
+                    }
+                });
+            }
+            
+            if (clientModal) {
+                clientModal.addEventListener('click', (e) => {
+                    if (e.target === clientModal || e.target.classList.contains('client-modal-overlay')) {
+                        if (typeof closeClientModal === 'function') {
+                            closeClientModal();
+                        }
+                    }
+                });
+            }
+            
+            // Close modal on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (clientModal && clientModal.classList.contains('active')) {
+                        if (typeof closeClientModal === 'function') {
+                            closeClientModal();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

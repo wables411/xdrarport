@@ -245,7 +245,6 @@ window.addEventListener('load', () => {
 
     // Animate hero on load
     const heroTitle = document.querySelector('.hero-title');
-    const heroMeta = document.querySelector('.hero-meta');
     if (heroTitle) {
         heroTitle.style.opacity = '0';
         heroTitle.style.transform = 'translateY(20px)';
@@ -254,13 +253,6 @@ window.addEventListener('load', () => {
             heroTitle.style.opacity = '1';
             heroTitle.style.transform = 'translateY(0)';
         }, 200);
-    }
-    if (heroMeta) {
-        heroMeta.style.opacity = '0';
-        setTimeout(() => {
-            heroMeta.style.transition = 'opacity 0.8s ease-out';
-            heroMeta.style.opacity = '1';
-        }, 400);
     }
 });
 
@@ -278,12 +270,11 @@ document.querySelectorAll('a[href^="#"]:not(.client-item)').forEach(anchor => {
         }
         const target = document.querySelector(href);
         if (target) {
-            const headerHeight = document.querySelector('.header').offsetHeight;
-            const targetPosition = target.offsetTop - headerHeight;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
+            // Use scrollIntoView with block: 'start' - works with scroll-snap
+            // scroll-margin-top in CSS handles header offset
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
         }
     });
@@ -347,16 +338,16 @@ projectItems.forEach(item => {
 });
 
 // Dynamic parallax on scroll with easing
-let scrollTimeout;
+let parallaxScrollTimeout;
 window.addEventListener('scroll', () => {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
+    clearTimeout(parallaxScrollTimeout);
+    parallaxScrollTimeout = setTimeout(() => {
         updateParallax();
     }, 10);
 });
 
 // Scroll-based scaling for projects
-let lastScrollY = 0;
+let projectScalingLastScrollY = 0;
 let scalingTicking = false;
 
 function updateProjectScaling() {
@@ -375,9 +366,9 @@ function updateProjectScaling() {
         const distanceFromCenter = Math.abs(itemCenter - viewportCenter);
         
         // Scale based on distance from viewport center
-        // Items at center = 1.0, items further away scale down to 0.85
+        // Items at center = 1.2, items further away scale down to 0.7 (increased parallax effect)
         const maxDistance = viewportHeight * 1.0;
-        const scaleFactor = Math.max(0.85, 1 - (distanceFromCenter / maxDistance) * 0.15);
+        const scaleFactor = Math.max(0.7, 1.2 - (distanceFromCenter / maxDistance) * 0.5);
         
         // Store scale factor on element for CSS to use
         item.style.setProperty('--item-scale', scaleFactor);
@@ -418,6 +409,223 @@ function requestScalingTick() {
 // Update scaling on scroll
 window.addEventListener('scroll', requestScalingTick);
 window.addEventListener('resize', updateProjectScaling);
+
+// Scroll Arrow Growth and Snap-Scroll (Reactive to scroll velocity) - Multi-Arrow System
+const arrowMaxSize = 3; // Maximum font-size multiplier (reduced for less dramatic effect)
+const snapScrollThreshold = 0.75; // When arrow reaches 75% of max size, trigger snap (increased for more restraint)
+const smoothing = 0.3; // Moderate smoothing for subtle effect
+
+// Arrow class to handle individual arrow instances
+class ScrollArrow {
+    constructor(element) {
+        this.element = element;
+        this.sectionId = element.getAttribute('data-arrow-section');
+        this.targetId = element.getAttribute('data-arrow-target');
+        this.section = document.querySelector(`#${this.sectionId}`);
+        this.targetSection = document.querySelector(`#${this.targetId}`);
+        
+        // Find previous section for upward scrolling
+        this.previousSection = this.findPreviousSection();
+        
+        // State
+        this.arrowSize = 1.5;
+        this.arrowSizeTarget = 1.5;
+        this.lastScrollY = 0;
+        this.lastScrollTime = Date.now();
+        this.scrollVelocity = 0;
+        this.accumulatedScroll = 0;
+        this.scrollDirection = 0;
+        this.isSnapping = false;
+        
+        // Store original arrow character
+        this.originalArrow = element.textContent;
+        
+        if (!this.section || !this.targetSection) {
+            console.warn(`Arrow: section or target not found for ${this.sectionId} -> ${this.targetId}`);
+        }
+    }
+    
+    findPreviousSection() {
+        // Find the section that comes before this arrow's section
+        const sections = ['hero', 'work', 'about', 'contact'];
+        const currentIndex = sections.indexOf(this.sectionId);
+        if (currentIndex > 0) {
+            const prevId = sections[currentIndex - 1];
+            return document.querySelector(`#${prevId}`);
+        }
+        return null;
+    }
+    
+    updateSize() {
+        // Smoothly interpolate arrow size towards target
+        this.arrowSize += (this.arrowSizeTarget - this.arrowSize) * smoothing;
+        
+        // Apply font-size (subtle growth from 1.5rem to 4.5rem = 3x larger)
+        this.element.style.fontSize = `${this.arrowSize}rem`;
+        
+        // Stretch the arrow both vertically and horizontally as it grows
+        const stretchY = 1 + ((this.arrowSize - 1.5) / 1.5) * 1; // Stretch up to 100% more vertically
+        const stretchX = 1 + ((this.arrowSize - 1.5) / 1.5) * 0.5; // Stretch up to 50% more horizontally (fatter)
+        this.element.style.transform = `scale(${stretchX}, ${stretchY})`;
+    }
+    
+    handleWheel(e) {
+        if (!this.section || this.isSnapping) return;
+        
+        const sectionRect = this.section.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const currentTime = Date.now();
+        const timeDelta = currentTime - this.lastScrollTime;
+        const wheelDelta = e.deltaY; // Positive = scrolling down, Negative = scrolling up
+        
+        // Calculate velocity from wheel delta
+        if (timeDelta > 0) {
+            this.scrollVelocity = Math.abs(wheelDelta / (timeDelta / 1000));
+        } else {
+            this.scrollVelocity = 0;
+        }
+        
+        // Determine scroll direction
+        if (wheelDelta > 0) {
+            this.scrollDirection = 1; // Scrolling down
+        } else if (wheelDelta < 0) {
+            this.scrollDirection = -1; // Scrolling up
+        }
+        
+        // Check section positions
+        const isInSection = sectionRect.bottom > 0 && sectionRect.top < viewportHeight;
+        const isAtBottomOfSection = sectionRect.bottom <= viewportHeight * 1.1 && sectionRect.bottom > viewportHeight * 0.3;
+        
+        // Check if we're in target section (for upward scrolling)
+        let isInTargetSection = false;
+        let isAtTopOfTargetSection = false;
+        if (this.targetSection) {
+            const targetRect = this.targetSection.getBoundingClientRect();
+            isInTargetSection = targetRect.top < viewportHeight && targetRect.bottom > 0;
+            isAtTopOfTargetSection = targetRect.top <= viewportHeight * 0.3 && targetRect.top > -viewportHeight * 0.2;
+        }
+        
+        // Handle downward scrolling (when in section, scrolling down)
+        if (this.scrollDirection === 1 && isInSection && this.targetSection) {
+            // Accumulate scroll amount
+            this.accumulatedScroll += Math.abs(wheelDelta);
+            
+            // Calculate arrow size (moderate thresholds for subtle effect)
+            const velocityFactor = Math.min(1, this.scrollVelocity / 150);
+            const scrollFactor = Math.min(1, this.accumulatedScroll / 120);
+            const combinedFactor = Math.max(velocityFactor, scrollFactor);
+            
+            // Set target arrow size (subtle growth from 1.5rem to 4.5rem = 3x larger)
+            this.arrowSizeTarget = 1.5 + (combinedFactor * (arrowMaxSize - 1) * 1.5);
+            
+            // Update arrow to point down
+            this.element.textContent = '↓';
+            
+            // Trigger snap-scroll if threshold reached (scrolling down from section)
+            if (combinedFactor >= snapScrollThreshold && isAtBottomOfSection) {
+                this.isSnapping = true;
+                this.accumulatedScroll = 0;
+                setTimeout(() => {
+                    this.targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    setTimeout(() => {
+                        this.isSnapping = false;
+                        this.arrowSizeTarget = 1.5;
+                        this.accumulatedScroll = 0;
+                    }, 1000);
+                }, 200);
+            }
+        }
+        // Handle upward scrolling (when in target section, scrolling up) - Less aggressive
+        else if (this.scrollDirection === -1 && this.previousSection && isInTargetSection && isAtTopOfTargetSection) {
+            // Accumulate scroll amount (for upward) - slower accumulation for less aggressiveness
+            this.accumulatedScroll += Math.abs(wheelDelta) * 0.7; // 30% slower accumulation
+            
+            // Calculate arrow size - higher thresholds for upward scrolling (less aggressive)
+            const velocityFactor = Math.min(1, this.scrollVelocity / 200); // Higher threshold (200px/s = max, was 150)
+            const scrollFactor = Math.min(1, this.accumulatedScroll / 180); // Higher threshold (180px = max, was 120)
+            const combinedFactor = Math.max(velocityFactor, scrollFactor);
+            
+            // Set target arrow size
+            this.arrowSizeTarget = 1.5 + (combinedFactor * (arrowMaxSize - 1) * 1.5);
+            
+            // Update arrow to point up
+            this.element.textContent = '↑';
+            
+            // Trigger snap-scroll if threshold reached (scrolling up to previous section) - higher threshold
+            if (combinedFactor >= snapScrollThreshold * 1.2) { // 20% higher threshold for upward
+                this.isSnapping = true;
+                this.accumulatedScroll = 0;
+                setTimeout(() => {
+                    this.previousSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    setTimeout(() => {
+                        this.isSnapping = false;
+                        this.arrowSizeTarget = 1.5;
+                        this.accumulatedScroll = 0;
+                    }, 1000);
+                }, 200);
+            }
+        } else {
+            // Reset when not in active scroll zone
+            this.arrowSizeTarget = 1.5;
+            this.accumulatedScroll = 0;
+            // Reset arrow direction when not actively scrolling
+            if (Math.abs(wheelDelta) < 1) {
+                this.element.textContent = this.originalArrow;
+            }
+        }
+        
+        this.lastScrollTime = currentTime;
+    }
+    
+    reset() {
+        this.arrowSizeTarget = 1.5;
+        this.accumulatedScroll = 0;
+    }
+}
+
+// Initialize all arrows
+let scrollArrows = [];
+let wheelTimeout;
+
+function initScrollArrows() {
+    const arrowElements = document.querySelectorAll('.scroll-arrow[data-arrow-section][data-arrow-target]');
+    scrollArrows = Array.from(arrowElements).map(el => new ScrollArrow(el));
+    console.log(`Initialized ${scrollArrows.length} scroll arrows`);
+}
+
+// Update all arrow sizes in animation loop
+function updateAllArrowSizes() {
+    scrollArrows.forEach(arrow => arrow.updateSize());
+    requestAnimationFrame(updateAllArrowSizes);
+}
+
+// Handle wheel events for all arrows
+window.addEventListener('wheel', (e) => {
+    scrollArrows.forEach(arrow => arrow.handleWheel(e));
+    
+    // Reset all arrows after wheel stops
+    clearTimeout(wheelTimeout);
+    wheelTimeout = setTimeout(() => {
+        scrollArrows.forEach(arrow => arrow.reset());
+    }, 200);
+}, { passive: true });
+
+// Initialize on load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        initScrollArrows();
+        updateAllArrowSizes();
+    });
+} else {
+    initScrollArrows();
+    updateAllArrowSizes();
+}
 
 // Initial scaling update
 window.addEventListener('load', () => {
@@ -529,8 +737,8 @@ const closeModal = document.getElementById('closeModal');
 const clientModalTitle = document.getElementById('clientModalTitle');
 const clientModalProjects = document.getElementById('clientModalProjects');
 
-// Client data
-const clientsData = {
+// Client data (make it globally accessible)
+window.clientsData = {
     'crybaby-oakland': {
         name: 'Crybaby Oakland',
         projects: [
@@ -641,10 +849,17 @@ const clientsData = {
     }
 };
 
-// Open client modal
-function openClientModal(clientId) {
-    const client = clientsData[clientId];
+// Open client modal (make globally accessible)
+window.openClientModal = function(clientId) {
+    const client = window.clientsData[clientId];
     if (!client) return;
+    
+    // Get modal elements (works on both index.html and clients.html)
+    const clientModal = document.getElementById('clientModal');
+    const clientModalTitle = document.getElementById('clientModalTitle');
+    const clientModalProjects = document.getElementById('clientModalProjects');
+    
+    if (!clientModal || !clientModalTitle || !clientModalProjects) return;
     
     clientModalTitle.textContent = client.name;
     clientModalProjects.innerHTML = '';
@@ -698,7 +913,6 @@ function openClientModal(clientId) {
                 <h3 class="project-title">${project.title}</h3>
                 <p class="project-description">${project.description}</p>
                 <div class="project-meta" style="margin-top: 0.5rem; color: var(--secondary-color); font-size: 0.875rem;">${project.date}</div>
-                <div class="project-tags">${tagsHTML}</div>
             </div>
             <div class="project-thumbnails-container ${totalMedia > 1 ? 'has-multiple' : ''}" data-count="${totalMedia}">
                 ${thumbnailsHTML}
@@ -717,7 +931,15 @@ function openClientModal(clientId) {
             video.load();
             
             video.addEventListener('loadedmetadata', () => {
-                video.currentTime = 0.1; // Frame 3 at 30fps
+                // Set to frame 3 (assuming 30fps: 3/30 = 0.1 seconds)
+                video.currentTime = 3 / 30;
+            });
+            
+            // Limit video playback to 5 seconds max, then loop back to frame 3
+            video.addEventListener('timeupdate', () => {
+                if (video.currentTime >= 5) {
+                    video.currentTime = 3 / 30; // Loop back to frame 3
+                }
             });
             
             // Try to play the video (autoplay might be blocked by browser)
@@ -771,6 +993,8 @@ function openClientModal(clientId) {
         });
         
         // Add cursor interactions to new project items
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursorFollower');
         if (cursor && cursorFollower) {
             projectItem.addEventListener('mouseenter', () => {
                 cursor.classList.add('active');
@@ -801,10 +1025,13 @@ function openClientModal(clientId) {
     }, 100);
 }
 
-// Close modal
-function closeClientModal() {
-    clientModal.classList.remove('active');
-    document.body.style.overflow = '';
+// Close modal (make globally accessible)
+window.closeClientModal = function() {
+    const clientModal = document.getElementById('clientModal');
+    if (clientModal) {
+        clientModal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
 }
 
 // Event listeners
@@ -814,19 +1041,19 @@ if (clientsDropdown) {
         const clientItem = e.target.closest('.client-item');
         if (clientItem) {
             const clientId = clientItem.getAttribute('data-client');
-            openClientModal(clientId);
+            window.openClientModal(clientId);
         }
     });
 }
 
 if (closeModal) {
-    closeModal.addEventListener('click', closeClientModal);
+    closeModal.addEventListener('click', window.closeClientModal);
 }
 
 if (clientModal) {
     clientModal.addEventListener('click', (e) => {
         if (e.target === clientModal || e.target.classList.contains('client-modal-overlay')) {
-            closeClientModal();
+            window.closeClientModal();
         }
     });
 }
@@ -834,8 +1061,8 @@ if (clientModal) {
 // Close modal on Escape key
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (clientModal.classList.contains('active')) {
-            closeClientModal();
+        if (clientModal && clientModal.classList.contains('active')) {
+            window.closeClientModal();
         }
         if (document.getElementById('mediaFullscreen').classList.contains('active')) {
             closeMediaFullscreen();
@@ -946,8 +1173,9 @@ function updateModalProjectScaling() {
         const distanceFromCenter = Math.abs(itemCenter - viewportCenter);
         
         // Scale based on distance from viewport center
+        // Items at center = 1.2, items further away scale down to 0.7 (increased parallax effect)
         const maxDistance = viewportHeight * 1.0;
-        const scaleFactor = Math.max(0.85, 1 - (distanceFromCenter / maxDistance) * 0.15);
+        const scaleFactor = Math.max(0.7, 1.2 - (distanceFromCenter / maxDistance) * 0.5);
         
         // Scale title font size
         const title = item.querySelector('.project-title');

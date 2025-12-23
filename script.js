@@ -12,14 +12,17 @@ function getMediaUrl(relativePath) {
     if (!relativePath) return '';
     
     if (R2_PUBLIC_URL && relativePath) {
-        // XDRAR.mp4 is at root level, not in Crybaby_Oakland/
+        // XDRAR.mp4 is at root level
         if (relativePath === 'XDRAR.mp4' || relativePath.endsWith('/XDRAR.mp4')) {
             return `${R2_PUBLIC_URL}/XDRAR.mp4`;
         }
-        // Ensure path starts with Crybaby_Oakland/
-        const path = relativePath.startsWith('Crybaby_Oakland/') 
-            ? relativePath 
-            : `Crybaby_Oakland/${relativePath}`;
+        // If path already starts with a client directory, use it as-is
+        // Otherwise, assume it's a relative path that needs the full path
+        // Client directories: Crybaby_Oakland/, Bussdown/, Planeta_Pisces_November_2025/, YNB/, ZMO/
+        const clientDirs = ['Crybaby_Oakland/', 'Bussdown/', 'Planeta_Pisces_November_2025/', 'YNB/', 'ZMO/'];
+        const hasClientDir = clientDirs.some(dir => relativePath.startsWith(dir));
+        
+        const path = hasClientDir ? relativePath : relativePath;
         return `${R2_PUBLIC_URL}/${path}`;
     }
     // Fallback to local path (for development)
@@ -556,6 +559,80 @@ const clientsData = {
                 ]
             }
         ]
+    },
+    'bussdown': {
+        name: 'Bussdown',
+        projects: [
+            {
+                title: 'The Brooklyn Bussdown - June 2023',
+                description: 'Promotional reel for The Brooklyn Bussdown event.',
+                tags: ['PROMO', 'VIDEO'],
+                date: 'June 2023',
+                videos: [
+                    getMediaUrl('Bussdown/The_Brooklyn_Bussdown_-_June_2023.mov')
+                ]
+            },
+            {
+                title: 'The Brooklyn Bussdown Fashion Week Edition',
+                description: 'Fashion Week edition promotional reel.',
+                tags: ['PROMO', 'VIDEO'],
+                date: 'September 2023',
+                videos: [
+                    getMediaUrl('Bussdown/The_Brooklyn Bussdown_Fashion_Week_Edition_Reel_-_September 2023.mp4')
+                ]
+            }
+        ]
+    },
+    'planeta-pisces': {
+        name: 'Planeta Pisces',
+        projects: [
+            {
+                title: 'Planeta Pisces Logo Collection',
+                description: 'Logo design variations for Planeta Pisces.',
+                tags: ['BRANDING', 'LOGO'],
+                date: 'November 2025',
+                images: [
+                    getMediaUrl('Planeta_Pisces_November_2025/Planeta_Pisces_Logo.png'),
+                    getMediaUrl('Planeta_Pisces_November_2025/Planeta_Pisces_Logo_(alternative).png'),
+                    getMediaUrl('Planeta_Pisces_November_2025/Planeta_Pisces_Logo_(alternative_2).png')
+                ]
+            }
+        ]
+    },
+    'ynb': {
+        name: 'YNB',
+        projects: [
+            {
+                title: 'Who TF is YNB Visuals',
+                description: 'Album visuals and promotional content for YNB.',
+                tags: ['ALBUM', 'VISUALS', 'VIDEO'],
+                date: 'June 2023',
+                videos: [
+                    getMediaUrl('YNB/"Who_TF_is_YNB"_Visuals_-_June_2023/"Who_TF_is_YNB"_Reel.mp4')
+                ],
+                images: [
+                    getMediaUrl('YNB/"Who_TF_is_YNB"_Visuals_-_June_2023/"Who_TF_is_YNB"_Album_Cover.png'),
+                    getMediaUrl('YNB/"Who_TF_is_YNB"_Visuals_-_June_2023/"Who_TF_is_YNB"_Album_BackCover.png')
+                ]
+            }
+        ]
+    },
+    'zmo': {
+        name: 'ZMO',
+        projects: [
+            {
+                title: 'ZMO Pressed',
+                description: 'Promotional content for ZMO Pressed release.',
+                tags: ['PROMO', 'VIDEO', 'IMAGE'],
+                date: '2023',
+                videos: [
+                    getMediaUrl('ZMO/ZMO_Pressed_Reel.mp4')
+                ],
+                images: [
+                    getMediaUrl('ZMO/ZMO_Pressed_IG_Post.png')
+                ]
+            }
+        ]
     }
 };
 
@@ -574,21 +651,37 @@ function openClientModal(clientId) {
         
         const tagsHTML = project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('');
         
-        // Build thumbnails for all videos
-        const numVideos = project.videos.length;
+        // Build thumbnails for videos and images
+        const videos = project.videos || [];
+        const images = project.images || [];
+        const totalMedia = videos.length + images.length;
         let thumbnailsHTML = '';
         
-        project.videos.forEach((video, videoIndex) => {
+        // Add video thumbnails
+        videos.forEach((video, videoIndex) => {
             const videoExt = video.split('.').pop();
             const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
             
             thumbnailsHTML += `
-                <div class="project-thumbnail-wrapper ${numVideos > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${numVideos}">
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
                             <video class="project-video" autoplay muted loop playsinline data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Add image thumbnails
+        images.forEach((image, imageIndex) => {
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <img class="project-image" src="${image}" alt="${project.title}" data-image-src="${image}">
                         </div>
                     </div>
                 </div>
@@ -602,7 +695,7 @@ function openClientModal(clientId) {
                 <div class="project-meta" style="margin-top: 0.5rem; color: var(--secondary-color); font-size: 0.875rem;">${project.date}</div>
                 <div class="project-tags">${tagsHTML}</div>
             </div>
-            <div class="project-thumbnails-container ${numVideos > 1 ? 'has-multiple' : ''}" data-count="${numVideos}">
+            <div class="project-thumbnails-container ${totalMedia > 1 ? 'has-multiple' : ''}" data-count="${totalMedia}">
                 ${thumbnailsHTML}
             </div>
         `;
@@ -610,10 +703,11 @@ function openClientModal(clientId) {
         clientModalProjects.appendChild(projectItem);
         
         // Set videos to start at frame 3 and add click handlers
-        const videos = projectItem.querySelectorAll('.project-video');
+        const videoElements = projectItem.querySelectorAll('.project-video');
+        const imageElements = projectItem.querySelectorAll('.project-image');
         const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
         
-        videos.forEach((video, videoIndex) => {
+        videoElements.forEach((video, videoIndex) => {
             video.addEventListener('loadedmetadata', () => {
                 video.currentTime = 0.1; // Frame 3 at 30fps
             });
@@ -629,6 +723,22 @@ function openClientModal(clientId) {
             if (thumbnailWrappers[videoIndex]) {
                 thumbnailWrappers[videoIndex].style.cursor = 'pointer';
                 thumbnailWrappers[videoIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        // Add click handlers for images
+        imageElements.forEach((image, imageIndex) => {
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                toggleMediaFullscreen(image);
+            };
+            
+            image.addEventListener('click', handleMediaClick);
+            
+            const imageWrapperIndex = videoElements.length + imageIndex;
+            if (thumbnailWrappers[imageWrapperIndex]) {
+                thumbnailWrappers[imageWrapperIndex].style.cursor = 'pointer';
+                thumbnailWrappers[imageWrapperIndex].addEventListener('click', handleMediaClick);
             }
         });
         

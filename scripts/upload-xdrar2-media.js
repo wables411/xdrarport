@@ -43,7 +43,14 @@ const s3Client = new S3Client({
   },
 })
 
-const mediaDir = path.join(__dirname, '../Crybaby_Oakland')
+// Client directories to upload
+const clientDirs = [
+  'Crybaby_Oakland',
+  'Bussdown',
+  'Planeta_Pisces_November_2025',
+  'YNB',
+  'ZMO'
+]
 
 // All media file extensions
 const MEDIA_EXTENSIONS = ['mp4', 'mov', 'avi', 'webm', 'ogg', 'png', 'jpg', 'jpeg', 'gif', 'MP4', 'MOV', 'AVI', 'PNG', 'JPG', 'JPEG', 'GIF']
@@ -102,7 +109,7 @@ async function uploadFile(localPath, r2Key) {
   }
 }
 
-function scanForMedia(dir, basePath = '') {
+function scanForMedia(dir, basePath = '', clientDirName = '') {
   const media = []
   if (!fs.existsSync(dir)) {
     return media
@@ -118,11 +125,11 @@ function scanForMedia(dir, basePath = '') {
     const stat = fs.statSync(fullPath)
 
     if (stat.isDirectory()) {
-      media.push(...scanForMedia(fullPath, relativePath))
+      media.push(...scanForMedia(fullPath, relativePath, clientDirName))
     } else if (stat.isFile() && isMediaFile(item)) {
       media.push({
         localPath: fullPath,
-        r2Key: `Crybaby_Oakland/${relativePath}`,
+        r2Key: `${clientDirName}/${relativePath}`,
         relativePath,
         size: stat.size,
       })
@@ -139,19 +146,22 @@ async function main() {
   console.log('')
 
   const mediaFiles = []
+  const rootDir = path.join(__dirname, '..')
 
-  // Check if media directory exists and scan it
-  if (fs.existsSync(mediaDir)) {
-    // Scan for media files in Crybaby_Oakland directory
-    console.log('📂 Scanning for media files in Crybaby_Oakland...')
-    const crybabyMedia = scanForMedia(mediaDir)
-    mediaFiles.push(...crybabyMedia)
-  } else {
-    console.warn(`⚠️  Media directory not found: ${mediaDir}`)
+  // Scan all client directories
+  for (const clientDir of clientDirs) {
+    const clientDirPath = path.join(rootDir, clientDir)
+    if (fs.existsSync(clientDirPath)) {
+      console.log(`📂 Scanning for media files in ${clientDir}...`)
+      const clientMedia = scanForMedia(clientDirPath, '', clientDir)
+      mediaFiles.push(...clientMedia)
+      console.log(`   Found ${clientMedia.length} files in ${clientDir}`)
+    } else {
+      console.warn(`⚠️  Client directory not found: ${clientDir}`)
+    }
   }
 
   // Also check for XDRAR.mp4 in root directory
-  const rootDir = path.join(__dirname, '..')
   const xdrarPath = path.join(rootDir, 'XDRAR.mp4')
   if (fs.existsSync(xdrarPath)) {
     const stat = fs.statSync(xdrarPath)
@@ -208,7 +218,8 @@ async function main() {
   console.log(`   ⏭️  Skipped: ${skipped}`)
   console.log(`   ❌ Failed: ${failed}`)
   if (R2_PUBLIC_URL) {
-    console.log(`\n🌐 Your media is available at: ${R2_PUBLIC_URL}/Crybaby_Oakland/`)
+    console.log(`\n🌐 Your media is available at: ${R2_PUBLIC_URL}/`)
+    console.log(`   Client directories: ${clientDirs.join(', ')}`)
   }
 }
 

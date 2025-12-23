@@ -267,11 +267,16 @@ window.addEventListener('load', () => {
 // Get project items
 const projectItems = document.querySelectorAll('.project-item');
 
-// Smooth scroll for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+// Smooth scroll for navigation links (exclude client items)
+document.querySelectorAll('a[href^="#"]:not(.client-item)').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
+        const href = this.getAttribute('href');
+        // Skip if href is just "#" or empty
+        if (!href || href === '#' || href.length <= 1) {
+            return;
+        }
+        const target = document.querySelector(href);
         if (target) {
             const headerHeight = document.querySelector('.header').offsetHeight;
             const targetPosition = target.offsetTop - headerHeight;
@@ -564,7 +569,7 @@ const clientsData = {
         name: 'Bussdown',
         projects: [
             {
-                title: 'The Brooklyn Bussdown - June 2023',
+                title: 'The Brooklyn Bussdown',
                 description: 'Promotional reel for The Brooklyn Bussdown event.',
                 tags: ['PROMO', 'VIDEO'],
                 date: 'June 2023',
@@ -708,8 +713,17 @@ function openClientModal(clientId) {
         const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
         
         videoElements.forEach((video, videoIndex) => {
+            // Ensure video loads and plays (especially for .mov files)
+            video.load();
+            
             video.addEventListener('loadedmetadata', () => {
                 video.currentTime = 0.1; // Frame 3 at 30fps
+            });
+            
+            // Try to play the video (autoplay might be blocked by browser)
+            video.play().catch(err => {
+                // Autoplay was prevented, but that's okay - it will play when user interacts
+                console.log('Video autoplay prevented:', err);
             });
             
             // Add click handler for fullscreen

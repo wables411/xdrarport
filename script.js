@@ -958,21 +958,28 @@ window.openClientModal = function(clientId) {
         videoElements.forEach((video, videoIndex) => {
             // Log the video source for debugging
             const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
+            const sourceTag = video.querySelector('source');
             console.log('Loading video:', videoSrc);
             console.log('Video element src:', video.src);
-            console.log('Source tag src:', video.querySelector('source')?.src);
+            console.log('Source tag src:', sourceTag?.src);
+            console.log('Source tag type:', sourceTag?.type);
             
             // Add error handling first
             video.addEventListener('error', (e) => {
-                console.error('❌ Video load error:', {
-                    src: video.src,
+                const errorDetails = {
+                    src: video.src || sourceTag?.src,
+                    dataVideoSrc: video.getAttribute('data-video-src'),
+                    sourceTagSrc: sourceTag?.src,
                     error: video.error,
                     errorCode: video.error ? video.error.code : 'unknown',
-                    errorMessage: video.error ? video.error.message : 'unknown'
-                });
+                    errorMessage: video.error ? video.error.message : 'unknown',
+                    networkState: video.networkState,
+                    readyState: video.readyState
+                };
+                console.error('❌ Video load error:', errorDetails);
                 // Try to reload if there was an error
                 if (video.error && video.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
-                    console.error('Video format not supported or URL incorrect:', video.src);
+                    console.error('Video format not supported or URL incorrect:', errorDetails.src);
                 }
             });
             

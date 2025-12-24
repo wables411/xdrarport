@@ -39,15 +39,12 @@ export async function onRequestPost(context) {
     const resendApiKey = env.RESEND_API_KEY
     const yourEmail = env.CONTACT_EMAIL || 'contactxd.rar@gmail.com'
     // Force use of verified domain - must use xdrar.xyz domain, not onboarding@resend.dev
-    const hostname = new URL(request.url).hostname
+    // IMPORTANT: Always use the verified domain, not the request hostname (which could be pages.dev)
     // Use contact@ instead of noreply@ for better trust (per Resend recommendations)
-    // Default to root domain, but allow subdomain via FROM_EMAIL env var (e.g., contact@mail.xdrar.xyz)
     let fromEmail = env.FROM_EMAIL
-    if (!fromEmail || fromEmail.includes('onboarding@resend.dev') || fromEmail.includes('resend.dev') || fromEmail.includes('noreply@')) {
-      // Default to root domain (e.g., contact@xdrar.xyz)
-      // Users can set FROM_EMAIL=contact@mail.xdrar.xyz if they've verified a subdomain
-      const domain = hostname.replace(/^www\./, '') // Remove www if present
-      fromEmail = `contact@${domain}`
+    if (!fromEmail || fromEmail.includes('onboarding@resend.dev') || fromEmail.includes('resend.dev') || fromEmail.includes('noreply@') || fromEmail.includes('pages.dev')) {
+      // Default to verified domain - always use xdrar.xyz, not the request hostname
+      fromEmail = 'contact@xdrar.xyz'
     }
     
     console.log('📧 Contact form submission:', { name, email, commentLength: comment.length })

@@ -90,46 +90,24 @@ export async function onRequestPost(context) {
       )
     }
     
-    // Send confirmation to client (only if different from owner email)
+    // Send confirmation to client
+    console.log(`📤 Sending confirmation email to ${email}...`)
     let confirmationSent = false
     let confirmationError = null
-    let confirmationResponse = null
-    
-    // Skip confirmation if form submitter is the owner (prevents duplicate emails)
-    if (email.toLowerCase() === yourEmail.toLowerCase()) {
-      console.log(`ℹ️ Form submitter email (${email}) matches owner email, skipping confirmation to prevent duplicate`)
-      confirmationSent = true // Mark as sent to avoid warnings
-    } else {
-      console.log(`📤 Sending confirmation email to ${email}...`)
-      console.log(`📤 Confirmation email details:`, { to: email, from: fromEmail, subject: 'Thanks for reaching out' })
-      try {
-        confirmationResponse = await sendEmail({
-          apiKey: resendApiKey,
-          to: email,
-          from: fromEmail,
-          subject: 'Thanks for reaching out',
-          text: `Hi ${name},\n\nThanks for reaching out, I've received your inquiry and will be in touch soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
-          replyTo: yourEmail, // Allow user to reply directly to owner
-        })
-        console.log(`✅ Confirmation email sent to ${email}`)
-        console.log(`✅ Confirmation response:`, JSON.stringify(confirmationResponse))
-        confirmationSent = true
-      } catch (error) {
-        console.error(`❌ Failed to send confirmation to ${email}:`, error.message)
-        console.error(`❌ Confirmation error details:`, error)
-        console.error(`❌ Confirmation error full:`, JSON.stringify(error, Object.getOwnPropertyNames(error)))
-        confirmationError = error.message
-        // Log full error for debugging
-        if (error.stack) {
-          console.error(`❌ Confirmation error stack:`, error.stack)
-        }
-      }
-      
-      // If confirmation failed, log warning but don't fail the entire request
-      if (!confirmationSent) {
-        console.warn(`⚠️ WARNING: Confirmation email to ${email} failed: ${confirmationError}`)
-        console.warn(`⚠️ Owner email was sent successfully, but user did not receive confirmation`)
-      }
+    try {
+      await sendEmail({
+        apiKey: resendApiKey,
+        to: email,
+        from: fromEmail,
+        subject: 'Thanks for reaching out',
+        text: `Hi ${name},\n\nThanks for reaching out, I've received your inquiry and will be in touch soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
+        replyTo: yourEmail,
+      })
+      console.log(`✅ Confirmation email sent to ${email}`)
+      confirmationSent = true
+    } catch (error) {
+      console.error(`❌ Failed to send confirmation to ${email}:`, error.message)
+      confirmationError = error.message
     }
     
     return new Response(

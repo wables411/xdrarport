@@ -1336,36 +1336,37 @@ if (modalContentEl) {
     setTimeout(updateModalProjectScaling, 100);
 }
 
-// Contact Form Handler
-function initContactForm() {
-    const contactForm = document.getElementById('contactForm');
-    const contactStatus = document.getElementById('contactStatus');
+// Contact Form Handler - Use global flag to prevent multiple initializations
+if (window.contactFormInitialized) {
+    // Already initialized, do nothing
+} else {
+    window.contactFormInitialized = true;
     
-    if (!contactForm) {
-        return false;
-    }
-    
-    // Check if handler is already attached by checking for data attribute
-    if (contactForm.dataset.handlerAttached === 'true') {
-        return true;
-    }
-    
-    // Mark as attached
-    contactForm.dataset.handlerAttached = 'true';
-    
-    let isSubmitting = false;
-    
-    contactForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Prevent duplicate submissions
-        if (isSubmitting) {
-            console.log('⚠️ Form submission already in progress, ignoring duplicate submit');
-            return;
+    function initContactForm() {
+        const contactForm = document.getElementById('contactForm');
+        if (!contactForm) {
+            return false;
         }
         
-        isSubmitting = true;
+        // Check if handler is already attached
+        if (contactForm.dataset.handlerAttached === 'true') {
+            return true;
+        }
+        
+        // Mark as attached
+        contactForm.dataset.handlerAttached = 'true';
+        const contactStatus = document.getElementById('contactStatus');
+        
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Prevent duplicate submissions using form property
+            if (contactForm.isSubmitting) {
+                return;
+            }
+            
+            contactForm.isSubmitting = true;
         console.log('📤 Form submitted');
         
         const submitButton = contactForm.querySelector('.contact-submit');
@@ -1421,20 +1422,21 @@ function initContactForm() {
             contactStatus.textContent = `Failed to send message: ${error.message}`;
             contactStatus.className = 'contact-status error';
         } finally {
-            isSubmitting = false;
+            contactForm.isSubmitting = false;
             submitButton.disabled = false;
             submitButton.textContent = 'Send Message';
         }
     });
     
     return true;
-}
-
-// Initialize contact form when DOM is ready (ONLY ONCE)
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initContactForm, { once: true });
-} else {
-    initContactForm();
+    }
+    
+    // Initialize contact form when DOM is ready (ONLY ONCE)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initContactForm, { once: true });
+    } else {
+        initContactForm();
+    }
 }
 
 

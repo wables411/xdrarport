@@ -796,7 +796,7 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'September 2023',
                 videos: [
-                    getMediaUrl('Bussdown/The_Brooklyn_Bussdown_Fashion_Week_Edition_Reel_-_September_2023.mp4')
+                    getMediaUrl('Bussdown/The_Brooklyn Bussdown_Fashion_Week_Edition_Reel_-_September 2023.mp4')
                 ]
             }
         ]

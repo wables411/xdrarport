@@ -14,7 +14,7 @@
 }
 
 @font-face {
-    font-family: 'NeueBit';
+    font-family: 'PPMondwest';
     src: url('fonts/PPMondwest-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
@@ -758,6 +758,7 @@ section {
 
 .form-group label {
     font-family: 'NeueBit', 'Space Grotesk', monospace;
+    font-weight: bold;
     font-size: 0.9rem;
     color: var(--text-color);
     text-transform: uppercase;
@@ -766,7 +767,7 @@ section {
 
 .form-group input,
 .form-group textarea {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'PPMondwest', 'Space Grotesk', sans-serif;
     font-size: 1rem;
     padding: 0.75rem;
     background: transparent;

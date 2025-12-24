@@ -796,7 +796,13 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'September 2023',
                 videos: [
-                    getMediaUrl('Bussdown/The_Brooklyn Bussdown_Fashion_Week_Edition_Reel_-_September 2023.mp4')
+                    (() => {
+                        const url = getMediaUrl('Bussdown/The_Brooklyn Bussdown_Fashion_Week_Edition_Reel_-_September 2023.mp4');
+                        console.log('🔍 Bussdown Fashion Week URL generated:', url);
+                        console.log('🔍 Expected URL:', 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/Bussdown/The_Brooklyn%20Bussdown_Fashion_Week_Edition_Reel_-_September%202023.mp4');
+                        console.log('🔍 URLs match:', url === 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev/Bussdown/The_Brooklyn%20Bussdown_Fashion_Week_Edition_Reel_-_September%202023.mp4');
+                        return url;
+                    })()
                 ]
             }
         ]

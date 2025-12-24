@@ -796,7 +796,7 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'September 2023',
                 videos: [
-                    getMediaUrl('Bussdown/The_Brooklyn Bussdown_Fashion_Week_Edition_Reel_-_September 2023.mp4')
+                    getMediaUrl('Bussdown/The_Brooklyn_Bussdown_Fashion_Week_Edition_Reel_-_September_2023.mp4')
                 ]
             }
         ]
@@ -951,7 +951,10 @@ window.openClientModal = function(clientId) {
         
         videoElements.forEach((video, videoIndex) => {
             // Log the video source for debugging
-            console.log('Loading video:', video.src);
+            const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
+            console.log('Loading video:', videoSrc);
+            console.log('Video element src:', video.src);
+            console.log('Source tag src:', video.querySelector('source')?.src);
             
             // Add error handling first
             video.addEventListener('error', (e) => {

@@ -1371,7 +1371,6 @@ function initContactForm() {
         }
         
         isSubmitting = true;
-        e.preventDefault();
         console.log('📤 Form submitted');
         
         const submitButton = contactForm.querySelector('.contact-submit');
@@ -1436,8 +1435,14 @@ function initContactForm() {
     return true;
 }
 
-// Initialize contact form when DOM is ready
+// Initialize contact form when DOM is ready (ONLY ONCE)
 (function() {
+    // Global flag to prevent multiple initializations
+    if (window.contactFormInitialized) {
+        return;
+    }
+    window.contactFormInitialized = true;
+    
     console.log('🔍 Setting up contact form initialization...');
     console.log('📄 Document ready state:', document.readyState);
     
@@ -1463,7 +1468,7 @@ function initContactForm() {
         document.addEventListener('DOMContentLoaded', () => {
             console.log('✅ DOMContentLoaded fired');
             tryInitContactForm();
-        });
+        }, { once: true }); // Only fire once
     } else {
         console.log('✅ Document already ready');
         // Try immediately if DOM is ready

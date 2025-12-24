@@ -40,10 +40,14 @@ export async function onRequestPost(context) {
     const yourEmail = env.CONTACT_EMAIL || 'contactxd.rar@gmail.com'
     // Force use of verified domain - must use xdrar.xyz domain, not onboarding@resend.dev
     const hostname = new URL(request.url).hostname
-    // Always use the verified domain, ignore env var if it's still the test email
-    let fromEmail = env.FROM_EMAIL || `noreply@${hostname}`
-    if (fromEmail.includes('onboarding@resend.dev') || fromEmail.includes('resend.dev')) {
-      fromEmail = `noreply@${hostname}`
+    // Use contact@ instead of noreply@ for better trust (per Resend recommendations)
+    // Default to root domain, but allow subdomain via FROM_EMAIL env var (e.g., contact@mail.xdrar.xyz)
+    let fromEmail = env.FROM_EMAIL
+    if (!fromEmail || fromEmail.includes('onboarding@resend.dev') || fromEmail.includes('resend.dev') || fromEmail.includes('noreply@')) {
+      // Default to root domain (e.g., contact@xdrar.xyz)
+      // Users can set FROM_EMAIL=contact@mail.xdrar.xyz if they've verified a subdomain
+      const domain = hostname.replace(/^www\./, '') // Remove www if present
+      fromEmail = `contact@${domain}`
     }
     
     console.log('📧 Contact form submission:', { name, email, commentLength: comment.length })
@@ -81,6 +85,8 @@ export async function onRequestPost(context) {
     
     // Send confirmation to client
     console.log(`📤 Sending confirmation email to ${email}...`)
+    let confirmationSent = false
+    let confirmationError = null
     try {
       await sendEmail({
         apiKey: resendApiKey,
@@ -88,18 +94,32 @@ export async function onRequestPost(context) {
         from: fromEmail,
         subject: 'Thanks for reaching out',
         text: `Hi ${name},\n\nThanks for reaching out, I've received your inquiry and will be in touch soon.\n\nYour message:\n${comment}\n\nBest regards,\nXDRAR`,
+        replyTo: yourEmail, // Allow user to reply directly to owner
       })
       console.log(`✅ Confirmation email sent to ${email}`)
+      confirmationSent = true
     } catch (error) {
       console.error(`❌ Failed to send confirmation to ${email}:`, error.message)
-      // Don't throw here - we already sent the main email
-      console.warn('⚠️ Continuing despite confirmation email failure')
+      console.error(`❌ Confirmation error details:`, error)
+      confirmationError = error.message
+      // Log full error for debugging
+      if (error.stack) {
+        console.error(`❌ Confirmation error stack:`, error.stack)
+      }
+    }
+    
+    // If confirmation failed, log warning but don't fail the entire request
+    if (!confirmationSent) {
+      console.warn(`⚠️ WARNING: Confirmation email to ${email} failed: ${confirmationError}`)
+      console.warn(`⚠️ Owner email was sent successfully, but user did not receive confirmation`)
     }
     
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: 'Thank you! Your message has been sent.'
+        message: 'Thank you! Your message has been sent.',
+        confirmationSent: confirmationSent,
+        ...(confirmationError && { warning: 'Confirmation email may not have been delivered' })
       }),
       { 
         status: 200,

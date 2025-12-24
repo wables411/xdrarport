@@ -25,10 +25,13 @@ Resend is free for up to 3,000 emails/month and works seamlessly with Cloudflare
    - Add these variables:
      ```
      RESEND_API_KEY=re_your_api_key_here
-     CONTACT_EMAIL=xd.rar@gmail.com
-     FROM_EMAIL=noreply@xdrar.xyz
+     CONTACT_EMAIL=contactxd.rar@gmail.com
+     FROM_EMAIL=contact@xdrar.xyz
      ```
-   - **Note:** `FROM_EMAIL` must use your verified domain (e.g., `noreply@xdrar.xyz`)
+   - **Note:** 
+     - `FROM_EMAIL` must use your verified domain (e.g., `contact@xdrar.xyz`)
+     - Defaults to `contact@xdrar.xyz` if not set (uses `contact@` instead of `noreply@` per Resend best practices)
+     - For subdomain support (recommended by Resend), verify `mail.xdrar.xyz` in Resend and set `FROM_EMAIL=contact@mail.xdrar.xyz`
    - Save and redeploy your site
 
 5. **How It Works:**
@@ -57,6 +60,11 @@ After setup, test the form:
   - Check spam folder
   - Verify domain is verified in Resend (see RESEND_DOMAIN_SETUP.md)
   - Check Resend dashboard for email logs
+- **Owner receives email but user doesn't get confirmation?**
+  - Check Cloudflare Pages function logs for confirmation email errors
+  - Verify `FROM_EMAIL` is using a verified domain (not `noreply@` which Resend discourages)
+  - Ensure the user's email address is valid and not blocked
+  - Check Resend dashboard for delivery status of confirmation emails
 - **CORS errors?** The function already handles CORS, but check that it's deployed correctly
 
 ---

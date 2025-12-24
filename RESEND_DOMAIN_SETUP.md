@@ -45,8 +45,9 @@ Once verified, update your Cloudflare Pages environment variables:
 
 1. Go to Cloudflare Pages → your site → **Settings** → **Environment variables**
 2. Update `FROM_EMAIL` to use your verified domain:
-   - For root domain: `noreply@xdrar.xyz`
-   - For subdomain: `noreply@mail.xdrar.xyz` (if you used a subdomain)
+   - For root domain: `contact@xdrar.xyz` (recommended - uses `contact@` instead of `noreply@` per Resend best practices)
+   - For subdomain: `contact@mail.xdrar.xyz` (if you used a subdomain)
+   - **Note:** The code will default to `contact@xdrar.xyz` if `FROM_EMAIL` is not set or contains `noreply@`
 3. Save and redeploy
 
 ### Step 7: Test the Form

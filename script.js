@@ -1337,6 +1337,8 @@ if (modalContentEl) {
 }
 
 // Contact Form Handler
+let formHandlerAttached = false; // Prevent duplicate handlers
+
 function initContactForm() {
     console.log('🔍 Initializing contact form...');
     const contactForm = document.getElementById('contactForm');
@@ -1344,12 +1346,31 @@ function initContactForm() {
     
     if (!contactForm) {
         console.error('❌ Contact form not found!');
-        return;
+        return false;
+    }
+    
+    // Prevent attaching handler multiple times
+    if (formHandlerAttached) {
+        console.log('⚠️ Form handler already attached, skipping...');
+        return true;
     }
     
     console.log('✅ Contact form found, adding submit listener');
+    formHandlerAttached = true;
+    
+    let isSubmitting = false; // Prevent duplicate submissions
     
     contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Prevent duplicate submissions
+        if (isSubmitting) {
+            console.log('⚠️ Form submission already in progress, ignoring duplicate submit');
+            return;
+        }
+        
+        isSubmitting = true;
         e.preventDefault();
         console.log('📤 Form submitted');
         
@@ -1406,10 +1427,13 @@ function initContactForm() {
             contactStatus.textContent = `Failed to send message: ${error.message}`;
             contactStatus.className = 'contact-status error';
         } finally {
+            isSubmitting = false;
             submitButton.disabled = false;
             submitButton.textContent = 'Send Message';
         }
     });
+    
+    return true;
 }
 
 // Initialize contact form when DOM is ready
@@ -1418,23 +1442,22 @@ function initContactForm() {
     console.log('📄 Document ready state:', document.readyState);
     
     function tryInitContactForm() {
+        // Don't try if handler is already attached
+        if (formHandlerAttached) {
+            return true;
+        }
+        
         console.log('🔍 Attempting to initialize contact form...');
         const contactForm = document.getElementById('contactForm');
         console.log('🔍 Contact form element exists?', contactForm ? 'YES' : 'NO');
         if (contactForm) {
             console.log('✅ Found contact form, initializing...');
-            initContactForm();
-            return true;
+            return initContactForm();
         }
         return false;
     }
     
-    // Try immediately
-    if (!tryInitContactForm()) {
-        console.log('⏳ Form not found, will retry...');
-    }
-    
-    // Try on DOMContentLoaded
+    // Try on DOMContentLoaded (only once)
     if (document.readyState === 'loading') {
         console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
         document.addEventListener('DOMContentLoaded', () => {
@@ -1443,14 +1466,9 @@ function initContactForm() {
         });
     } else {
         console.log('✅ Document already ready');
-        setTimeout(() => tryInitContactForm(), 100);
-    }
-    
-    // Also try after a delay as fallback
-    setTimeout(() => {
-        console.log('⏰ Delayed fallback initialization attempt...');
+        // Try immediately if DOM is ready
         tryInitContactForm();
-    }, 500);
+    }
 })();
 
 

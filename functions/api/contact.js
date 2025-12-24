@@ -83,12 +83,24 @@ export async function onRequestPost(context) {
       throw error
     }
     
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      console.error(`❌ Invalid email format: ${email}`)
+      return new Response(
+        JSON.stringify({ error: 'Invalid email address' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
+    
     // Send confirmation to client
     console.log(`📤 Sending confirmation email to ${email}...`)
+    console.log(`📤 Confirmation email details:`, { to: email, from: fromEmail, subject: 'Thanks for reaching out' })
     let confirmationSent = false
     let confirmationError = null
+    let confirmationResponse = null
     try {
-      await sendEmail({
+      confirmationResponse = await sendEmail({
         apiKey: resendApiKey,
         to: email,
         from: fromEmail,
@@ -97,10 +109,12 @@ export async function onRequestPost(context) {
         replyTo: yourEmail, // Allow user to reply directly to owner
       })
       console.log(`✅ Confirmation email sent to ${email}`)
+      console.log(`✅ Confirmation response:`, JSON.stringify(confirmationResponse))
       confirmationSent = true
     } catch (error) {
       console.error(`❌ Failed to send confirmation to ${email}:`, error.message)
       console.error(`❌ Confirmation error details:`, error)
+      console.error(`❌ Confirmation error full:`, JSON.stringify(error, Object.getOwnPropertyNames(error)))
       confirmationError = error.message
       // Log full error for debugging
       if (error.stack) {

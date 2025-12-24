@@ -1337,28 +1337,23 @@ if (modalContentEl) {
 }
 
 // Contact Form Handler
-let formHandlerAttached = false; // Prevent duplicate handlers
-
 function initContactForm() {
-    console.log('🔍 Initializing contact form...');
     const contactForm = document.getElementById('contactForm');
     const contactStatus = document.getElementById('contactStatus');
     
     if (!contactForm) {
-        console.error('❌ Contact form not found!');
         return false;
     }
     
-    // Prevent attaching handler multiple times
-    if (formHandlerAttached) {
-        console.log('⚠️ Form handler already attached, skipping...');
+    // Check if handler is already attached by checking for data attribute
+    if (contactForm.dataset.handlerAttached === 'true') {
         return true;
     }
     
-    console.log('✅ Contact form found, adding submit listener');
-    formHandlerAttached = true;
+    // Mark as attached
+    contactForm.dataset.handlerAttached = 'true';
     
-    let isSubmitting = false; // Prevent duplicate submissions
+    let isSubmitting = false;
     
     contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1436,44 +1431,10 @@ function initContactForm() {
 }
 
 // Initialize contact form when DOM is ready (ONLY ONCE)
-(function() {
-    // Global flag to prevent multiple initializations
-    if (window.contactFormInitialized) {
-        return;
-    }
-    window.contactFormInitialized = true;
-    
-    console.log('🔍 Setting up contact form initialization...');
-    console.log('📄 Document ready state:', document.readyState);
-    
-    function tryInitContactForm() {
-        // Don't try if handler is already attached
-        if (formHandlerAttached) {
-            return true;
-        }
-        
-        console.log('🔍 Attempting to initialize contact form...');
-        const contactForm = document.getElementById('contactForm');
-        console.log('🔍 Contact form element exists?', contactForm ? 'YES' : 'NO');
-        if (contactForm) {
-            console.log('✅ Found contact form, initializing...');
-            return initContactForm();
-        }
-        return false;
-    }
-    
-    // Try on DOMContentLoaded (only once)
-    if (document.readyState === 'loading') {
-        console.log('⏳ Document still loading, waiting for DOMContentLoaded...');
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('✅ DOMContentLoaded fired');
-            tryInitContactForm();
-        }, { once: true }); // Only fire once
-    } else {
-        console.log('✅ Document already ready');
-        // Try immediately if DOM is ready
-        tryInitContactForm();
-    }
-})();
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initContactForm, { once: true });
+} else {
+    initContactForm();
+}
 
 

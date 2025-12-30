@@ -331,7 +331,7 @@ body[data-theme="light"] .cursor-follower.active {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 0 4rem 4rem;
+    padding: 0 4rem 10rem;
     padding-top: calc(1.5rem * 2 + 1px + 2.5rem); /* Header top padding + bottom padding + border + logo height = exact header height, 0 visual gap */
     overflow: hidden;
     scroll-margin-top: 100px; /* Account for header height for scroll snapping */
@@ -359,7 +359,7 @@ body[data-theme="light"] .cursor-follower.active {
     width: clamp(40rem, 90vw, 120rem);
     height: clamp(24rem, 56vw, 72rem);
     object-fit: contain;
-    margin-bottom: 0.125rem;
+    margin-bottom: 0;
     display: block;
 }
 
@@ -372,7 +372,7 @@ body[data-theme="light"] .hero-video {
 /* Hero Marquee */
 .hero-marquee-container {
     width: 100%;
-    margin-top: 0.125rem;
+    margin-top: 0;
     margin-bottom: 6rem;
     display: flex;
     flex-direction: column;

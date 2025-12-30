@@ -227,8 +227,33 @@ body[data-theme="light"] .cursor-follower.active {
     color: var(--accent-color);
 }
 
+.portfolio-label {
+    font-family: 'PPMondwest', 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-color);
+    line-height: 1.2;
+    margin-top: 0;
+    opacity: 0.8;
+    user-select: none;
+    pointer-events: none;
+}
+
+.time-display {
+    font-family: 'PPMondwest', 'Space Grotesk', monospace;
+    font-size: 0.625rem;
+    font-weight: 400;
+    color: var(--text-color);
+    line-height: 1.2;
+    margin-top: 0.1rem;
+    opacity: 0.8;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
 .coordinate-display {
-    font-family: 'JetBrains Mono', 'Space Grotesk', monospace;
+    font-family: 'PPMondwest', 'Space Grotesk', monospace;
     font-size: 0.625rem;
     font-weight: 400;
     color: var(--text-color);
@@ -321,9 +346,9 @@ body[data-theme="light"] .cursor-follower.active {
     padding: 0.5rem 0.75rem;
     color: var(--text-color);
     text-decoration: none;
-    font-family: 'NeueBit', 'Space Grotesk', monospace;
+    font-family: 'PPMondwest', 'Space Grotesk', monospace;
     font-size: 0.9625rem;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     background: transparent;
@@ -973,6 +998,15 @@ section {
         gap: 1rem;
     }
 
+    .logo-wrapper {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+
     .nav {
         gap: 1.5rem;
         order: 3;
@@ -1058,6 +1092,16 @@ section {
         bottom: 1rem;
         font-size: 1.25rem;
         transform: translateX(-50%) !important;
+    }
+
+    .portfolio-label {
+        font-size: 0.625rem;
+        margin-top: 0;
+    }
+
+    .time-display {
+        font-size: 0.5rem;
+        margin-top: 0.05rem;
     }
 
     .coordinate-display {

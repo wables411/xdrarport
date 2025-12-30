@@ -1667,6 +1667,28 @@ if (window.contactFormInitialized) {
     }
 }
 
+// Time Display System
+(function initTimeDisplay() {
+    const timeDisplay = document.getElementById('timeDisplay');
+    if (!timeDisplay) return;
+    
+    function updateTime() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        
+        timeDisplay.textContent = `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`;
+    }
+    
+    // Update immediately and then every second
+    updateTime();
+    setInterval(updateTime, 1000);
+})();
+
 // Coordinate Display System
 (function initCoordinateDisplay() {
     const coordinateDisplay = document.getElementById('coordinateDisplay');
@@ -1693,10 +1715,6 @@ if (window.contactFormInitialized) {
         // Check for clickable elements
         if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.onclick) {
             hoverText = target.textContent?.trim() || target.getAttribute('data-text') || target.getAttribute('aria-label') || target.title;
-        }
-        // Check for video
-        else if (target.tagName === 'VIDEO' || target.closest('.hero-video')) {
-            hoverText = '/xdrar.mp4';
         }
         // Check for project items
         else if (target.closest('.project-item')) {
@@ -1725,6 +1743,10 @@ if (window.contactFormInitialized) {
     function sanitizeLogMessage(message) {
         // Remove sensitive information
         let msg = String(message);
+        // Remove emojis
+        msg = msg.replace(/[\u{1F300}-\u{1F9FF}]/gu, ''); // Emoji range
+        msg = msg.replace(/[\u{2600}-\u{26FF}]/gu, ''); // Miscellaneous symbols
+        msg = msg.replace(/[\u{2700}-\u{27BF}]/gu, ''); // Dingbats
         // Remove email patterns
         msg = msg.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[email]');
         // Remove URLs with tokens/keys
@@ -1733,7 +1755,7 @@ if (window.contactFormInitialized) {
         if (msg.length > 100) {
             msg = msg.substring(0, 100) + '...';
         }
-        return msg;
+        return msg.trim();
     }
     
     function captureLog(originalFn, level) {

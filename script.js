@@ -686,7 +686,7 @@ function updateArrowSize() {
     requestAnimationFrame(updateArrowSize);
 }
 
-// Handle wheel events for the single arrow
+// Handle wheel events for the single arrow (desktop)
 window.addEventListener('wheel', (e) => {
     if (singleScrollArrow) {
         singleScrollArrow.handleWheel(e);
@@ -700,6 +700,87 @@ window.addEventListener('wheel', (e) => {
                 singleScrollArrow.element.textContent = singleScrollArrow.originalArrow;
             }
         }, 100);
+    }
+}, { passive: true });
+
+// Handle touch events for mobile
+let touchStartY = 0;
+let touchStartTime = 0;
+let lastTouchY = 0;
+let lastTouchTime = Date.now();
+
+window.addEventListener('touchstart', (e) => {
+    if (singleScrollArrow && e.touches.length > 0) {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        lastTouchY = touchStartY;
+        lastTouchTime = touchStartTime;
+    }
+}, { passive: true });
+
+window.addEventListener('touchmove', (e) => {
+    if (singleScrollArrow && e.touches.length > 0) {
+        const currentTouchY = e.touches[0].clientY;
+        const currentTime = Date.now();
+        const deltaY = lastTouchY - currentTouchY; // Positive = scrolling down
+        const timeDelta = currentTime - lastTouchTime;
+        
+        // Create a synthetic wheel event for mobile
+        const syntheticEvent = {
+            deltaY: deltaY * 10, // Scale for mobile sensitivity
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY,
+            preventDefault: () => {}
+        };
+        
+        singleScrollArrow.handleWheel(syntheticEvent);
+        
+        lastTouchY = currentTouchY;
+        lastTouchTime = currentTime;
+        
+        // Reset arrow after touch stops
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+            if (singleScrollArrow) {
+                singleScrollArrow.reset();
+                singleScrollArrow.element.textContent = singleScrollArrow.originalArrow;
+            }
+        }, 150);
+    }
+}, { passive: true });
+
+// Also handle scroll events for mobile (fallback)
+let lastScrollY = window.pageYOffset;
+let scrollTimeout;
+
+window.addEventListener('scroll', () => {
+    if (singleScrollArrow) {
+        const currentScrollY = window.pageYOffset;
+        const scrollDelta = currentScrollY - lastScrollY;
+        const currentTime = Date.now();
+        
+        // Only process if there's significant scroll movement
+        if (Math.abs(scrollDelta) > 5) {
+            // Create synthetic wheel event from scroll
+            const syntheticEvent = {
+                deltaY: scrollDelta * 3, // Scale for scroll sensitivity
+                clientX: window.innerWidth / 2,
+                clientY: window.innerHeight / 2,
+                preventDefault: () => {}
+            };
+            
+            singleScrollArrow.handleWheel(syntheticEvent);
+            lastScrollY = currentScrollY;
+        }
+        
+        // Reset arrow after scroll stops
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            if (singleScrollArrow) {
+                singleScrollArrow.reset();
+                singleScrollArrow.element.textContent = singleScrollArrow.originalArrow;
+            }
+        }, 200);
     }
 }, { passive: true });
 

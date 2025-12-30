@@ -22,6 +22,11 @@ async function build() {
     const filesToCopy = [
       'index.html',
       'clients.html',
+      'bussdown.html',
+      'crybaby-oakland.html',
+      'planeta-pisces.html',
+      'ynb.html',
+      'zmo.html',
       'script.js',
       'styles.css',
       'XDRAR.mp4',

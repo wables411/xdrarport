@@ -3,29 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLIENTS - PORTFOLIO</title>
+    <title>ZMO - CLIENTS</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
-        // R2 Public URL - Media is hosted on Cloudflare R2
         window.R2_PUBLIC_URL = 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev';
     </script>
 </head>
 <body data-theme="dark">
-    <!-- Custom Cursor -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-follower" id="cursorFollower"></div>
     
-    <!-- Header with Navigation -->
     <header class="header" id="header">
         <div class="header-inner">
             <div class="logo-wrapper">
                 <a href="index.html" class="logo" data-parallax="0.1">XD.RAR</a>
-                <div class="portfolio-label">Portfolio</div>
-                <div class="time-display" id="timeDisplay">00:00:00</div>
-                <div class="coordinate-display" id="coordinateDisplay">0, 0</div>
+                <span class="portfolio-label" id="portfolioLabel">Portfolio</span>
+                <span class="time-display" id="timeDisplay"></span>
+                <span class="coordinate-display" id="coordinateDisplay"></span>
             </div>
             <nav class="nav">
                 <div class="nav-link-wrapper">
@@ -58,49 +55,30 @@
         </div>
     </header>
 
-
-    <!-- Clients Page Content -->
-    <section class="clients-page" style="padding-top: 8rem; min-height: 100vh;">
-        <div class="clients-page-content">
-            <h1 class="clients-page-title">CLIENTS</h1>
-            <div class="clients-horizontal-list" id="clientsList">
-                <!-- Clients will be dynamically inserted here -->
-            </div>
+    <section class="client-page" style="padding-top: 8rem; min-height: 100vh;">
+        <div class="client-page-content">
+            <h1 class="client-page-title" id="clientPageTitle">ZMO</h1>
+            <div class="client-page-projects" id="clientPageProjects"></div>
         </div>
     </section>
 
-    <!-- Fullscreen Media Viewer -->
     <div class="media-fullscreen" id="mediaFullscreen">
         <button class="media-fullscreen-close" id="closeFullscreen">&times;</button>
-        <div class="media-fullscreen-content" id="mediaFullscreenContent">
-            <!-- Media will be inserted here -->
-        </div>
+        <div class="media-fullscreen-content" id="mediaFullscreenContent"></div>
     </div>
 
     <script src="script.js"></script>
     <script>
-        // Clients page specific script
         document.addEventListener('DOMContentLoaded', function() {
-            // Check for client parameter in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const clientParam = urlParams.get('client');
-            
-            const clientsList = document.getElementById('clientsList');
-            
-            // Get clientsData from script.js (it's in global scope)
-            if (typeof window.clientsData !== 'undefined') {
-                Object.keys(window.clientsData).forEach((clientId, index) => {
-                    const client = window.clientsData[clientId];
-                    const clientItem = document.createElement('a');
-                    clientItem.className = 'client-list-item';
-                    clientItem.setAttribute('data-client', clientId);
-                    clientItem.href = `${clientId}.html`;
-                    clientItem.textContent = client.name;
-                    
-                    clientsList.appendChild(clientItem);
-                });
+            const clientId = 'zmo';
+            const client = window.clientsData && window.clientsData[clientId];
+            if (!client) return;
+            const clientPageTitle = document.getElementById('clientPageTitle');
+            const clientPageProjects = document.getElementById('clientPageProjects');
+            if (clientPageTitle) clientPageTitle.textContent = client.name;
+            if (clientPageProjects && typeof window.renderClientProjects === 'function') {
+                window.renderClientProjects(clientId, clientPageProjects);
             }
-            
         });
     </script>
 </body>

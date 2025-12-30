@@ -481,7 +481,7 @@ body[data-theme="light"] .hero-video {
 .marquee-content {
     display: inline-block;
     font-family: 'NeueBit', 'Space Grotesk', monospace;
-    font-size: 0.875rem;
+    font-size: 1.25rem;
     letter-spacing: 0.1em;
     color: var(--secondary-color);
     padding-right: 3rem;
@@ -712,55 +712,47 @@ section {
 /* Consistent Thumbnail Framing - Right Side */
 .project-thumbnail-wrapper {
     position: relative;
-    width: 200px;
+    width: fit-content;
     height: 200px;
+    min-width: 200px;
     flex-shrink: 0;
-    overflow: hidden;
-    transition: width 0.3s ease, height 0.3s ease;
+    overflow: visible;
+    transition: height 0.3s ease, width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Multiple thumbnails - scale down to fit */
 .project-thumbnail-wrapper.multiple-thumbnails {
     height: 200px;
     flex: 0 0 auto;
+    width: fit-content;
     min-width: 120px;
-    max-width: 200px;
 }
 
-/* 2 thumbnails */
-.project-thumbnails-container.has-multiple[data-count="2"] .project-thumbnail-wrapper.multiple-thumbnails {
-    width: calc((400px - 1rem) / 2);
-    max-width: 200px;
-}
-
-/* 3 thumbnails */
-.project-thumbnails-container.has-multiple[data-count="3"] .project-thumbnail-wrapper.multiple-thumbnails {
-    width: calc((600px - 2rem) / 3);
-    max-width: 180px;
-}
-
-/* 4+ thumbnails */
-.project-thumbnails-container.has-multiple[data-count="4"] .project-thumbnail-wrapper.multiple-thumbnails,
-.project-thumbnails-container.has-multiple[data-count="5"] .project-thumbnail-wrapper.multiple-thumbnails {
-    width: calc((800px - 3rem) / 4);
-    max-width: 160px;
+/* Multiple thumbnails maintain aspect ratio with uniform height */
+.project-thumbnails-container.has-multiple .project-thumbnail-wrapper.multiple-thumbnails {
+    width: auto;
+    height: 200px;
 }
 
 .project-thumbnail-frame {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    position: relative;
+    width: fit-content;
     height: 100%;
     border: 1px solid var(--border-color);
     background: var(--bg-color);
     overflow: hidden;
     transition: border-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .project-thumbnail-wrapper.multiple-thumbnails .project-thumbnail-frame {
-    position: absolute;
-    width: 100%;
+    position: relative;
+    width: auto;
     height: 100%;
 }
 
@@ -769,10 +761,8 @@ section {
 }
 
 .project-thumbnail {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
+    position: relative;
+    width: auto;
     height: 100%;
     display: flex;
     align-items: center;
@@ -781,11 +771,13 @@ section {
 
 .project-thumbnail img,
 .project-thumbnail video {
-    width: 100%;
+    width: auto;
     height: 100%;
-    object-fit: cover;
+    max-width: none;
+    object-fit: contain;
     object-position: center;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: block;
 }
 
 .project-item:hover .project-thumbnail img,
@@ -955,7 +947,7 @@ section {
 /* Parallax Elements */
 [data-parallax] {
     will-change: transform;
-    transition: transform 0.1s ease-out;
+    transition: transform 0.2s ease-out;
 }
 
 /* Loading Animation */
@@ -1072,8 +1064,9 @@ section {
     }
 
     .project-thumbnail-wrapper {
-        width: 100%;
+        width: auto;
         height: 300px;
+        max-width: 100%;
     }
 
     .hero {
@@ -1095,7 +1088,7 @@ section {
     }
 
     .marquee-content {
-        font-size: 0.75rem;
+        font-size: 1.1rem;
     }
 
     .scroll-arrow-fixed {
@@ -1385,6 +1378,43 @@ section {
     color: var(--text-color);
 }
 
+/* Client Page Styles */
+.client-page {
+    padding: 8rem 2rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.client-page-content {
+    width: 100%;
+}
+
+.client-page-title {
+    font-family: 'NeueBit', 'Space Grotesk', monospace;
+    font-size: clamp(2rem, 4vw, 4rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-color);
+    margin-bottom: 4rem;
+}
+
+.client-page-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+}
+
+.client-page-projects .project-item {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 4rem;
+}
+
+.client-page-projects .project-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
 /* Clients Horizontal List */
 .clients-horizontal-list {
     display: flex;
@@ -1405,6 +1435,8 @@ section {
     cursor: pointer;
     transition: color 0.3s ease, transform 0.3s ease;
     padding: 1rem 0;
+    text-decoration: none;
+    display: inline-block;
 }
 
 .client-list-item:hover {
@@ -1476,10 +1508,13 @@ section {
 
 .client-project-media {
     position: relative;
-    width: 300px;
+    width: auto;
     height: 300px;
     border: 1px solid var(--border-color);
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: border-color 0.3s ease;
 }
@@ -1490,9 +1525,11 @@ section {
 
 .client-project-video,
 .client-project-image {
-    width: 100%;
+    width: auto;
     height: 100%;
-    object-fit: cover;
+    max-width: 100%;
+    object-fit: contain;
+    object-position: center;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -1503,8 +1540,9 @@ section {
 
 @media (max-width: 768px) {
     .client-project-media {
-        width: 100%;
+        width: auto;
         height: 250px;
+        max-width: 100%;
     }
     
     .clients-page {

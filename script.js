@@ -193,46 +193,88 @@ let followerY = 0;
     }
 })();
 
-// Parallax Effect
-const parallaxElements = document.querySelectorAll('[data-parallax]');
-let ticking = false;
+// Parallax Effect - Hover-based
+let parallaxElements = [];
+let parallaxMouseX = 0;
+let parallaxMouseY = 0;
+let parallaxTicking = false;
+
+function getParallaxElements() {
+    parallaxElements = document.querySelectorAll('[data-parallax]');
+}
 
 function updateParallax() {
-    const scrollY = window.pageYOffset;
+    // Refresh elements list in case new elements were added
+    if (parallaxElements.length === 0) {
+        getParallaxElements();
+    }
+    
+    if (parallaxElements.length === 0) return;
+    
+    const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
-    const viewportCenter = scrollY + (viewportHeight / 2);
+    const viewportCenterX = viewportWidth / 2;
+    const viewportCenterY = viewportHeight / 2;
+    
+    // Calculate mouse position relative to viewport center
+    const mouseXRelative = parallaxMouseX - viewportCenterX;
+    const mouseYRelative = parallaxMouseY - viewportCenterY;
     
     parallaxElements.forEach(element => {
-        const speed = parseFloat(element.getAttribute('data-parallax'));
-        const rect = element.getBoundingClientRect();
-        const elementTop = rect.top + scrollY;
-        const elementCenter = elementTop + (rect.height / 2);
+        const speed = parseFloat(element.getAttribute('data-parallax')) || 0.1;
         
-        // Calculate parallax offset based on distance from viewport center
-        // Use a smoother calculation with reduced intensity
-        const distanceFromCenter = elementCenter - viewportCenter;
-        const normalizedDistance = distanceFromCenter / viewportHeight;
-        const yPos = normalizedDistance * speed * 50; // Reduced multiplier for smoother effect
+        // Calculate parallax offset based on mouse position relative to viewport center
+        const xPos = (mouseXRelative / viewportWidth) * speed * 100;
+        const yPos = (mouseYRelative / viewportHeight) * speed * 100;
         
         // Apply parallax transform with CSS transition for smoothness
-        element.style.transform = `translateY(${yPos}px)`;
+        element.style.transform = `translate(${xPos}px, ${yPos}px)`;
     });
     
-    ticking = false;
+    parallaxTicking = false;
 }
 
 function requestParallaxTick() {
-    if (!ticking) {
+    if (!parallaxTicking) {
         requestAnimationFrame(updateParallax);
-        ticking = true;
+        parallaxTicking = true;
     }
 }
 
-window.addEventListener('scroll', requestParallaxTick);
-window.addEventListener('resize', updateParallax);
+// Initialize parallax elements when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', getParallaxElements);
+} else {
+    getParallaxElements();
+}
+
+// Track mouse movement for parallax (separate from cursor)
+document.addEventListener('mousemove', (e) => {
+    parallaxMouseX = e.clientX;
+    parallaxMouseY = e.clientY;
+    requestParallaxTick();
+});
+
+// Reset parallax when mouse leaves the window
+document.addEventListener('mouseleave', () => {
+    parallaxMouseX = window.innerWidth / 2;
+    parallaxMouseY = window.innerHeight / 2;
+    requestParallaxTick();
+});
+
+window.addEventListener('resize', () => {
+    // Reset to center on resize
+    parallaxMouseX = window.innerWidth / 2;
+    parallaxMouseY = window.innerHeight / 2;
+    getParallaxElements();
+    updateParallax();
+});
 
 // Initial parallax on load with animation
 window.addEventListener('load', () => {
+    // Initialize parallax to center position
+    parallaxMouseX = window.innerWidth / 2;
+    parallaxMouseY = window.innerHeight / 2;
     updateParallax();
     
     // Animate elements on load
@@ -342,14 +384,7 @@ projectItems.forEach(item => {
     });
 });
 
-// Dynamic parallax on scroll with easing
-let parallaxScrollTimeout;
-window.addEventListener('scroll', () => {
-    clearTimeout(parallaxScrollTimeout);
-    parallaxScrollTimeout = setTimeout(() => {
-        updateParallax();
-    }, 10);
-});
+// Parallax is now hover-based, no scroll listener needed
 
 // Scroll-based scaling for projects
 let projectScalingLastScrollY = 0;
@@ -392,12 +427,12 @@ function updateProjectScaling() {
             description.style.fontSize = `${baseDescSize * scaleFactor}rem`;
         }
         
-        // Scale thumbnail
+        // Scale thumbnail (maintain aspect ratio, only scale height)
         const thumbnailWrapper = item.querySelector('.project-thumbnail-wrapper');
         if (thumbnailWrapper) {
-            const baseSize = 200;
-            thumbnailWrapper.style.width = `${baseSize * scaleFactor}px`;
-            thumbnailWrapper.style.height = `${baseSize * scaleFactor}px`;
+            const baseHeight = 200;
+            thumbnailWrapper.style.height = `${baseHeight * scaleFactor}px`;
+            // Width is auto to maintain aspect ratio
         }
     });
     
@@ -897,6 +932,33 @@ window.addProject = function(title, description, tags, category, imageUrl, index
     intersectionObserver.observe(projectItem);
 };
 
+// Helper function to update thumbnail width based on media aspect ratio
+function updateThumbnailWidth(mediaElement, wrapper) {
+    if (!mediaElement || !wrapper) return;
+    
+    const height = wrapper.offsetHeight || 200;
+    let naturalWidth, naturalHeight;
+    
+    if (mediaElement.tagName === 'VIDEO') {
+        naturalWidth = mediaElement.videoWidth;
+        naturalHeight = mediaElement.videoHeight;
+    } else if (mediaElement.tagName === 'IMG') {
+        naturalWidth = mediaElement.naturalWidth;
+        naturalHeight = mediaElement.naturalHeight;
+    }
+    
+    if (naturalWidth && naturalHeight && naturalHeight > 0) {
+        const aspectRatio = naturalWidth / naturalHeight;
+        const calculatedWidth = height * aspectRatio;
+        // Ensure minimum width
+        const finalWidth = Math.max(calculatedWidth, 200);
+        wrapper.style.width = `${finalWidth}px`;
+    } else {
+        // If dimensions not available yet, ensure minimum width
+        wrapper.style.width = '200px';
+    }
+}
+
 // Clients Dropdown and Modal
 const clientsLink = document.getElementById('clientsLink');
 const clientsDropdown = document.getElementById('clientsDropdown');
@@ -1140,20 +1202,24 @@ window.openClientModal = function(clientId) {
                 }
             });
             
-            video.addEventListener('loadeddata', () => {
-                console.log('✅ Video loaded successfully:', video.src);
-            });
-            
             // Ensure video loads and plays (especially for .mov files)
             video.load();
             
-            // Set video to show first frame immediately
+            // Set video to show first frame immediately and update width
             video.addEventListener('loadeddata', () => {
+                console.log('✅ Video loaded successfully:', video.src);
+                // Update thumbnail wrapper width based on video aspect ratio
+                updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
                 // Seek to frame 3 (assuming 30fps: 3/30 = 0.1 seconds) to show a frame
                 if (video.duration > 0) {
                     const targetTime = Math.min(3 / 30, video.duration - 0.1);
                     video.currentTime = targetTime;
                 }
+            });
+            
+            video.addEventListener('loadedmetadata', () => {
+                // Update width when metadata loads (earlier than loadeddata)
+                updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
             });
             
             video.addEventListener('loadedmetadata', () => {
@@ -1234,6 +1300,11 @@ window.openClientModal = function(clientId) {
             
             image.addEventListener('load', () => {
                 console.log('✅ Image loaded successfully:', image.src);
+                // Update thumbnail wrapper width based on image aspect ratio
+                const imageWrapperIndex = videoElements.length + imageIndex;
+                if (thumbnailWrappers[imageWrapperIndex]) {
+                    updateThumbnailWidth(image, thumbnailWrappers[imageWrapperIndex]);
+                }
             });
             
             const handleMediaClick = (e) => {
@@ -1304,7 +1375,206 @@ window.closeClientModal = function() {
         clientModal.classList.remove('active');
         document.body.style.overflow = '';
     }
-}
+};
+
+// Render client projects to a container (for client pages)
+window.renderClientProjects = function(clientId, container) {
+    const client = window.clientsData && window.clientsData[clientId];
+    if (!client || !container) return;
+    
+    container.innerHTML = '';
+    
+    client.projects.forEach((project, index) => {
+        const projectItem = document.createElement('div');
+        projectItem.className = 'project-item';
+        projectItem.setAttribute('data-index', index);
+        
+        const tagsHTML = project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('');
+        
+        // Build thumbnails for videos and images
+        const videos = project.videos || [];
+        const images = project.images || [];
+        const totalMedia = videos.length + images.length;
+        let thumbnailsHTML = '';
+        
+        // Add video thumbnails
+        videos.forEach((video) => {
+            const videoExt = video.split('.').pop();
+            const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
+            
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                                <source src="${video}" type="${videoType}">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Add image thumbnails
+        images.forEach((image) => {
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <img class="project-image" src="${image}" alt="${project.title}" data-image-src="${image}">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        projectItem.innerHTML = `
+            <div class="project-info">
+                <h3 class="project-title">${project.title}</h3>
+                <p class="project-description">${project.description}</p>
+                <div class="project-meta" style="margin-top: 0.5rem; color: var(--secondary-color); font-size: 0.875rem;">${project.date}</div>
+            </div>
+            <div class="project-thumbnails-container ${totalMedia > 1 ? 'has-multiple' : ''}" data-count="${totalMedia}">
+                ${thumbnailsHTML}
+            </div>
+        `;
+        
+        container.appendChild(projectItem);
+        
+        // Initialize media (same logic as modal)
+        const videoElements = projectItem.querySelectorAll('.project-video');
+        const imageElements = projectItem.querySelectorAll('.project-image');
+        const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
+        
+        videoElements.forEach((video, videoIndex) => {
+            const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
+            
+            video.addEventListener('error', () => {
+                console.error('❌ Video load error:', videoSrc);
+            });
+            
+            video.load();
+            
+            video.addEventListener('loadeddata', () => {
+                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                }
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                }
+            });
+            
+            video.addEventListener('loadedmetadata', () => {
+                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                }
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                    video.play().catch(() => {});
+                }
+            });
+            
+            video.addEventListener('canplay', () => {
+                if (video.duration > 0 && video.currentTime < 0.05) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+                video.play().catch(() => {});
+            });
+            
+            video.addEventListener('timeupdate', () => {
+                if (video.currentTime >= 5 && video.duration > 0) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+            });
+            
+            video.play().catch(() => {});
+            
+            setTimeout(() => {
+                if (video.readyState >= 2) {
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                    video.play().catch(() => {});
+                } else {
+                    video.load();
+                }
+            }, 300);
+            
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                if (typeof toggleMediaFullscreen === 'function') {
+                    toggleMediaFullscreen(video);
+                }
+            };
+            
+            video.addEventListener('click', handleMediaClick);
+            if (thumbnailWrappers[videoIndex]) {
+                thumbnailWrappers[videoIndex].style.cursor = 'pointer';
+                thumbnailWrappers[videoIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        imageElements.forEach((image, imageIndex) => {
+            image.addEventListener('error', () => {
+                console.error('❌ Image load error:', image.src);
+            });
+            
+            image.addEventListener('load', () => {
+                if (typeof updateThumbnailWidth === 'function') {
+                    const imageWrapperIndex = videoElements.length + imageIndex;
+                    if (thumbnailWrappers[imageWrapperIndex]) {
+                        updateThumbnailWidth(image, thumbnailWrappers[imageWrapperIndex]);
+                    }
+                }
+            });
+            
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                if (typeof toggleMediaFullscreen === 'function') {
+                    toggleMediaFullscreen(image);
+                }
+            };
+            
+            image.addEventListener('click', handleMediaClick);
+            const imageWrapperIndex = videoElements.length + imageIndex;
+            if (thumbnailWrappers[imageWrapperIndex]) {
+                thumbnailWrappers[imageWrapperIndex].style.cursor = 'pointer';
+                thumbnailWrappers[imageWrapperIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        // Add hover effects
+        const thumbnailFrames = projectItem.querySelectorAll('.project-thumbnail-frame');
+        projectItem.addEventListener('mouseenter', function() {
+            thumbnailFrames.forEach(frame => {
+                frame.style.borderColor = 'var(--accent-color)';
+            });
+        });
+        
+        projectItem.addEventListener('mouseleave', function() {
+            thumbnailFrames.forEach(frame => {
+                frame.style.borderColor = 'var(--border-color)';
+            });
+        });
+        
+        // Add cursor interactions
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursorFollower');
+        if (cursor && cursorFollower) {
+            projectItem.addEventListener('mouseenter', () => {
+                cursor.classList.add('active');
+                cursorFollower.classList.add('active');
+            });
+            projectItem.addEventListener('mouseleave', () => {
+                cursor.classList.remove('active');
+                cursorFollower.classList.remove('active');
+            });
+        }
+    });
+};
 
 // Event listeners
 if (clientsDropdown) {
@@ -1370,14 +1640,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle CLIENTS dropdown items - navigate to clients page with client parameter
+    // Handle CLIENTS dropdown items - navigate to individual client pages
     const clientsDropdownItems = document.querySelectorAll('.clients-dropdown .dropdown-item');
     clientsDropdownItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const clientId = this.getAttribute('data-client');
-            // Navigate to clients page with client parameter
-            window.location.href = `clients.html?client=${clientId}`;
+            // Don't prevent default - let the link navigate naturally
+            // The href is already set to the correct client page (e.g., ynb.html)
         });
     });
     
@@ -1528,21 +1796,13 @@ function updateModalProjectScaling() {
             description.style.fontSize = `${baseDescSize * scaleFactor}rem`;
         }
         
-        // Scale thumbnails - handle single and multiple thumbnails
+        // Scale thumbnails - maintain aspect ratio, only scale height
         const thumbnailWrappers = item.querySelectorAll('.project-thumbnail-wrapper');
-        const isMultiple = thumbnailWrappers.length > 1;
+        const baseHeight = 200;
         
         thumbnailWrappers.forEach(wrapper => {
-            if (isMultiple) {
-                // For multiple thumbnails, maintain aspect ratio but scale
-                const currentWidth = parseFloat(getComputedStyle(wrapper).width) || 200;
-                const baseWidth = currentWidth / scaleFactor;
-                wrapper.style.width = `${baseWidth * scaleFactor}px`;
-            } else {
-                // Single thumbnail
-                wrapper.style.width = `${200 * scaleFactor}px`;
-            }
-            wrapper.style.height = `${200 * scaleFactor}px`;
+            // Only scale height, width is auto to maintain aspect ratio
+            wrapper.style.height = `${baseHeight * scaleFactor}px`;
         });
     });
     

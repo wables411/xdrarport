@@ -373,7 +373,7 @@ body[data-theme="light"] .hero-video {
 .hero-marquee-container {
     width: 100%;
     margin-top: 0;
-    margin-bottom: 6rem;
+    margin-bottom: 12rem;
     display: flex;
     flex-direction: column;
     align-items: center;

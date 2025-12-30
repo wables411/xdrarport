@@ -206,6 +206,13 @@ body[data-theme="light"] .cursor-follower.active {
     margin-right: 2rem;
 }
 
+.logo-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .logo {
     font-family: 'NeueBit', 'Space Grotesk', monospace;
     font-size: 2.5rem;
@@ -218,6 +225,22 @@ body[data-theme="light"] .cursor-follower.active {
 
 .logo:hover {
     color: var(--accent-color);
+}
+
+.coordinate-display {
+    font-family: 'JetBrains Mono', 'Space Grotesk', monospace;
+    font-size: 0.625rem;
+    font-weight: 400;
+    color: var(--text-color);
+    line-height: 1.2;
+    margin-top: 0.1rem;
+    opacity: 0.8;
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .nav {
@@ -1035,6 +1058,11 @@ section {
         bottom: 1rem;
         font-size: 1.25rem;
         transform: translateX(-50%) !important;
+    }
+
+    .coordinate-display {
+        font-size: 0.5rem;
+        margin-top: 0.05rem;
     }
 
     .about-text {

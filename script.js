@@ -1667,4 +1667,129 @@ if (window.contactFormInitialized) {
     }
 }
 
+// Coordinate Display System
+(function initCoordinateDisplay() {
+    const coordinateDisplay = document.getElementById('coordinateDisplay');
+    if (!coordinateDisplay) return;
+    
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentHoverTarget = null;
+    let lastLogMessage = '';
+    let logTimeout = null;
+    
+    // Track mouse position
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        updateDisplay();
+    });
+    
+    // Track hover targets
+    document.addEventListener('mouseover', (e) => {
+        const target = e.target;
+        let hoverText = null;
+        
+        // Check for clickable elements
+        if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.onclick) {
+            hoverText = target.textContent?.trim() || target.getAttribute('data-text') || target.getAttribute('aria-label') || target.title;
+        }
+        // Check for video
+        else if (target.tagName === 'VIDEO' || target.closest('.hero-video')) {
+            hoverText = '/xdrar.mp4';
+        }
+        // Check for project items
+        else if (target.closest('.project-item')) {
+            const projectTitle = target.closest('.project-item')?.querySelector('.project-title')?.textContent?.trim();
+            if (projectTitle) hoverText = projectTitle;
+        }
+        // Check for client items
+        else if (target.closest('.client-item') || target.closest('.client-list-item')) {
+            hoverText = target.textContent?.trim() || target.getAttribute('data-client');
+        }
+        
+        currentHoverTarget = hoverText;
+        updateDisplay();
+    });
+    
+    document.addEventListener('mouseout', () => {
+        currentHoverTarget = null;
+        updateDisplay();
+    });
+    
+    // Intercept console.log
+    const originalConsoleLog = console.log;
+    const originalConsoleError = console.error;
+    const originalConsoleWarn = console.warn;
+    
+    function sanitizeLogMessage(message) {
+        // Remove sensitive information
+        let msg = String(message);
+        // Remove email patterns
+        msg = msg.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[email]');
+        // Remove URLs with tokens/keys
+        msg = msg.replace(/[?&](token|key|api_key|secret|password)=[^&\s]+/gi, '[key]');
+        // Remove long data objects
+        if (msg.length > 100) {
+            msg = msg.substring(0, 100) + '...';
+        }
+        return msg;
+    }
+    
+    function captureLog(originalFn, level) {
+        return function(...args) {
+            // Call original
+            originalFn.apply(console, args);
+            
+            // Capture non-sensitive logs
+            const message = args.map(arg => {
+                if (typeof arg === 'object') {
+                    try {
+                        return JSON.stringify(arg).substring(0, 50);
+                    } catch (e) {
+                        return String(arg).substring(0, 50);
+                    }
+                }
+                return String(arg);
+            }).join(' ');
+            
+            const sanitized = sanitizeLogMessage(message);
+            
+            // Only show certain types of logs (not errors with sensitive data)
+            if (level === 'log' && !sanitized.includes('Form data') && !sanitized.includes('email')) {
+                lastLogMessage = sanitized;
+                updateDisplay();
+                
+                // Clear log message after 3 seconds
+                clearTimeout(logTimeout);
+                logTimeout = setTimeout(() => {
+                    lastLogMessage = '';
+                    updateDisplay();
+                }, 3000);
+            }
+        };
+    }
+    
+    console.log = captureLog(originalConsoleLog, 'log');
+    console.error = captureLog(originalConsoleError, 'error');
+    console.warn = captureLog(originalConsoleWarn, 'warn');
+    
+    function updateDisplay() {
+        let displayText = `${mouseX}, ${mouseY}`;
+        
+        if (currentHoverTarget) {
+            displayText += ` | ${currentHoverTarget}`;
+        }
+        
+        if (lastLogMessage) {
+            displayText += ` | ${lastLogMessage}`;
+        }
+        
+        coordinateDisplay.textContent = displayText;
+    }
+    
+    // Initialize
+    updateDisplay();
+})();
+
 

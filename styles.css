@@ -350,7 +350,7 @@ body[data-theme="light"] .cursor-follower.active {
     color: var(--text-color);
     text-decoration: none;
     font-family: 'PPMondwest', 'Space Grotesk', monospace;
-    font-size: 0.9625rem;
+    font-size: 0.77rem;
     font-weight: 400;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -1054,7 +1054,7 @@ section {
 
     .dropdown-item {
         padding: 0.5rem 0;
-        font-size: 0.75rem;
+        font-size: 0.6rem;
     }
 
     section {

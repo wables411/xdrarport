@@ -1342,6 +1342,71 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Navigation Dropdown Handlers
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle WORK dropdown items - filter projects by category
+    const workDropdownItems = document.querySelectorAll('.work-dropdown .dropdown-item');
+    workDropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const category = this.getAttribute('data-category');
+            
+            // If we're on the work section, filter projects
+            if (window.location.hash === '#work' || window.location.pathname.includes('index.html')) {
+                // Scroll to work section first
+                const workSection = document.getElementById('work');
+                if (workSection) {
+                    workSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Filter projects by category after a short delay
+                    setTimeout(() => {
+                        filterProjectsByCategory(category);
+                    }, 500);
+                }
+            } else {
+                // Navigate to work section with category filter
+                window.location.href = `index.html#work?category=${category}`;
+            }
+        });
+    });
+    
+    // Handle CLIENTS dropdown items - navigate to clients page with client parameter
+    const clientsDropdownItems = document.querySelectorAll('.clients-dropdown .dropdown-item');
+    clientsDropdownItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const clientId = this.getAttribute('data-client');
+            // Navigate to clients page with client parameter
+            window.location.href = `clients.html?client=${clientId}`;
+        });
+    });
+    
+    // Function to filter projects by category
+    function filterProjectsByCategory(category) {
+        const projectItems = document.querySelectorAll('.project-item');
+        projectItems.forEach(item => {
+            const itemCategory = item.getAttribute('data-category');
+            if (category === 'all' || itemCategory === category) {
+                item.style.display = '';
+                item.style.opacity = '1';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+    
+    // Check for category parameter in URL on work section
+    if (window.location.hash === '#work' || window.location.pathname.includes('index.html')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            setTimeout(() => {
+                filterProjectsByCategory(categoryParam);
+            }, 300);
+        }
+    }
+});
+
 // Fullscreen Media Viewer
 const mediaFullscreen = document.getElementById('mediaFullscreen');
 const mediaFullscreenContent = document.getElementById('mediaFullscreenContent');

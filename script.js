@@ -417,7 +417,7 @@ window.addEventListener('resize', updateProjectScaling);
 
 // Scroll Arrow Growth and Snap-Scroll (Reactive to scroll velocity) - Single Fixed Arrow
 const arrowMaxSize = 3; // Maximum font-size multiplier (reduced for less dramatic effect)
-const snapScrollThreshold = 0.75; // When arrow reaches 75% of max size, trigger snap (increased for more restraint)
+const snapScrollThreshold = 0.85; // When arrow reaches 85% of max size, trigger snap (5/10 sensitivity - requires deliberate scrolling)
 const smoothing = 0.3; // Moderate smoothing for subtle effect
 
 // Single arrow class that dynamically detects sections
@@ -567,9 +567,9 @@ class SingleScrollArrow {
                 // Accumulate scroll amount
                 this.accumulatedScroll += Math.abs(wheelDelta);
                 
-                // Calculate arrow size (moderate thresholds for subtle effect)
-                const velocityFactor = Math.min(1, this.scrollVelocity / 150);
-                const scrollFactor = Math.min(1, this.accumulatedScroll / 120);
+                // Calculate arrow size (5/10 sensitivity - requires more deliberate scrolling)
+                const velocityFactor = Math.min(1, this.scrollVelocity / 250); // Higher threshold (250px/s = max, was 150)
+                const scrollFactor = Math.min(1, this.accumulatedScroll / 200); // Higher threshold (200px = max, was 120)
                 const combinedFactor = Math.max(velocityFactor, scrollFactor);
                 
                 // Set target arrow size (subtle growth from 1.5rem to 4.5rem = 3x larger)
@@ -609,12 +609,12 @@ class SingleScrollArrow {
             
             // Only grow arrow if at top of section AND there's a previous section AND actively scrolling
             if (previousSection && isAtTopOfSection && Math.abs(wheelDelta) > 0) {
-                // Accumulate scroll amount (for upward) - slower accumulation for less aggressiveness
-                this.accumulatedScroll += Math.abs(wheelDelta) * 0.7; // 30% slower accumulation
+                // Accumulate scroll amount (for upward) - same as downward for 5/10 sensitivity
+                this.accumulatedScroll += Math.abs(wheelDelta);
                 
-                // Calculate arrow size - higher thresholds for upward scrolling (less aggressive)
-                const velocityFactor = Math.min(1, this.scrollVelocity / 200); // Higher threshold (200px/s = max, was 150)
-                const scrollFactor = Math.min(1, this.accumulatedScroll / 180); // Higher threshold (180px = max, was 120)
+                // Calculate arrow size (5/10 sensitivity - same as downward)
+                const velocityFactor = Math.min(1, this.scrollVelocity / 250); // Same threshold as downward (250px/s = max)
+                const scrollFactor = Math.min(1, this.accumulatedScroll / 200); // Same threshold as downward (200px = max)
                 const combinedFactor = Math.max(velocityFactor, scrollFactor);
                 
                 // Set target arrow size
@@ -623,8 +623,8 @@ class SingleScrollArrow {
                 // Update arrow to point up
                 this.element.textContent = '↑';
                 
-                // Trigger snap-scroll if threshold reached (scrolling up to previous section) - higher threshold
-                if (combinedFactor >= snapScrollThreshold * 1.2) { // 20% higher threshold for upward
+                // Trigger snap-scroll if threshold reached (scrolling up to previous section) - same threshold as downward
+                if (combinedFactor >= snapScrollThreshold) { // Same threshold as downward for 5/10 sensitivity
                     this.isSnapping = true;
                     this.accumulatedScroll = 0;
                     setTimeout(() => {

@@ -359,7 +359,7 @@ body[data-theme="light"] .cursor-follower.active {
     width: clamp(40rem, 90vw, 120rem);
     height: clamp(24rem, 56vw, 72rem);
     object-fit: contain;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.125rem;
     display: block;
 }
 
@@ -372,7 +372,7 @@ body[data-theme="light"] .hero-video {
 /* Hero Marquee */
 .hero-marquee-container {
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 0.125rem;
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -415,22 +415,17 @@ function requestScalingTick() {
 window.addEventListener('scroll', requestScalingTick);
 window.addEventListener('resize', updateProjectScaling);
 
-// Scroll Arrow Growth and Snap-Scroll (Reactive to scroll velocity) - Multi-Arrow System
+// Scroll Arrow Growth and Snap-Scroll (Reactive to scroll velocity) - Single Fixed Arrow
 const arrowMaxSize = 3; // Maximum font-size multiplier (reduced for less dramatic effect)
 const snapScrollThreshold = 0.75; // When arrow reaches 75% of max size, trigger snap (increased for more restraint)
 const smoothing = 0.3; // Moderate smoothing for subtle effect
 
-// Arrow class to handle individual arrow instances
-class ScrollArrow {
+// Single arrow class that dynamically detects sections
+class SingleScrollArrow {
     constructor(element) {
         this.element = element;
-        this.sectionId = element.getAttribute('data-arrow-section');
-        this.targetId = element.getAttribute('data-arrow-target');
-        this.section = document.querySelector(`#${this.sectionId}`);
-        this.targetSection = document.querySelector(`#${this.targetId}`);
-        
-        // Find previous section for upward scrolling
-        this.previousSection = this.findPreviousSection();
+        this.sections = ['hero', 'work', 'about', 'contact'];
+        this.sectionElements = this.sections.map(id => document.querySelector(`#${id}`)).filter(el => el !== null);
         
         // State
         this.arrowSize = 1.5;
@@ -445,18 +440,68 @@ class ScrollArrow {
         // Store original arrow character
         this.originalArrow = element.textContent;
         
-        if (!this.section || !this.targetSection) {
-            console.warn(`Arrow: section or target not found for ${this.sectionId} -> ${this.targetId}`);
-        }
+        // Initialize transform
+        this.updateSize();
     }
     
-    findPreviousSection() {
-        // Find the section that comes before this arrow's section
-        const sections = ['hero', 'work', 'about', 'contact'];
-        const currentIndex = sections.indexOf(this.sectionId);
+    // Detect which section the viewport is currently in
+    getCurrentSection() {
+        const viewportHeight = window.innerHeight;
+        const scrollY = window.pageYOffset;
+        const viewportCenter = scrollY + (viewportHeight / 2);
+        
+        // Find the section that contains the viewport center
+        for (let i = 0; i < this.sectionElements.length; i++) {
+            const section = this.sectionElements[i];
+            const rect = section.getBoundingClientRect();
+            const sectionTop = rect.top + scrollY;
+            const sectionBottom = sectionTop + rect.height;
+            
+            if (viewportCenter >= sectionTop && viewportCenter <= sectionBottom) {
+                return { element: section, index: i, id: this.sections[i] };
+            }
+        }
+        
+        // Fallback: return the section closest to viewport center
+        let closestSection = null;
+        let closestDistance = Infinity;
+        
+        for (let i = 0; i < this.sectionElements.length; i++) {
+            const section = this.sectionElements[i];
+            const rect = section.getBoundingClientRect();
+            const sectionTop = rect.top + scrollY;
+            const sectionCenter = sectionTop + (rect.height / 2);
+            const distance = Math.abs(viewportCenter - sectionCenter);
+            
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestSection = { element: section, index: i, id: this.sections[i] };
+            }
+        }
+        
+        return closestSection;
+    }
+    
+    // Get next section (for downward scrolling)
+    getNextSection(currentIndex) {
+        if (currentIndex < this.sectionElements.length - 1) {
+            return {
+                element: this.sectionElements[currentIndex + 1],
+                index: currentIndex + 1,
+                id: this.sections[currentIndex + 1]
+            };
+        }
+        return null;
+    }
+    
+    // Get previous section (for upward scrolling)
+    getPreviousSection(currentIndex) {
         if (currentIndex > 0) {
-            const prevId = sections[currentIndex - 1];
-            return document.querySelector(`#${prevId}`);
+            return {
+                element: this.sectionElements[currentIndex - 1],
+                index: currentIndex - 1,
+                id: this.sections[currentIndex - 1]
+            };
         }
         return null;
     }
@@ -471,13 +516,13 @@ class ScrollArrow {
         // Stretch the arrow both vertically and horizontally as it grows
         const stretchY = 1 + ((this.arrowSize - 1.5) / 1.5) * 1; // Stretch up to 100% more vertically
         const stretchX = 1 + ((this.arrowSize - 1.5) / 1.5) * 0.5; // Stretch up to 50% more horizontally (fatter)
-        this.element.style.transform = `scale(${stretchX}, ${stretchY})`;
+        // Apply scale transform while preserving translateX for centering
+        this.element.style.transform = `translateX(-50%) scale(${stretchX}, ${stretchY})`;
     }
     
     handleWheel(e) {
-        if (!this.section || this.isSnapping) return;
+        if (this.isSnapping) return;
         
-        const sectionRect = this.section.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
         const currentTime = Date.now();
         const timeDelta = currentTime - this.lastScrollTime;
@@ -497,92 +542,116 @@ class ScrollArrow {
             this.scrollDirection = -1; // Scrolling up
         }
         
-        // Check section positions
-        const isInSection = sectionRect.bottom > 0 && sectionRect.top < viewportHeight;
-        const isAtBottomOfSection = sectionRect.bottom <= viewportHeight * 1.1 && sectionRect.bottom > viewportHeight * 0.3;
-        
-        // Check if we're in target section (for upward scrolling)
-        let isInTargetSection = false;
-        let isAtTopOfTargetSection = false;
-        if (this.targetSection) {
-            const targetRect = this.targetSection.getBoundingClientRect();
-            isInTargetSection = targetRect.top < viewportHeight && targetRect.bottom > 0;
-            isAtTopOfTargetSection = targetRect.top <= viewportHeight * 0.3 && targetRect.top > -viewportHeight * 0.2;
-        }
-        
-        // Handle downward scrolling (when in section, scrolling down)
-        if (this.scrollDirection === 1 && isInSection && this.targetSection) {
-            // Accumulate scroll amount
-            this.accumulatedScroll += Math.abs(wheelDelta);
-            
-            // Calculate arrow size (moderate thresholds for subtle effect)
-            const velocityFactor = Math.min(1, this.scrollVelocity / 150);
-            const scrollFactor = Math.min(1, this.accumulatedScroll / 120);
-            const combinedFactor = Math.max(velocityFactor, scrollFactor);
-            
-            // Set target arrow size (subtle growth from 1.5rem to 4.5rem = 3x larger)
-            this.arrowSizeTarget = 1.5 + (combinedFactor * (arrowMaxSize - 1) * 1.5);
-            
-            // Update arrow to point down
-            this.element.textContent = '↓';
-            
-            // Trigger snap-scroll if threshold reached (scrolling down from section)
-            if (combinedFactor >= snapScrollThreshold && isAtBottomOfSection) {
-                this.isSnapping = true;
-                this.accumulatedScroll = 0;
-                setTimeout(() => {
-                    this.targetSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    setTimeout(() => {
-                        this.isSnapping = false;
-                        this.arrowSizeTarget = 1.5;
-                        this.accumulatedScroll = 0;
-                    }, 1000);
-                }, 200);
-            }
-        }
-        // Handle upward scrolling (when in target section, scrolling up) - Less aggressive
-        else if (this.scrollDirection === -1 && this.previousSection && isInTargetSection && isAtTopOfTargetSection) {
-            // Accumulate scroll amount (for upward) - slower accumulation for less aggressiveness
-            this.accumulatedScroll += Math.abs(wheelDelta) * 0.7; // 30% slower accumulation
-            
-            // Calculate arrow size - higher thresholds for upward scrolling (less aggressive)
-            const velocityFactor = Math.min(1, this.scrollVelocity / 200); // Higher threshold (200px/s = max, was 150)
-            const scrollFactor = Math.min(1, this.accumulatedScroll / 180); // Higher threshold (180px = max, was 120)
-            const combinedFactor = Math.max(velocityFactor, scrollFactor);
-            
-            // Set target arrow size
-            this.arrowSizeTarget = 1.5 + (combinedFactor * (arrowMaxSize - 1) * 1.5);
-            
-            // Update arrow to point up
-            this.element.textContent = '↑';
-            
-            // Trigger snap-scroll if threshold reached (scrolling up to previous section) - higher threshold
-            if (combinedFactor >= snapScrollThreshold * 1.2) { // 20% higher threshold for upward
-                this.isSnapping = true;
-                this.accumulatedScroll = 0;
-                setTimeout(() => {
-                    this.previousSection.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    setTimeout(() => {
-                        this.isSnapping = false;
-                        this.arrowSizeTarget = 1.5;
-                        this.accumulatedScroll = 0;
-                    }, 1000);
-                }, 200);
-            }
-        } else {
-            // Reset when not in active scroll zone
+        // Get current section
+        const currentSection = this.getCurrentSection();
+        if (!currentSection) {
+            // Reset immediately if no section detected
             this.arrowSizeTarget = 1.5;
             this.accumulatedScroll = 0;
-            // Reset arrow direction when not actively scrolling
-            if (Math.abs(wheelDelta) < 1) {
-                this.element.textContent = this.originalArrow;
+            this.element.textContent = this.originalArrow;
+            this.lastScrollTime = currentTime;
+            return;
+        }
+        
+        const currentSectionRect = currentSection.element.getBoundingClientRect();
+        // More strict boundaries - only trigger when very close to section edges
+        const isAtBottomOfSection = currentSectionRect.bottom <= viewportHeight * 1.05 && currentSectionRect.bottom > viewportHeight * 0.5;
+        const isAtTopOfSection = currentSectionRect.top <= viewportHeight * 0.5 && currentSectionRect.top > -viewportHeight * 0.1;
+        
+        // Handle downward scrolling
+        if (this.scrollDirection === 1) {
+            const nextSection = this.getNextSection(currentSection.index);
+            
+            // Only grow arrow if at bottom of section AND there's a next section AND actively scrolling
+            if (nextSection && isAtBottomOfSection && Math.abs(wheelDelta) > 0) {
+                // Accumulate scroll amount
+                this.accumulatedScroll += Math.abs(wheelDelta);
+                
+                // Calculate arrow size (moderate thresholds for subtle effect)
+                const velocityFactor = Math.min(1, this.scrollVelocity / 150);
+                const scrollFactor = Math.min(1, this.accumulatedScroll / 120);
+                const combinedFactor = Math.max(velocityFactor, scrollFactor);
+                
+                // Set target arrow size (subtle growth from 1.5rem to 4.5rem = 3x larger)
+                this.arrowSizeTarget = 1.5 + (combinedFactor * (arrowMaxSize - 1) * 1.5);
+                
+                // Update arrow to point down
+                this.element.textContent = '↓';
+                
+                // Trigger snap-scroll if threshold reached (scrolling down from section)
+                if (combinedFactor >= snapScrollThreshold) {
+                    this.isSnapping = true;
+                    this.accumulatedScroll = 0;
+                    setTimeout(() => {
+                        nextSection.element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        setTimeout(() => {
+                            this.isSnapping = false;
+                            this.arrowSizeTarget = 1.5;
+                            this.accumulatedScroll = 0;
+                        }, 1000);
+                    }, 200);
+                }
+            } else {
+                // Reset immediately when not at bottom or no next section
+                this.arrowSizeTarget = 1.5;
+                this.accumulatedScroll = 0;
+                if (!isAtBottomOfSection || !nextSection) {
+                    this.element.textContent = this.originalArrow;
+                }
             }
+        }
+        // Handle upward scrolling - Less aggressive
+        else if (this.scrollDirection === -1) {
+            const previousSection = this.getPreviousSection(currentSection.index);
+            
+            // Only grow arrow if at top of section AND there's a previous section AND actively scrolling
+            if (previousSection && isAtTopOfSection && Math.abs(wheelDelta) > 0) {
+                // Accumulate scroll amount (for upward) - slower accumulation for less aggressiveness
+                this.accumulatedScroll += Math.abs(wheelDelta) * 0.7; // 30% slower accumulation
+                
+                // Calculate arrow size - higher thresholds for upward scrolling (less aggressive)
+                const velocityFactor = Math.min(1, this.scrollVelocity / 200); // Higher threshold (200px/s = max, was 150)
+                const scrollFactor = Math.min(1, this.accumulatedScroll / 180); // Higher threshold (180px = max, was 120)
+                const combinedFactor = Math.max(velocityFactor, scrollFactor);
+                
+                // Set target arrow size
+                this.arrowSizeTarget = 1.5 + (combinedFactor * (arrowMaxSize - 1) * 1.5);
+                
+                // Update arrow to point up
+                this.element.textContent = '↑';
+                
+                // Trigger snap-scroll if threshold reached (scrolling up to previous section) - higher threshold
+                if (combinedFactor >= snapScrollThreshold * 1.2) { // 20% higher threshold for upward
+                    this.isSnapping = true;
+                    this.accumulatedScroll = 0;
+                    setTimeout(() => {
+                        previousSection.element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        setTimeout(() => {
+                            this.isSnapping = false;
+                            this.arrowSizeTarget = 1.5;
+                            this.accumulatedScroll = 0;
+                        }, 1000);
+                    }, 200);
+                }
+            } else {
+                // Reset immediately when not at top or no previous section
+                this.arrowSizeTarget = 1.5;
+                this.accumulatedScroll = 0;
+                if (!isAtTopOfSection || !previousSection) {
+                    this.element.textContent = this.originalArrow;
+                }
+            }
+        } else {
+            // Reset immediately when not actively scrolling
+            this.arrowSizeTarget = 1.5;
+            this.accumulatedScroll = 0;
+            this.element.textContent = this.originalArrow;
         }
         
         this.lastScrollTime = currentTime;
@@ -591,45 +660,58 @@ class ScrollArrow {
     reset() {
         this.arrowSizeTarget = 1.5;
         this.accumulatedScroll = 0;
+        this.element.textContent = this.originalArrow;
     }
 }
 
-// Initialize all arrows
-let scrollArrows = [];
+// Initialize single fixed arrow
+let singleScrollArrow = null;
 let wheelTimeout;
 
-function initScrollArrows() {
-    const arrowElements = document.querySelectorAll('.scroll-arrow[data-arrow-section][data-arrow-target]');
-    scrollArrows = Array.from(arrowElements).map(el => new ScrollArrow(el));
-    console.log(`Initialized ${scrollArrows.length} scroll arrows`);
+function initSingleScrollArrow() {
+    const arrowElement = document.getElementById('scrollArrowFixed');
+    if (arrowElement) {
+        singleScrollArrow = new SingleScrollArrow(arrowElement);
+        console.log('Initialized single fixed scroll arrow');
+    } else {
+        console.warn('Fixed scroll arrow element not found');
+    }
 }
 
-// Update all arrow sizes in animation loop
-function updateAllArrowSizes() {
-    scrollArrows.forEach(arrow => arrow.updateSize());
-    requestAnimationFrame(updateAllArrowSizes);
+// Update arrow size in animation loop
+function updateArrowSize() {
+    if (singleScrollArrow) {
+        singleScrollArrow.updateSize();
+    }
+    requestAnimationFrame(updateArrowSize);
 }
 
-// Handle wheel events for all arrows
+// Handle wheel events for the single arrow
 window.addEventListener('wheel', (e) => {
-    scrollArrows.forEach(arrow => arrow.handleWheel(e));
-    
-    // Reset all arrows after wheel stops
-    clearTimeout(wheelTimeout);
-    wheelTimeout = setTimeout(() => {
-        scrollArrows.forEach(arrow => arrow.reset());
-    }, 200);
+    if (singleScrollArrow) {
+        singleScrollArrow.handleWheel(e);
+        
+        // Reset arrow quickly after wheel stops (reduced from 200ms to 100ms for faster reset)
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+            if (singleScrollArrow) {
+                singleScrollArrow.reset();
+                // Also reset arrow direction
+                singleScrollArrow.element.textContent = singleScrollArrow.originalArrow;
+            }
+        }, 100);
+    }
 }, { passive: true });
 
 // Initialize on load
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
-        initScrollArrows();
-        updateAllArrowSizes();
+        initSingleScrollArrow();
+        updateArrowSize();
     });
 } else {
-    initScrollArrows();
-    updateAllArrowSizes();
+    initSingleScrollArrow();
+    updateArrowSize();
 }
 
 // Initial scaling update

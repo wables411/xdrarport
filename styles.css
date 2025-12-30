@@ -432,6 +432,26 @@ body[data-theme="light"] .hero-video {
     width: 100%;
 }
 
+/* Fixed Scroll Arrow at Bottom */
+.scroll-arrow-fixed {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    font-size: 1.5rem;
+    color: var(--text-color);
+    cursor: pointer;
+    user-select: none;
+    font-family: 'NeueBit', 'Space Grotesk', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-origin: center;
+    will-change: transform, font-size;
+    z-index: 1000;
+    pointer-events: none;
+    transform: translateX(-50%);
+}
+
 .hero-bg {
     position: absolute;
     top: 0;

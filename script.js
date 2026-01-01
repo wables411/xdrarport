@@ -1612,32 +1612,152 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Animation state management
+let isAnimating = false;
+let currentAnimation = null;
+
+// Category to route mapping
+const categoryRoutes = {
+    'identity': '/branding',
+    'digital': '/motion',
+    'print': '/personal'
+};
+
+// Function to animate project item sliding off-screen
+function animateProjectItem(projectItem, direction, callback) {
+    if (isAnimating) {
+        // Interrupt current animation
+        if (currentAnimation) {
+            clearTimeout(currentAnimation);
+        }
+        // Reset all project items
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.classList.remove('slide-up', 'slide-down', 'animating');
+        });
+    }
+    
+    isAnimating = true;
+    projectItem.classList.add('animating');
+    
+    // Determine slide direction based on item position
+    // Items above the clicked one slide up, items below slide down
+    const allItems = Array.from(document.querySelectorAll('.project-item'));
+    const clickedIndex = allItems.indexOf(projectItem);
+    
+    // Use requestAnimationFrame to ensure smooth animation start
+    requestAnimationFrame(() => {
+        allItems.forEach((item, index) => {
+            if (index < clickedIndex) {
+                // Items above: slide up
+                item.classList.add('slide-up');
+            } else if (index > clickedIndex) {
+                // Items below: slide down
+                item.classList.add('slide-down');
+            } else {
+                // Clicked item: use provided direction or default to up
+                item.classList.add(direction || 'slide-up');
+            }
+        });
+    });
+    
+    // Wait for animation to complete, then navigate
+    currentAnimation = setTimeout(() => {
+        isAnimating = false;
+        if (callback) callback();
+    }, 800); // Match CSS transition duration
+}
+
 // Navigation Dropdown Handlers
 document.addEventListener('DOMContentLoaded', function() {
-    // Handle WORK dropdown items - filter projects by category
+    // Only run on homepage
+    const isHomePage = window.location.pathname === '/' || 
+                      window.location.pathname.includes('index.html') ||
+                      window.location.pathname.endsWith('/');
+    
+    if (!isHomePage) return;
+    
+    // Handle WORK dropdown items - animate and navigate
     const workDropdownItems = document.querySelectorAll('.work-dropdown .dropdown-item');
     workDropdownItems.forEach(item => {
         item.addEventListener('click', function(e) {
             e.preventDefault();
             const category = this.getAttribute('data-category');
+            const projectItem = document.querySelector(`.project-item[data-category="${category}"]`);
             
-            // If we're on the work section, filter projects
-            if (window.location.hash === '#work' || window.location.pathname.includes('index.html')) {
-                // Scroll to work section first
+            if (projectItem && !isAnimating) {
+                // Scroll to work section if needed
                 const workSection = document.getElementById('work');
                 if (workSection) {
-                    workSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Check if we need to scroll
+                    const rect = workSection.getBoundingClientRect();
+                    const isVisible = rect.top >= 0 && rect.top < window.innerHeight;
                     
-                    // Filter projects by category after a short delay
+                    if (!isVisible) {
+                        workSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                    
+                    // Wait for scroll if needed, then animate
+                    const delay = isVisible ? 0 : 300;
                     setTimeout(() => {
-                        filterProjectsByCategory(category);
-                    }, 500);
+                        const route = categoryRoutes[category] || `/${category}`;
+                        const allItems = Array.from(document.querySelectorAll('.project-item'));
+                        const clickedIndex = allItems.indexOf(projectItem);
+                        const direction = clickedIndex === 0 ? 'slide-up' : 'slide-down';
+                        
+                        animateProjectItem(projectItem, direction, () => {
+                            window.location.href = route;
+                        });
+                    }, delay);
+                } else {
+                    // If no work section, navigate directly
+                    const route = categoryRoutes[category] || `/${category}`;
+                    window.location.href = route;
                 }
-            } else {
-                // Navigate to work section with category filter
-                window.location.href = `index.html#work?category=${category}`;
             }
         });
+    });
+    
+    // Handle clicks on project items themselves
+    const projectItems = document.querySelectorAll('.project-item');
+    projectItems.forEach(item => {
+        // Make items keyboard accessible
+        item.setAttribute('tabindex', '0');
+        item.setAttribute('role', 'button');
+        item.setAttribute('aria-label', `Navigate to ${item.querySelector('.project-title')?.textContent || 'project page'}`);
+        
+        const handleActivation = (e) => {
+            // Don't trigger if clicking on a link or button inside
+            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                return;
+            }
+            
+            // Check if it's a keyboard event and the key is not Enter or Space
+            if (e.type === 'keydown' && e.key !== 'Enter' && e.key !== ' ') {
+                return;
+            }
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            if (isAnimating) {
+                return; // Prevent multiple animations
+            }
+            
+            const category = item.getAttribute('data-category');
+            const route = categoryRoutes[category] || `/${category}`;
+            
+            // Determine direction: first item slides up, others slide down
+            const allItems = Array.from(document.querySelectorAll('.project-item'));
+            const clickedIndex = allItems.indexOf(item);
+            const direction = clickedIndex === 0 ? 'slide-up' : 'slide-down';
+            
+            animateProjectItem(item, direction, () => {
+                window.location.href = route;
+            });
+        };
+        
+        item.addEventListener('click', handleActivation);
+        item.addEventListener('keydown', handleActivation);
     });
     
     // Handle CLIENTS dropdown items - navigate to individual client pages
@@ -1649,7 +1769,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Function to filter projects by category
+    // Function to filter projects by category (kept for backward compatibility)
     function filterProjectsByCategory(category) {
         const projectItems = document.querySelectorAll('.project-item');
         projectItems.forEach(item => {
@@ -1663,7 +1783,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Check for category parameter in URL on work section
+    // Check for category parameter in URL on work section (backward compatibility)
     if (window.location.hash === '#work' || window.location.pathname.includes('index.html')) {
         const urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');

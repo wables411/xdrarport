@@ -1377,6 +1377,26 @@ window.closeClientModal = function() {
     }
 };
 
+// Load projects by category (for category pages like /branding, /motion, /personal)
+window.loadProjectsByCategory = function(category, container) {
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // For now, this is a placeholder
+    // When project data is available, filter and render projects here
+    // Example structure:
+    // const projects = window.projectsData || [];
+    // const filteredProjects = projects.filter(p => p.category === category);
+    // filteredProjects.forEach((project, index) => { ... });
+    
+    // Placeholder message
+    const placeholder = document.createElement('div');
+    placeholder.style.cssText = 'text-align: center; padding: 4rem 2rem; color: var(--secondary-color);';
+    placeholder.innerHTML = '<p style="font-size: 1.125rem; line-height: 1.8;">Projects will be displayed here.</p>';
+    container.appendChild(placeholder);
+};
+
 // Render client projects to a container (for client pages)
 window.renderClientProjects = function(clientId, container) {
     const client = window.clientsData && window.clientsData[clientId];
@@ -1676,44 +1696,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!isHomePage) return;
     
-    // Handle WORK dropdown items - animate and navigate
+    // Handle WORK dropdown items - navigate directly (no animation)
     const workDropdownItems = document.querySelectorAll('.work-dropdown .dropdown-item');
     workDropdownItems.forEach(item => {
         item.addEventListener('click', function(e) {
-            e.preventDefault();
-            const category = this.getAttribute('data-category');
-            const projectItem = document.querySelector(`.project-item[data-category="${category}"]`);
-            
-            if (projectItem && !isAnimating) {
-                // Scroll to work section if needed
-                const workSection = document.getElementById('work');
-                if (workSection) {
-                    // Check if we need to scroll
-                    const rect = workSection.getBoundingClientRect();
-                    const isVisible = rect.top >= 0 && rect.top < window.innerHeight;
-                    
-                    if (!isVisible) {
-                        workSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                    
-                    // Wait for scroll if needed, then animate
-                    const delay = isVisible ? 0 : 300;
-                    setTimeout(() => {
-                        const route = categoryRoutes[category] || `/${category}`;
-                        const allItems = Array.from(document.querySelectorAll('.project-item'));
-                        const clickedIndex = allItems.indexOf(projectItem);
-                        const direction = clickedIndex === 0 ? 'slide-up' : 'slide-down';
-                        
-                        animateProjectItem(projectItem, direction, () => {
-                            window.location.href = route;
-                        });
-                    }, delay);
-                } else {
-                    // If no work section, navigate directly
-                    const route = categoryRoutes[category] || `/${category}`;
-                    window.location.href = route;
-                }
-            }
+            // Don't prevent default - let the link navigate naturally
+            // The href is already set to the correct page (e.g., /branding)
         });
     });
     

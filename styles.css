@@ -622,12 +622,13 @@ section {
     gap: 0;
     margin-top: 0;
     width: 100%;
+    overflow: visible;
 }
 
 .project-item {
     position: relative;
     cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 1;
     width: 100%;
     display: flex;
@@ -637,7 +638,7 @@ section {
     padding: 1rem 0;
     border-bottom: 1px solid var(--border-color);
     min-height: 180px;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
     will-change: transform;
 }
 
@@ -651,6 +652,7 @@ section {
 
 .project-item:hover {
     opacity: 0.8;
+    transform: translateY(0) scale(1.02);
 }
 
 /* Project Info - Left Side */
@@ -955,13 +957,15 @@ section {
 /* Loading Animation */
 /* Slide animations for project items */
 .project-item.slide-up {
-    transform: translateY(-100vh) !important;
+    transform: translateY(-100vh) scale(1) !important;
     opacity: 0 !important;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease !important;
 }
 
 .project-item.slide-down {
-    transform: translateY(100vh) !important;
+    transform: translateY(100vh) scale(1) !important;
     opacity: 0 !important;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease !important;
 }
 
 .project-item.animating {

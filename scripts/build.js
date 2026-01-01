@@ -50,6 +50,14 @@ async function build() {
       }
     }
 
+    // Copy _redirects file to root of dist (required for Cloudflare Pages)
+    const redirectsSource = join(process.cwd(), 'public', '_redirects');
+    const redirectsDest = join(distDir, '_redirects');
+    if (existsSync(redirectsSource)) {
+      await cp(redirectsSource, redirectsDest);
+      console.log('  ✅ Copied _redirects to root');
+    }
+
     console.log('✨ Build complete!');
     console.log(`📁 Output directory: ${distDir}`);
   } catch (error) {

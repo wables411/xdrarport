@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORK - XD.RAR</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        window.R2_PUBLIC_URL = 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev';
+    </script>
+</head>
+<body data-theme="dark">
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+    
+    <header class="header" id="header">
+        <div class="header-inner">
+            <div class="logo-wrapper">
+                <a href="/" class="logo" data-parallax="0.1">XD.RAR</a>
+                <span class="portfolio-label" id="portfolioLabel">Portfolio</span>
+                <span class="time-display" id="timeDisplay"></span>
+                <span class="coordinate-display" id="coordinateDisplay"></span>
+            </div>
+            <nav class="nav">
+                <div class="nav-link-wrapper">
+                    <a href="/work" class="nav-link" data-text="WORK">WORK</a>
+                    <div class="nav-dropdown work-dropdown">
+                        <a href="/branding" class="dropdown-item" data-category="identity">BRANDING & IDENTITY</a>
+                        <a href="/motion" class="dropdown-item" data-category="digital">MOTION & VISUAL MEDIA</a>
+                        <a href="/personal" class="dropdown-item" data-category="print">PERSONAL PROJECTS</a>
+                    </div>
+                </div>
+                <div class="nav-link-wrapper">
+                    <a href="/clients" class="nav-link" data-text="CLIENTS">CLIENTS</a>
+                    <div class="nav-dropdown clients-dropdown">
+                        <a href="/clients/crybaby-oakland" class="dropdown-item" data-client="crybaby-oakland">Crybaby Oakland</a>
+                        <a href="/clients/bussdown" class="dropdown-item" data-client="bussdown">Bussdown</a>
+                        <a href="/clients/planeta-pisces" class="dropdown-item" data-client="planeta-pisces">Planeta Pisces</a>
+                        <a href="/clients/ynb" class="dropdown-item" data-client="ynb">YNB</a>
+                        <a href="/clients/zmo" class="dropdown-item" data-client="zmo">ZMO</a>
+                    </div>
+                </div>
+                <a href="/#about" class="nav-link" data-text="ABOUT">ABOUT</a>
+                <a href="/#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
+                <a href="/archive.html" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
+            </nav>
+            <div class="theme-toggle-wrapper">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">☀</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="work-page" style="padding-top: 8rem; min-height: 100vh;">
+        <div class="work-page-content" style="max-width: 1400px; margin: 0 auto; padding: 0 4rem;">
+            <h1 class="work-page-title" style="font-family: 'NeueBit', 'Space Grotesk', monospace; font-size: clamp(2rem, 4vw, 4rem); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-color); margin-bottom: 4rem;">WORK</h1>
+            
+            <div class="work-sections" style="display: flex; flex-direction: column; gap: 6rem;">
+                <!-- Branding Section -->
+                <div class="work-section" data-category="branding">
+                    <a href="/branding" class="work-section-link" style="text-decoration: none; color: inherit;">
+                        <h2 class="work-section-title" style="font-family: 'NeueBit', 'Space Grotesk', monospace; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-color); margin-bottom: 2rem; position: relative; display: inline-block;">
+                            <span class="nav-link" data-text="BRANDING & IDENTITY" style="display: inline-block;">BRANDING & IDENTITY</span>
+                        </h2>
+                        <div class="work-section-thumbnail" id="brandingThumbnail" style="width: 100%; max-width: 800px; height: 400px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, opacity 0.3s ease;">
+                            <!-- Thumbnail will be loaded here -->
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Motion Section -->
+                <div class="work-section" data-category="motion">
+                    <a href="/motion" class="work-section-link" style="text-decoration: none; color: inherit;">
+                        <h2 class="work-section-title" style="font-family: 'NeueBit', 'Space Grotesk', monospace; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-color); margin-bottom: 2rem; position: relative; display: inline-block;">
+                            <span class="nav-link" data-text="MOTION & VISUAL MEDIA" style="display: inline-block;">MOTION & VISUAL MEDIA</span>
+                        </h2>
+                        <div class="work-section-thumbnail" id="motionThumbnail" style="width: 100%; max-width: 800px; height: 400px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, opacity 0.3s ease;">
+                            <!-- Thumbnail will be loaded here -->
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Personal Section -->
+                <div class="work-section" data-category="personal">
+                    <a href="/personal" class="work-section-link" style="text-decoration: none; color: inherit;">
+                        <h2 class="work-section-title" style="font-family: 'NeueBit', 'Space Grotesk', monospace; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-color); margin-bottom: 2rem; position: relative; display: inline-block;">
+                            <span class="nav-link" data-text="PERSONAL PROJECTS" style="display: inline-block;">PERSONAL PROJECTS</span>
+                        </h2>
+                        <div class="work-section-thumbnail" id="personalThumbnail" style="width: 100%; max-width: 800px; height: 400px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, opacity 0.3s ease;">
+                            <!-- Thumbnail will be loaded here -->
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="media-fullscreen" id="mediaFullscreen">
+        <button class="media-fullscreen-close" id="closeFullscreen">&times;</button>
+        <div class="media-fullscreen-content" id="mediaFullscreenContent"></div>
+    </div>
+
+    <script src="/script.js"></script>
+    <script>
+        // Function to load work page thumbnails
+        window.loadWorkThumbnails = function() {
+            function loadWorkThumbnail(containerId, category) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                // For now, use a placeholder that matches the project thumbnail style
+                // This will be replaced with actual project thumbnails when project data is available
+                container.innerHTML = `
+                    <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">
+                        <div class="project-thumbnail-frame" style="width: 100%; height: 100%; border: 1px solid var(--border-color);">
+                            <div class="project-thumbnail" style="width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color);">
+                                <span style="font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase;">Thumbnail</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            loadWorkThumbnail('brandingThumbnail', 'identity');
+            loadWorkThumbnail('motionThumbnail', 'digital');
+            loadWorkThumbnail('personalThumbnail', 'print');
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load thumbnails
+            if (typeof window.loadWorkThumbnails === 'function') {
+                window.loadWorkThumbnails();
+            }
+            
+            // Add hover effects matching homepage style
+            const workSections = document.querySelectorAll('.work-section');
+            const cursor = document.getElementById('cursor');
+            const cursorFollower = document.getElementById('cursorFollower');
+            
+            workSections.forEach(section => {
+                const thumbnail = section.querySelector('.work-section-thumbnail');
+                const link = section.querySelector('.work-section-link');
+                const thumbnailFrame = section.querySelector('.project-thumbnail-frame');
+                
+                if (link) {
+                    link.addEventListener('mouseenter', function() {
+                        if (thumbnailFrame) {
+                            thumbnailFrame.style.borderColor = 'var(--accent-color)';
+                        }
+                        if (thumbnail) {
+                            thumbnail.style.transform = 'scale(1.02)';
+                            thumbnail.style.opacity = '0.9';
+                        }
+                        if (cursor) cursor.classList.add('active');
+                        if (cursorFollower) cursorFollower.classList.add('active');
+                    });
+                    
+                    link.addEventListener('mouseleave', function() {
+                        if (thumbnailFrame) {
+                            thumbnailFrame.style.borderColor = 'var(--border-color)';
+                        }
+                        if (thumbnail) {
+                            thumbnail.style.transform = 'scale(1)';
+                            thumbnail.style.opacity = '1';
+                        }
+                        if (cursor) cursor.classList.remove('active');
+                        if (cursorFollower) cursorFollower.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

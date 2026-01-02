@@ -29,11 +29,11 @@
             </div>
             <nav class="nav">
                 <div class="nav-link-wrapper">
-                    <a href="index.html#work" class="nav-link" data-text="WORK">WORK</a>
+                    <a href="/work" class="nav-link" data-text="WORK">WORK</a>
                     <div class="nav-dropdown work-dropdown">
-                        <a href="index.html#work" class="dropdown-item" data-category="identity">BRANDING & IDENTITY</a>
-                        <a href="index.html#work" class="dropdown-item" data-category="digital">MOTION & VISUAL MEDIA</a>
-                        <a href="index.html#work" class="dropdown-item" data-category="print">PERSONAL PROJECTS</a>
+                        <a href="/branding" class="dropdown-item" data-category="identity">BRANDING & IDENTITY</a>
+                        <a href="/motion" class="dropdown-item" data-category="digital">MOTION & VISUAL MEDIA</a>
+                        <a href="/personal" class="dropdown-item" data-category="print">PERSONAL PROJECTS</a>
                     </div>
                 </div>
                 <div class="nav-link-wrapper">
@@ -61,9 +61,9 @@
 
     <!-- Clients Page Content -->
     <section class="clients-page" style="padding-top: 8rem; min-height: 100vh;">
-        <div class="clients-page-content">
-            <h1 class="clients-page-title">CLIENTS</h1>
-            <div class="clients-horizontal-list" id="clientsList">
+        <div class="clients-page-content" style="max-width: 800px; margin: 0 auto; padding: 0 4rem;">
+            <h1 class="clients-page-title" style="margin-bottom: 4rem;">CLIENTS</h1>
+            <div class="clients-list-paragraph" id="clientsList" style="display: flex; flex-direction: column; gap: 1.5rem;">
                 <!-- Clients will be dynamically inserted here -->
             </div>
         </div>
@@ -81,10 +81,6 @@
     <script>
         // Clients page specific script
         document.addEventListener('DOMContentLoaded', function() {
-            // Check for client parameter in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const clientParam = urlParams.get('client');
-            
             const clientsList = document.getElementById('clientsList');
             
             // Get clientsData from script.js (it's in global scope)
@@ -92,15 +88,15 @@
                 Object.keys(window.clientsData).forEach((clientId, index) => {
                     const client = window.clientsData[clientId];
                     const clientItem = document.createElement('a');
-                    clientItem.className = 'client-list-item';
-                    clientItem.setAttribute('data-client', clientId);
+                    clientItem.className = 'nav-link';
+                    clientItem.setAttribute('data-text', client.name.toUpperCase());
                     clientItem.href = `/clients/${clientId}`;
-                    clientItem.textContent = client.name;
+                    clientItem.textContent = client.name.toUpperCase();
+                    clientItem.style.cssText = 'display: inline-block; margin-bottom: 0.5rem;';
                     
                     clientsList.appendChild(clientItem);
                 });
             }
-            
         });
     </script>
 </body>

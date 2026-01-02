@@ -603,7 +603,11 @@ section {
 .projects {
     position: relative;
     scroll-margin-top: 100px; /* Account for header height */
-    padding-top: 2rem; /* Reduced top padding */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
 }
 
 .work-menu-title {
@@ -620,26 +624,35 @@ section {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin-top: 0;
+    margin: 0;
     width: 100%;
+    max-width: 1400px;
     overflow: visible;
 }
 
 .project-item {
     position: relative;
     cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     opacity: 1;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 3rem;
-    padding: 1rem 0;
+    padding: 1rem 4rem;
     border-bottom: 1px solid var(--border-color);
     min-height: 180px;
     transform: translateY(0) scale(1);
     will-change: transform;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .project-item {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
 }
 
 .project-item:last-child {
@@ -959,18 +972,44 @@ section {
 .project-item.slide-up {
     transform: translateY(-100vh) scale(1) !important;
     opacity: 0 !important;
-    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease !important;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
 
 .project-item.slide-down {
     transform: translateY(100vh) scale(1) !important;
     opacity: 0 !important;
-    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease !important;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.project-item.stay-at-top {
+    position: fixed !important;
+    top: var(--header-height, 100px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    z-index: 999 !important;
+    transform: translateY(0) scale(1) !important;
+    opacity: 1 !important;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    padding: 1rem 4rem !important;
 }
 
 .project-item.animating {
     pointer-events: none;
     z-index: 1000;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .project-item.slide-up,
+    .project-item.slide-down,
+    .project-item.stay-at-top {
+        transition: opacity 0.3s ease, transform 0.3s ease !important;
+    }
 }
 
 @keyframes fadeIn {
@@ -1078,6 +1117,14 @@ section {
     .project-item {
         flex-direction: column;
         gap: 2rem;
+        padding: 1rem 2rem;
+    }
+    
+    .project-item.stay-at-top {
+        padding: 1rem 2rem !important;
+    }
+    
+    .projects {
         padding: 1rem 0;
     }
 

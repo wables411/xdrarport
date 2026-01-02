@@ -1652,39 +1652,67 @@ function animateProjectItem(projectItem, direction, callback) {
         }
         // Reset all project items
         document.querySelectorAll('.project-item').forEach(item => {
-            item.classList.remove('slide-up', 'slide-down', 'animating');
+            item.classList.remove('slide-up', 'slide-down', 'stay-at-top', 'animating');
         });
     }
     
     isAnimating = true;
     projectItem.classList.add('animating');
     
-    // Determine slide direction based on item position
-    // Items above the clicked one slide up, items below slide down
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const animationDuration = prefersReducedMotion ? 300 : 600;
+    
+    // Get header height for positioning
+    const header = document.getElementById('header');
+    const headerHeight = header ? header.offsetHeight : 100;
+    
+    // Set CSS variable for header height
+    document.documentElement.style.setProperty('--header-height', `${headerHeight}px`);
+    
+    // Get all project items
     const allItems = Array.from(document.querySelectorAll('.project-item'));
     const clickedIndex = allItems.indexOf(projectItem);
     
-    // Use requestAnimationFrame to ensure smooth animation start
-    requestAnimationFrame(() => {
-        allItems.forEach((item, index) => {
-            if (index < clickedIndex) {
-                // Items above: slide up
-                item.classList.add('slide-up');
-            } else if (index > clickedIndex) {
-                // Items below: slide down
-                item.classList.add('slide-down');
-            } else {
-                // Clicked item: use provided direction or default to up
-                item.classList.add(direction || 'slide-up');
-            }
+    // Calculate the target position for the clicked item (top of page under header)
+    const currentRect = projectItem.getBoundingClientRect();
+    const currentScrollY = window.scrollY;
+    const itemAbsoluteTop = currentRect.top + currentScrollY;
+    const targetScrollY = Math.max(0, itemAbsoluteTop - headerHeight);
+    
+    // Scroll to position the clicked item at the top (if not reduced motion)
+    if (!prefersReducedMotion) {
+        window.scrollTo({
+            top: targetScrollY,
+            behavior: 'smooth'
         });
-    });
+    }
+    
+    // Start animation after a brief delay to allow scroll to begin
+    const animationDelay = prefersReducedMotion ? 0 : 50;
+    
+    setTimeout(() => {
+        requestAnimationFrame(() => {
+            allItems.forEach((item, index) => {
+                if (index < clickedIndex) {
+                    // Items above: slide up
+                    item.classList.add('slide-up');
+                } else if (index > clickedIndex) {
+                    // Items below: slide down
+                    item.classList.add('slide-down');
+                } else {
+                    // Clicked item: stay at top under header (fixed position)
+                    item.classList.add('stay-at-top');
+                }
+            });
+        });
+    }, animationDelay);
     
     // Wait for animation to complete, then navigate
     currentAnimation = setTimeout(() => {
         isAnimating = false;
         if (callback) callback();
-    }, 800); // Match CSS transition duration
+    }, animationDuration + 50); // Add small buffer for smooth completion
 }
 
 // Navigation Dropdown Handlers
@@ -1695,6 +1723,30 @@ document.addEventListener('DOMContentLoaded', function() {
                       window.location.pathname.endsWith('/');
     
     if (!isHomePage) return;
+    
+    // Center projects section in viewport on initial load
+    // The CSS flexbox centering handles visual centering,
+    // but we ensure the page scrolls to show the projects section
+    const projectsSection = document.getElementById('work');
+    if (projectsSection && !window.location.hash && window.scrollY === 0) {
+        // Only center on initial page load (no hash, at top of page)
+        requestAnimationFrame(() => {
+            const header = document.getElementById('header');
+            const headerHeight = header ? header.offsetHeight : 100;
+            const viewportHeight = window.innerHeight;
+            const sectionRect = projectsSection.getBoundingClientRect();
+            const sectionTop = sectionRect.top + window.scrollY;
+            
+            // Calculate scroll position to center the section vertically
+            const targetScroll = sectionTop - (viewportHeight / 2) + (sectionRect.height / 2);
+            
+            // Smooth scroll to center (only on initial load)
+            window.scrollTo({
+                top: Math.max(0, targetScroll),
+                behavior: 'smooth'
+            });
+        });
+    }
     
     // Handle WORK dropdown items - navigate directly (no animation)
     const workDropdownItems = document.querySelectorAll('.work-dropdown .dropdown-item');

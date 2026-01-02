@@ -1918,29 +1918,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!isHomePage) return;
     
-    // Center projects section in viewport on initial load
-    // The CSS flexbox centering handles visual centering,
-    // but we ensure the page scrolls to show the projects section
-    const projectsSection = document.getElementById('work');
-    if (projectsSection && !window.location.hash && window.scrollY === 0) {
-        // Only center on initial page load (no hash, at top of page)
-        requestAnimationFrame(() => {
-            const header = document.getElementById('header');
-            const headerHeight = header ? header.offsetHeight : 100;
-            const viewportHeight = window.innerHeight;
-            const sectionRect = projectsSection.getBoundingClientRect();
-            const sectionTop = sectionRect.top + window.scrollY;
-            
-            // Calculate scroll position to center the section vertically
-            const targetScroll = sectionTop - (viewportHeight / 2) + (sectionRect.height / 2);
-            
-            // Smooth scroll to center (only on initial load)
-            window.scrollTo({
-                top: Math.max(0, targetScroll),
-                behavior: 'smooth'
-            });
-        });
-    }
+    // Work section removed - no centering needed
     
     // Handle WORK dropdown items - navigate directly (no animation)
     const workDropdownItems = document.querySelectorAll('.work-dropdown .dropdown-item');
@@ -2017,16 +1995,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Check for category parameter in URL on work section (backward compatibility)
-    if (window.location.hash === '#work' || window.location.pathname.includes('index.html')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const categoryParam = urlParams.get('category');
-        if (categoryParam) {
-            setTimeout(() => {
-                filterProjectsByCategory(categoryParam);
-            }, 300);
-        }
-    }
+    // Work section removed - category filtering no longer needed on homepage
 });
 
 // Fullscreen Media Viewer

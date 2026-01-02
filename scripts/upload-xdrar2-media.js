@@ -49,7 +49,8 @@ const clientDirs = [
   'Bussdown',
   'Planeta_Pisces_November_2025',
   'YNB',
-  'ZMO'
+  'ZMO',
+  '411_Oakland'
 ]
 
 // All media file extensions

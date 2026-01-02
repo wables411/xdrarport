@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLIENTS - PORTFOLIO</title>
+    <title>411 Oakland - CLIENTS</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +23,9 @@
         <div class="header-inner">
             <div class="logo-wrapper">
                 <a href="/" class="logo" data-parallax="0.1">XD.RAR</a>
-                <div class="portfolio-label">Portfolio</div>
-                <div class="time-display" id="timeDisplay">00:00:00</div>
-                <div class="coordinate-display" id="coordinateDisplay">0, 0</div>
+                <span class="portfolio-label" id="portfolioLabel">Portfolio</span>
+                <span class="time-display" id="timeDisplay"></span>
+                <span class="coordinate-display" id="coordinateDisplay"></span>
             </div>
             <nav class="nav">
                 <div class="nav-link-wrapper">
@@ -49,7 +49,7 @@
                 </div>
                 <a href="/#about" class="nav-link" data-text="ABOUT">ABOUT</a>
                 <a href="/#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
-                <a href="/archive.html" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
+                <a href="/#archive" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
             </nav>
             <div class="theme-toggle-wrapper">
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
@@ -59,13 +59,12 @@
         </div>
     </header>
 
-
-    <!-- Clients Page Content -->
-    <section class="clients-page" style="padding-top: 8rem; min-height: 100vh;">
-        <div class="clients-page-content" style="max-width: 800px; margin: 0 auto; padding: 0 4rem;">
-            <h1 class="clients-page-title" style="margin-bottom: 4rem;">CLIENTS</h1>
-            <div class="clients-list-paragraph" id="clientsList">
-                <!-- Clients will be dynamically inserted here -->
+    <!-- Client Page Content -->
+    <section class="client-page" style="padding-top: 8rem; min-height: 100vh;">
+        <div class="client-page-content">
+            <h1 class="client-page-title" id="clientPageTitle">411 Oakland</h1>
+            <div class="client-page-projects" id="clientPageProjects">
+                <!-- Projects will be inserted here -->
             </div>
         </div>
     </section>
@@ -80,29 +79,25 @@
 
     <script src="/script.js"></script>
     <script>
-        // Clients page specific script
+        // Client page specific script
         document.addEventListener('DOMContentLoaded', function() {
-            const clientsList = document.getElementById('clientsList');
+            const clientId = '411-oakland';
+            const client = window.clientsData && window.clientsData[clientId];
             
-            // Get clientsData from script.js (it's in global scope)
-            if (typeof window.clientsData !== 'undefined') {
-                const clientIds = Object.keys(window.clientsData);
-                clientIds.forEach((clientId, index) => {
-                    const client = window.clientsData[clientId];
-                    const clientItem = document.createElement('a');
-                    clientItem.className = 'nav-link clients-link';
-                    clientItem.setAttribute('data-text', client.name.toUpperCase());
-                    clientItem.href = `/clients/${clientId}`;
-                    clientItem.textContent = client.name.toUpperCase();
-                    
-                    clientsList.appendChild(clientItem);
-                    
-                    // Add separator (comma) between items, but not after the last one
-                    if (index < clientIds.length - 1) {
-                        const separator = document.createTextNode(', ');
-                        clientsList.appendChild(separator);
-                    }
-                });
+            if (!client) {
+                console.error('Client data not found:', clientId);
+                return;
+            }
+            
+            const clientPageTitle = document.getElementById('clientPageTitle');
+            const clientPageProjects = document.getElementById('clientPageProjects');
+            
+            if (clientPageTitle) {
+                clientPageTitle.textContent = client.name;
+            }
+            
+            if (clientPageProjects && typeof window.renderClientProjects === 'function') {
+                window.renderClientProjects(clientId, clientPageProjects);
             }
         });
     </script>

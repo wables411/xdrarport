@@ -1077,6 +1077,25 @@ window.clientsData = {
                 ]
             }
         ]
+    },
+    '411-oakland': {
+        name: '411 Oakland',
+        projects: [
+            {
+                title: '411 Oakland Logo',
+                description: 'Logo design and animation for 411 Oakland.',
+                tags: ['LOGO', 'BRANDING', 'VIDEO', 'IMAGE'],
+                date: '2024',
+                videos: [
+                    getMediaUrl('411_Oakland/411_Oakland_Logo_animation.mp4')
+                ],
+                images: [
+                    getMediaUrl('411_Oakland/411_Oakland_Logo_v1.png'),
+                    getMediaUrl('411_Oakland/411_Oakland_Logo_v2.png'),
+                    getMediaUrl('411_Oakland/411_Oakland_Logo_v3.png')
+                ]
+            }
+        ]
     }
 };
 

@@ -21,8 +21,8 @@ async function build() {
     // Files and directories to copy
     const filesToCopy = [
       'index.html',
-      'clients.html',
-      'work.html',
+      'clients',
+      'work',
       'bussdown.html',
       'crybaby-oakland.html',
       'planeta-pisces.html',

@@ -63,7 +63,7 @@
     <section class="clients-page" style="padding-top: 8rem; min-height: 100vh;">
         <div class="clients-page-content" style="max-width: 800px; margin: 0 auto; padding: 0 4rem;">
             <h1 class="clients-page-title" style="margin-bottom: 4rem;">CLIENTS</h1>
-            <div class="clients-list-paragraph" id="clientsList" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div class="clients-list-paragraph" id="clientsList">
                 <!-- Clients will be dynamically inserted here -->
             </div>
         </div>
@@ -85,16 +85,22 @@
             
             // Get clientsData from script.js (it's in global scope)
             if (typeof window.clientsData !== 'undefined') {
-                Object.keys(window.clientsData).forEach((clientId, index) => {
+                const clientIds = Object.keys(window.clientsData);
+                clientIds.forEach((clientId, index) => {
                     const client = window.clientsData[clientId];
                     const clientItem = document.createElement('a');
-                    clientItem.className = 'nav-link';
+                    clientItem.className = 'nav-link clients-link';
                     clientItem.setAttribute('data-text', client.name.toUpperCase());
                     clientItem.href = `/clients/${clientId}`;
                     clientItem.textContent = client.name.toUpperCase();
-                    clientItem.style.cssText = 'display: inline-block; margin-bottom: 0.5rem;';
                     
                     clientsList.appendChild(clientItem);
+                    
+                    // Add separator (comma) between items, but not after the last one
+                    if (index < clientIds.length - 1) {
+                        const separator = document.createTextNode(', ');
+                        clientsList.appendChild(separator);
+                    }
                 });
             }
         });

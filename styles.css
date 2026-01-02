@@ -1447,6 +1447,30 @@ section {
     color: var(--text-color);
 }
 
+.clients-list-paragraph {
+    font-family: 'NeueBit', 'Space Grotesk', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.8;
+    color: var(--text-color);
+}
+
+.clients-link {
+    display: inline;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.clients-link::after {
+    display: none; /* Remove underline on hover */
+}
+
+.clients-link:hover {
+    color: var(--accent-color);
+}
+
 /* Client Page Styles */
 .client-page {
     padding: 8rem 2rem 4rem;

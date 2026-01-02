@@ -1402,6 +1402,20 @@ section {
 }
 
 /* Make project videos clickable */
+.project-video-thumbnail {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.project-item:hover .project-video-thumbnail {
+    transform: scale(1.1);
+}
+
 .project-video {
     cursor: pointer;
     width: 100%;
@@ -1675,16 +1689,12 @@ section {
 /* Archive Grid - Snap Scroll Layout */
 .archive-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 2px;
     width: 100%;
     overflow-y: auto;
     max-height: calc(100vh - 20rem);
     scroll-snap-type: y proximity;
-}
-
-.archive-grid-item {
-    scroll-snap-align: start;
 }
 
 .archive-grid-item {
@@ -1693,12 +1703,12 @@ section {
     overflow: hidden;
     cursor: pointer;
     scroll-snap-align: start;
-    border: 1px solid var(--border-color);
-    transition: border-color 0.3s ease, transform 0.3s ease;
+    border: none;
+    transition: transform 0.3s ease;
+    background: var(--bg-color);
 }
 
 .archive-grid-item:hover {
-    border-color: var(--accent-color);
     transform: scale(1.02);
 }
 
@@ -1714,15 +1724,15 @@ section {
     background-color: #000;
 }
 
-/* Mobile: 2 columns */
+/* Mobile: 3 columns */
 @media (max-width: 768px) {
     .archive-page {
         padding: 8rem 2rem 2rem;
     }
     
     .archive-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2px;
         max-height: calc(100vh - 15rem);
     }
     

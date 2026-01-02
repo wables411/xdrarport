@@ -932,6 +932,46 @@ window.addProject = function(title, description, tags, category, imageUrl, index
     intersectionObserver.observe(projectItem);
 };
 
+// Helper function to extract frame 3 from video and create thumbnail image
+function extractVideoFrame3(videoUrl, callback) {
+    const video = document.createElement('video');
+    video.crossOrigin = 'anonymous';
+    video.preload = 'metadata';
+    video.muted = true;
+    video.playsInline = true;
+    
+    video.addEventListener('loadedmetadata', () => {
+        // Seek to frame 3 (assuming 30fps: 3/30 = 0.1 seconds)
+        const targetTime = Math.min(3 / 30, video.duration - 0.01);
+        video.currentTime = targetTime;
+    });
+    
+    video.addEventListener('seeked', () => {
+        // Draw frame to canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Convert to data URL
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        callback(dataUrl);
+        
+        // Clean up
+        video.src = '';
+        video.load();
+    });
+    
+    video.addEventListener('error', (e) => {
+        console.error('Error loading video for thumbnail:', videoUrl, e);
+        callback(null);
+    });
+    
+    video.src = videoUrl;
+    video.load();
+}
+
 // Helper function to update thumbnail width based on media aspect ratio
 function updateThumbnailWidth(mediaElement, wrapper) {
     if (!mediaElement || !wrapper) return;
@@ -988,7 +1028,8 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'September 2022',
                 videos: [
-                    getMediaUrl('Crybaby_Oakland/Sith_Rave/Sith_Rave_Reel.mp4')
+                    getMediaUrl('Crybaby_Oakland/Sith_Rave/Sith_Rave_Reel.mp4'),
+                    getMediaUrl('Crybaby_Oakland/Sith_Rave/RAINSDEAF.mov')
                 ]
             },
             {
@@ -1125,17 +1166,15 @@ window.openClientModal = function(clientId) {
         const totalMedia = videos.length + images.length;
         let thumbnailsHTML = '';
         
-        // Add video thumbnails
+        // Add video thumbnails (using frame 3 as static image)
         videos.forEach((video, videoIndex) => {
-            const videoExt = video.split('.').pop();
-            const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
-            
             thumbnailsHTML += `
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
-                                <source src="${video}" type="${videoType}">
+                            <img class="project-video-thumbnail" src="" alt="${project.title}" data-video-src="${video}">
+                            <video class="project-video" style="display: none;" muted playsinline preload="metadata" data-video-src="${video}">
+                                <source src="${video}" type="${video.split('.').pop() === 'mov' ? 'video/quicktime' : 'video/mp4'}">
                             </video>
                         </div>
                     </div>
@@ -1169,116 +1208,55 @@ window.openClientModal = function(clientId) {
         
         clientModalProjects.appendChild(projectItem);
         
-        // Set videos to start at frame 3 and add click handlers
+        // Extract frame 3 from videos and set as thumbnails
+        const videoThumbnails = projectItem.querySelectorAll('.project-video-thumbnail');
         const videoElements = projectItem.querySelectorAll('.project-video');
         const imageElements = projectItem.querySelectorAll('.project-image');
         const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
         
-        videoElements.forEach((video, videoIndex) => {
-            // Log the video source for debugging
-            const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
-            const sourceTag = video.querySelector('source');
-            console.log('Loading video:', videoSrc);
-            console.log('Video element src:', video.src);
-            console.log('Source tag src:', sourceTag?.src);
-            console.log('Source tag type:', sourceTag?.type);
+        videoThumbnails.forEach((thumbnail, videoIndex) => {
+            const videoUrl = thumbnail.getAttribute('data-video-src');
+            const video = videoElements[videoIndex];
             
-            // Add error handling first
-            video.addEventListener('error', (e) => {
-                const errorDetails = {
-                    src: video.src || sourceTag?.src,
-                    dataVideoSrc: video.getAttribute('data-video-src'),
-                    sourceTagSrc: sourceTag?.src,
-                    error: video.error,
-                    errorCode: video.error ? video.error.code : 'unknown',
-                    errorMessage: video.error ? video.error.message : 'unknown',
-                    networkState: video.networkState,
-                    readyState: video.readyState
-                };
-                console.error('❌ Video load error:', errorDetails);
-                // Try to reload if there was an error
-                if (video.error && video.error.code === MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED) {
-                    console.error('Video format not supported or URL incorrect:', errorDetails.src);
-                }
-            });
+            if (!videoUrl) return;
             
-            // Ensure video loads and plays (especially for .mov files)
-            video.load();
-            
-            // Set video to show first frame immediately and update width
-            video.addEventListener('loadeddata', () => {
-                console.log('✅ Video loaded successfully:', video.src);
-                // Update thumbnail wrapper width based on video aspect ratio
-                updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
-                // Seek to frame 3 (assuming 30fps: 3/30 = 0.1 seconds) to show a frame
-                if (video.duration > 0) {
-                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
-                    video.currentTime = targetTime;
-                }
-            });
-            
-            video.addEventListener('loadedmetadata', () => {
-                // Update width when metadata loads (earlier than loadeddata)
-                updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
-            });
-            
-            video.addEventListener('loadedmetadata', () => {
-                // Set to frame 3 (assuming 30fps: 3/30 = 0.1 seconds)
-                if (video.duration > 0) {
-                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
-                    video.currentTime = targetTime;
-                    // Try to play after seeking
-                    video.play().catch(() => {
-                        // If autoplay fails, at least we've shown the frame
-                    });
-                }
-            });
-            
-            // Once video can play, ensure it's visible and playing
-            video.addEventListener('canplay', () => {
-                // Ensure we're at the right frame
-                if (video.duration > 0 && video.currentTime < 0.05) {
-                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
-                }
-                video.play().catch(err => {
-                    // Ignore autoplay errors
-                });
-            });
-            
-            // Limit video playback to 5 seconds max, then loop back to frame 3
-            video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
-                    video.currentTime = Math.min(3 / 30, video.duration - 0.1); // Loop back to frame 3
-                }
-            });
-            
-            // Try to play the video (autoplay might be blocked by browser)
-            video.play().catch(err => {
-                // Autoplay was prevented, but that's okay - it will play when user interacts
-            });
-            
-            // Force load and seek to show frame after a short delay
-            setTimeout(() => {
-                if (video.readyState >= 2) { // HAVE_CURRENT_DATA or higher
-                    if (video.duration > 0) {
-                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
-                        video.currentTime = targetTime;
-                    }
-                    video.play().catch(() => {
-                        // Ignore autoplay errors, but frame should be visible
-                    });
+            // Extract frame 3 and set as thumbnail
+            extractVideoFrame3(videoUrl, (thumbnailDataUrl) => {
+                if (thumbnailDataUrl) {
+                    thumbnail.src = thumbnailDataUrl;
+                    
+                    // Update thumbnail wrapper width once image loads
+                    thumbnail.onload = () => {
+                        updateThumbnailWidth(thumbnail, thumbnailWrappers[videoIndex]);
+                    };
                 } else {
-                    video.load();
+                    // Fallback: show placeholder or try to load video metadata
+                    console.warn('Failed to extract frame 3, using placeholder');
                 }
-            }, 300);
+            });
+            
+            // Load video for fullscreen playback (hidden)
+            if (video) {
+                video.load();
+                
+                video.addEventListener('loadedmetadata', () => {
+                    // Update width based on video dimensions
+                    if (thumbnailWrappers[videoIndex]) {
+                        updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                    }
+                });
+            }
             
             // Add click handler for fullscreen
             const handleMediaClick = (e) => {
                 e.stopPropagation();
-                toggleMediaFullscreen(video);
+                if (video) {
+                    toggleMediaFullscreen(video);
+                }
             };
             
-            video.addEventListener('click', handleMediaClick);
+            thumbnail.addEventListener('click', handleMediaClick);
+            thumbnail.style.cursor = 'pointer';
             
             if (thumbnailWrappers[videoIndex]) {
                 thumbnailWrappers[videoIndex].style.cursor = 'pointer';
@@ -1611,17 +1589,15 @@ window.renderClientProjects = function(clientId, container) {
         const totalMedia = videos.length + images.length;
         let thumbnailsHTML = '';
         
-        // Add video thumbnails
+        // Add video thumbnails (using frame 3 as static image)
         videos.forEach((video) => {
-            const videoExt = video.split('.').pop();
-            const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
-            
             thumbnailsHTML += `
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
-                                <source src="${video}" type="${videoType}">
+                            <img class="project-video-thumbnail" src="" alt="${project.title}" data-video-src="${video}">
+                            <video class="project-video" style="display: none;" muted playsinline preload="metadata" data-video-src="${video}">
+                                <source src="${video}" type="${video.split('.').pop() === 'mov' ? 'video/quicktime' : 'video/mp4'}">
                             </video>
                         </div>
                     </div>
@@ -1655,76 +1631,58 @@ window.renderClientProjects = function(clientId, container) {
         
         container.appendChild(projectItem);
         
-        // Initialize media (same logic as modal)
+        // Extract frame 3 from videos and set as thumbnails
+        const videoThumbnails = projectItem.querySelectorAll('.project-video-thumbnail');
         const videoElements = projectItem.querySelectorAll('.project-video');
         const imageElements = projectItem.querySelectorAll('.project-image');
         const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
         
-        videoElements.forEach((video, videoIndex) => {
-            const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
+        videoThumbnails.forEach((thumbnail, videoIndex) => {
+            const videoUrl = thumbnail.getAttribute('data-video-src');
+            const video = videoElements[videoIndex];
             
-            video.addEventListener('error', () => {
-                console.error('❌ Video load error:', videoSrc);
-            });
+            if (!videoUrl) return;
             
-            video.load();
-            
-            video.addEventListener('loadeddata', () => {
-                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
-                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
-                }
-                if (video.duration > 0) {
-                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
-                    video.currentTime = targetTime;
-                }
-            });
-            
-            video.addEventListener('loadedmetadata', () => {
-                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
-                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
-                }
-                if (video.duration > 0) {
-                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
-                    video.currentTime = targetTime;
-                    video.play().catch(() => {});
-                }
-            });
-            
-            video.addEventListener('canplay', () => {
-                if (video.duration > 0 && video.currentTime < 0.05) {
-                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
-                }
-                video.play().catch(() => {});
-            });
-            
-            video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
-                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
-                }
-            });
-            
-            video.play().catch(() => {});
-            
-            setTimeout(() => {
-                if (video.readyState >= 2) {
-                    if (video.duration > 0) {
-                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
-                        video.currentTime = targetTime;
-                    }
-                    video.play().catch(() => {});
+            // Extract frame 3 and set as thumbnail
+            extractVideoFrame3(videoUrl, (thumbnailDataUrl) => {
+                if (thumbnailDataUrl) {
+                    thumbnail.src = thumbnailDataUrl;
+                    
+                    // Update thumbnail wrapper width once image loads
+                    thumbnail.onload = () => {
+                        if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                            updateThumbnailWidth(thumbnail, thumbnailWrappers[videoIndex]);
+                        }
+                    };
                 } else {
-                    video.load();
+                    // Fallback: show placeholder or try to load video metadata
+                    console.warn('Failed to extract frame 3, using placeholder');
                 }
-            }, 300);
+            });
             
+            // Load video for fullscreen playback (hidden)
+            if (video) {
+                video.load();
+                
+                video.addEventListener('loadedmetadata', () => {
+                    // Update width based on video dimensions
+                    if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                        updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                    }
+                });
+            }
+            
+            // Add click handler for fullscreen
             const handleMediaClick = (e) => {
                 e.stopPropagation();
-                if (typeof toggleMediaFullscreen === 'function') {
+                if (video && typeof toggleMediaFullscreen === 'function') {
                     toggleMediaFullscreen(video);
                 }
             };
             
-            video.addEventListener('click', handleMediaClick);
+            thumbnail.addEventListener('click', handleMediaClick);
+            thumbnail.style.cursor = 'pointer';
+            
             if (thumbnailWrappers[videoIndex]) {
                 thumbnailWrappers[videoIndex].style.cursor = 'pointer';
                 thumbnailWrappers[videoIndex].addEventListener('click', handleMediaClick);

@@ -50,7 +50,8 @@ const clientDirs = [
   'Planeta_Pisces_November_2025',
   'YNB',
   'ZMO',
-  '411_Oakland'
+  '411_Oakland',
+  'DNA_Lounge'
 ]
 
 // All media file extensions

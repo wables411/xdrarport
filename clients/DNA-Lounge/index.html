@@ -3,19 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERSONAL PROJECTS - XD.RAR</title>
+    <title>DNA Lounge - CLIENTS</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
+        // R2 Public URL - Media is hosted on Cloudflare R2
         window.R2_PUBLIC_URL = 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev';
     </script>
 </head>
 <body data-theme="dark">
+    <!-- Custom Cursor -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-follower" id="cursorFollower"></div>
     
+    <!-- Header with Navigation -->
     <header class="header" id="header">
         <div class="header-inner">
             <div class="logo-wrapper">
@@ -57,31 +60,45 @@
         </div>
     </header>
 
+    <!-- Client Page Content -->
     <section class="client-page" style="padding-top: 8rem; min-height: 100vh;">
         <div class="client-page-content">
-            <h1 class="client-page-title">PERSONAL PROJECTS</h1>
-            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--secondary-color); margin-bottom: 4rem; max-width: 800px;">
-                Public-facing visuals tied to nightlife, releases, and live moments.
-            </p>
-            <div class="client-page-projects" id="personalProjects">
-                <!-- Projects will be loaded here -->
+            <h1 class="client-page-title" id="clientPageTitle">DNA Lounge</h1>
+            <div class="client-page-projects" id="clientPageProjects">
+                <!-- Projects will be inserted here -->
             </div>
         </div>
     </section>
 
+    <!-- Fullscreen Media Viewer -->
     <div class="media-fullscreen" id="mediaFullscreen">
         <button class="media-fullscreen-close" id="closeFullscreen">&times;</button>
-        <div class="media-fullscreen-content" id="mediaFullscreenContent"></div>
+        <div class="media-fullscreen-content" id="mediaFullscreenContent">
+            <!-- Media will be inserted here -->
+        </div>
     </div>
 
     <script src="/script.js"></script>
     <script>
+        // Client page specific script
         document.addEventListener('DOMContentLoaded', function() {
-            // Filter and display only personal projects
-            const category = 'print';
-            const projectsGrid = document.getElementById('personalProjects');
-            if (projectsGrid && typeof window.loadProjectsByCategory === 'function') {
-                window.loadProjectsByCategory(category, projectsGrid);
+            const clientId = 'dna-lounge';
+            const client = window.clientsData && window.clientsData[clientId];
+            
+            if (!client) {
+                console.error('Client data not found:', clientId);
+                return;
+            }
+            
+            const clientPageTitle = document.getElementById('clientPageTitle');
+            const clientPageProjects = document.getElementById('clientPageProjects');
+            
+            if (clientPageTitle) {
+                clientPageTitle.textContent = client.name;
+            }
+            
+            if (clientPageProjects && typeof window.renderClientProjects === 'function') {
+                window.renderClientProjects(clientId, clientPageProjects);
             }
         });
     </script>

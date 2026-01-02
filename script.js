@@ -1096,6 +1096,20 @@ window.clientsData = {
                 ]
             }
         ]
+    },
+    'dna-lounge': {
+        name: 'DNA Lounge',
+        projects: [
+            {
+                title: 'Into the Void Halloween Party',
+                description: 'Flyer design for Into the Void Halloween Party at DNA Lounge.',
+                tags: ['FLYER', 'EVENT', 'IMAGE'],
+                date: 'October 2025',
+                images: [
+                    getMediaUrl('DNA_Lounge/Into_the_Void_Halloween_Party_-_October_2025/Into_the_Void_Flyer.png')
+                ]
+            }
+        ]
     }
 };
 

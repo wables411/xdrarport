@@ -30,6 +30,7 @@ async function build() {
       'branding.html',
       'motion.html',
       'personal.html',
+      'archive.html',
       'script.js',
       'styles.css',
       'XDRAR.mp4',

@@ -1397,6 +1397,200 @@ window.loadProjectsByCategory = function(category, container) {
     container.appendChild(placeholder);
 };
 
+// Archive functionality
+let allArchiveMedia = [];
+let currentFilter = 'all';
+let sortByDate = false;
+
+// Collect all media from all projects
+function collectAllMedia() {
+    const media = [];
+    
+    // Collect from clients
+    if (window.clientsData) {
+        Object.keys(window.clientsData).forEach(clientId => {
+            const client = window.clientsData[clientId];
+            client.projects.forEach(project => {
+                // Add videos
+                if (project.videos) {
+                    project.videos.forEach(videoUrl => {
+                        media.push({
+                            url: videoUrl,
+                            type: 'video',
+                            title: project.title,
+                            client: client.name,
+                            date: project.date || '',
+                            tags: project.tags || [],
+                            category: 'client'
+                        });
+                    });
+                }
+                // Add images
+                if (project.images) {
+                    project.images.forEach(imageUrl => {
+                        media.push({
+                            url: imageUrl,
+                            type: 'image',
+                            title: project.title,
+                            client: client.name,
+                            date: project.date || '',
+                            tags: project.tags || [],
+                            category: 'client'
+                        });
+                    });
+                }
+            });
+        });
+    }
+    
+    // TODO: Add media from branding, motion, and personal projects when available
+    // For now, we'll use client data
+    
+    return media;
+}
+
+// Filter media based on current filter
+function filterMedia(media, filter) {
+    let filtered = media;
+    
+    if (filter === 'image') {
+        filtered = media.filter(m => m.type === 'image');
+    } else if (filter === 'video') {
+        filtered = media.filter(m => m.type === 'video');
+    } else if (filter === 'branding') {
+        filtered = media.filter(m => 
+            m.tags.some(tag => tag.toLowerCase().includes('branding') || tag.toLowerCase().includes('logo'))
+        );
+    }
+    // 'all' filter doesn't change the array
+    
+    // Apply date sorting if enabled
+    if (sortByDate) {
+        filtered = [...filtered].sort((a, b) => {
+            // Try to parse dates, fallback to string comparison
+            const dateA = parseDate(a.date);
+            const dateB = parseDate(b.date);
+            if (dateA && dateB) {
+                return dateB - dateA; // Most recent first
+            }
+            return (b.date || '').localeCompare(a.date || '');
+        });
+    }
+    
+    return filtered;
+}
+
+// Helper to parse date strings
+function parseDate(dateStr) {
+    if (!dateStr) return null;
+    // Try to parse common date formats
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+}
+
+// Render archive grid
+function renderArchiveGrid(media) {
+    const grid = document.getElementById('archiveGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    if (media.length === 0) {
+        const empty = document.createElement('div');
+        empty.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--secondary-color);';
+        empty.textContent = 'No media found.';
+        grid.appendChild(empty);
+        return;
+    }
+    
+    media.forEach((item, index) => {
+        const gridItem = document.createElement('div');
+        gridItem.className = 'archive-grid-item';
+        gridItem.setAttribute('data-type', item.type);
+        gridItem.setAttribute('data-index', index);
+        
+        if (item.type === 'video') {
+            const video = document.createElement('video');
+            video.src = item.url;
+            video.autoplay = true;
+            video.muted = true;
+            video.loop = true;
+            video.playsInline = true;
+            video.preload = 'metadata';
+            video.setAttribute('data-video-src', item.url);
+            video.addEventListener('error', () => {
+                console.error('Video load error:', item.url);
+            });
+            // Try to play video
+            video.play().catch(err => {
+                // Autoplay may be blocked, that's okay
+            });
+            gridItem.appendChild(video);
+        } else {
+            const img = document.createElement('img');
+            img.src = item.url;
+            img.alt = item.title;
+            img.setAttribute('data-image-src', item.url);
+            img.addEventListener('error', () => {
+                console.error('Image load error:', item.url);
+            });
+            gridItem.appendChild(img);
+        }
+        
+        // Add click handler for fullscreen
+        gridItem.addEventListener('click', () => {
+            const mediaElement = item.type === 'video' 
+                ? gridItem.querySelector('video')
+                : gridItem.querySelector('img');
+            if (mediaElement && typeof toggleMediaFullscreen === 'function') {
+                toggleMediaFullscreen(mediaElement);
+            }
+        });
+        
+        grid.appendChild(gridItem);
+    });
+}
+
+// Load archive page
+window.loadArchive = function() {
+    // Collect all media
+    allArchiveMedia = collectAllMedia();
+    
+    // Render initial grid
+    renderArchiveGrid(allArchiveMedia);
+    
+    // Set up filter buttons
+    const filterButtons = document.querySelectorAll('.archive-filter-btn[data-filter]');
+    filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active state
+            filterButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Update filter
+            currentFilter = btn.getAttribute('data-filter');
+            
+            // Filter and render
+            const filtered = filterMedia(allArchiveMedia, currentFilter);
+            renderArchiveGrid(filtered);
+        });
+    });
+    
+    // Set up date sort button
+    const dateSortBtn = document.getElementById('dateSortBtn');
+    if (dateSortBtn) {
+        dateSortBtn.addEventListener('click', () => {
+            sortByDate = !sortByDate;
+            dateSortBtn.textContent = sortByDate ? 'SORT BY DATE ✓' : 'SORT BY DATE';
+            dateSortBtn.classList.toggle('active', sortByDate);
+            
+            // Re-apply filter with new sort
+            const filtered = filterMedia(allArchiveMedia, currentFilter);
+            renderArchiveGrid(filtered);
+        });
+    }
+};
+
 // Render client projects to a container (for client pages)
 window.renderClientProjects = function(clientId, container) {
     const client = window.clientsData && window.clientsData[clientId];

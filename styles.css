@@ -1619,4 +1619,121 @@ section {
     }
 }
 
+/* Archive Page Styles */
+.archive-page {
+    position: relative;
+    padding: 8rem 4rem 4rem;
+}
+
+.archive-page-content {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.archive-page-title {
+    font-family: 'NeueBit', 'Space Grotesk', monospace;
+    font-size: 2.25rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    color: var(--text-color);
+}
+
+/* Archive Filters */
+.archive-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.archive-filter-btn {
+    font-family: 'NeueBit', 'Space Grotesk', monospace;
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: transparent;
+    color: var(--text-color);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+}
+
+.archive-filter-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.archive-filter-btn.active {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background-color: rgba(var(--accent-color-rgb, 255, 255, 255), 0.1);
+}
+
+/* Archive Grid - Snap Scroll Layout */
+.archive-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    width: 100%;
+    overflow-y: auto;
+    max-height: calc(100vh - 20rem);
+    scroll-snap-type: y proximity;
+}
+
+.archive-grid-item {
+    scroll-snap-align: start;
+}
+
+.archive-grid-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    cursor: pointer;
+    scroll-snap-align: start;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.archive-grid-item:hover {
+    border-color: var(--accent-color);
+    transform: scale(1.02);
+}
+
+.archive-grid-item img,
+.archive-grid-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.archive-grid-item video {
+    background-color: #000;
+}
+
+/* Mobile: 2 columns */
+@media (max-width: 768px) {
+    .archive-page {
+        padding: 8rem 2rem 2rem;
+    }
+    
+    .archive-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        max-height: calc(100vh - 15rem);
+    }
+    
+    .archive-filters {
+        gap: 0.5rem;
+    }
+    
+    .archive-filter-btn {
+        font-size: 0.65rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
 

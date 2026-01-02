@@ -1184,6 +1184,13 @@ window.openClientModal = function(clientId) {
             console.log('Source tag src:', sourceTag?.src);
             console.log('Source tag type:', sourceTag?.type);
             
+            // For .mov files, set src directly on video element as well (some browsers need this)
+            if (videoSrc && videoSrc.toLowerCase().endsWith('.mov')) {
+                if (!video.src) {
+                    video.src = videoSrc;
+                }
+            }
+            
             // Add error handling first
             video.addEventListener('error', (e) => {
                 const errorDetails = {
@@ -1259,6 +1266,10 @@ window.openClientModal = function(clientId) {
             });
             
             // Force load and seek to show frame after a short delay
+            // Use longer timeout for .mov files as they may take longer to load
+            const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
+            const loadTimeout = isMovFile ? 800 : 300;
+            
             setTimeout(() => {
                 if (video.readyState >= 2) { // HAVE_CURRENT_DATA or higher
                     if (video.duration > 0) {
@@ -1269,9 +1280,22 @@ window.openClientModal = function(clientId) {
                         // Ignore autoplay errors, but frame should be visible
                     });
                 } else {
-                    video.load();
+                    // For .mov files, try reloading if not ready
+                    if (isMovFile) {
+                        video.load();
+                        // Try again after another delay
+                        setTimeout(() => {
+                            if (video.duration > 0) {
+                                const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                                video.currentTime = targetTime;
+                                video.play().catch(() => {});
+                            }
+                        }, 500);
+                    } else {
+                        video.load();
+                    }
                 }
-            }, 300);
+            }, loadTimeout);
             
             // Add click handler for fullscreen
             const handleMediaClick = (e) => {
@@ -1664,6 +1688,13 @@ window.renderClientProjects = function(clientId, container) {
         videoElements.forEach((video, videoIndex) => {
             const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
             
+            // For .mov files, set src directly on video element as well (some browsers need this)
+            if (videoSrc && videoSrc.toLowerCase().endsWith('.mov')) {
+                if (!video.src) {
+                    video.src = videoSrc;
+                }
+            }
+            
             video.addEventListener('error', () => {
                 console.error('❌ Video load error:', videoSrc);
             });
@@ -1706,6 +1737,10 @@ window.renderClientProjects = function(clientId, container) {
             
             video.play().catch(() => {});
             
+            // Use longer timeout for .mov files as they may take longer to load
+            const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
+            const loadTimeout = isMovFile ? 800 : 300;
+            
             setTimeout(() => {
                 if (video.readyState >= 2) {
                     if (video.duration > 0) {
@@ -1714,9 +1749,22 @@ window.renderClientProjects = function(clientId, container) {
                     }
                     video.play().catch(() => {});
                 } else {
-                    video.load();
+                    // For .mov files, try reloading if not ready
+                    if (isMovFile) {
+                        video.load();
+                        // Try again after another delay
+                        setTimeout(() => {
+                            if (video.duration > 0) {
+                                const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                                video.currentTime = targetTime;
+                                video.play().catch(() => {});
+                            }
+                        }, 500);
+                    } else {
+                        video.load();
+                    }
                 }
-            }, 300);
+            }, loadTimeout);
             
             const handleMediaClick = (e) => {
                 e.stopPropagation();

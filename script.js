@@ -1126,6 +1126,64 @@ window.clientsData = {
                 ]
             }
         ]
+    },
+    'louie-el-ser': {
+        name: 'Louie El Ser',
+        projects: [
+            {
+                title: 'Psyched! Radio SF',
+                description: '3D animated visual produced for promotional content.',
+                tags: ['MOTION', 'VIDEO', '3D', 'ANIMATION'],
+                date: '2025',
+                videos: [
+                    getMediaUrl('Louie-El-Ser/Louie-El-Ser-Psyched-Radio-SF.mp4')
+                ]
+            }
+        ]
+    },
+    'joogmaster-j': {
+        name: 'JoogMaster J',
+        projects: [
+            {
+                title: 'Joog\'s Bday Bash 25',
+                description: 'Event flyer design for Joog\'s Birthday Bash.',
+                tags: ['FLYER', 'EVENT', 'IMAGE'],
+                date: '2025',
+                images: [
+                    getMediaUrl('JoogMaster J/joogs bday bash 25 v6.png')
+                ]
+            }
+        ]
+    },
+    'portionclub69': {
+        name: 'portionclub69',
+        projects: [
+            {
+                title: 'Branding 2022',
+                description: 'Branding and logo designs for portionclub69.',
+                tags: ['BRANDING', 'LOGO', 'IMAGE', 'VIDEO'],
+                date: '2022',
+                images: [
+                    getMediaUrl('portionclub69/branding 2022/father pfp pc69.png'),
+                    getMediaUrl('portionclub69/branding 2022/PC69 Logo Flash Final.png')
+                ],
+                videos: [
+                    getMediaUrl('portionclub69/branding 2022/Splats Final (1).mp4')
+                ]
+            },
+            {
+                title: 'Petty Mart 2023',
+                description: 'Promotional content for Petty Mart event.',
+                tags: ['PROMO', 'EVENT', 'VIDEO', 'GIF'],
+                date: '2023',
+                videos: [
+                    getMediaUrl('portionclub69/petty mart 2023/PM Story Updated 12.5.mp4')
+                ],
+                images: [
+                    getMediaUrl('portionclub69/petty mart 2023/Petty Mart Carousel [transparent].gif')
+                ]
+            }
+        ]
     }
 };
 
@@ -1449,6 +1507,246 @@ window.closeClientModal = function() {
         clientModal.classList.remove('active');
         document.body.style.overflow = '';
     }
+};
+
+// Render branding projects from specific clients (Text Me Records, Planeta Pisces, 411 Oakland)
+window.renderBrandingProjects = function(container) {
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // Client IDs for branding projects
+    const brandingClientIds = ['text-me-records', 'planeta-pisces', '411-oakland', 'portionclub69'];
+    
+    if (!window.clientsData) {
+        console.error('clientsData not available');
+        return;
+    }
+    
+    // Collect all projects from branding clients
+    const allProjects = [];
+    brandingClientIds.forEach(clientId => {
+        const client = window.clientsData[clientId];
+        if (client && client.projects) {
+            client.projects.forEach(project => {
+                allProjects.push({
+                    ...project,
+                    clientName: client.name,
+                    clientId: clientId
+                });
+            });
+        }
+    });
+    
+    // Render each project using the same structure as renderClientProjects
+    allProjects.forEach((project, index) => {
+        const projectItem = document.createElement('div');
+        projectItem.className = 'project-item';
+        projectItem.setAttribute('data-index', index);
+        
+        const tagsHTML = project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('');
+        
+        // Build thumbnails for videos and images
+        const videos = project.videos || [];
+        const images = project.images || [];
+        const totalMedia = videos.length + images.length;
+        let thumbnailsHTML = '';
+        
+        // Add video thumbnails
+        videos.forEach((video) => {
+            const videoExt = video.split('.').pop();
+            const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
+            
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                                <source src="${video}" type="${videoType}">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Add image thumbnails
+        images.forEach((image) => {
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <img class="project-image" src="${image}" alt="${project.title}" data-image-src="${image}">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        projectItem.innerHTML = `
+            <div class="project-info">
+                <h3 class="project-title">${project.title}</h3>
+                <p class="project-description">${project.description}</p>
+                <div class="project-meta" style="margin-top: 0.5rem; color: var(--secondary-color); font-size: 0.875rem;">
+                    <span>${project.clientName}</span> • <span>${project.date}</span>
+                </div>
+            </div>
+            <div class="project-thumbnails-container ${totalMedia > 1 ? 'has-multiple' : ''}" data-count="${totalMedia}">
+                ${thumbnailsHTML}
+            </div>
+        `;
+        
+        container.appendChild(projectItem);
+        
+        // Initialize media (same logic as renderClientProjects)
+        const videoElements = projectItem.querySelectorAll('.project-video');
+        const imageElements = projectItem.querySelectorAll('.project-image');
+        const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
+        
+        videoElements.forEach((video, videoIndex) => {
+            const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
+            
+            if (videoSrc && videoSrc.toLowerCase().endsWith('.mov')) {
+                if (!video.src) {
+                    video.src = videoSrc;
+                }
+            }
+            
+            video.addEventListener('error', () => {
+                console.error('❌ Video load error:', videoSrc);
+            });
+            
+            video.load();
+            
+            video.addEventListener('loadeddata', () => {
+                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                }
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                }
+            });
+            
+            video.addEventListener('loadedmetadata', () => {
+                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                }
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                    video.play().catch(() => {});
+                }
+            });
+            
+            video.addEventListener('canplay', () => {
+                if (video.duration > 0 && video.currentTime < 0.05) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+                video.play().catch(() => {});
+            });
+            
+            video.addEventListener('timeupdate', () => {
+                if (video.currentTime >= 5 && video.duration > 0) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+            });
+            
+            video.play().catch(() => {});
+            
+            // Use longer timeout for .mov files as they may take longer to load
+            const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
+            const loadTimeout = isMovFile ? 800 : 300;
+            
+            setTimeout(() => {
+                if (video.readyState >= 2) {
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                    video.play().catch(() => {});
+                } else {
+                    // For .mov files, try reloading if not ready
+                    if (isMovFile) {
+                        video.load();
+                        // Try again after another delay
+                        setTimeout(() => {
+                            if (video.duration > 0) {
+                                const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                                video.currentTime = targetTime;
+                                video.play().catch(() => {});
+                            }
+                        }, 500);
+                    } else {
+                        video.load();
+                    }
+                }
+            }, loadTimeout);
+            
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                if (typeof toggleMediaFullscreen === 'function') {
+                    toggleMediaFullscreen(video);
+                }
+            };
+            
+            video.addEventListener('click', handleMediaClick);
+            if (thumbnailWrappers[videoIndex]) {
+                thumbnailWrappers[videoIndex].style.cursor = 'pointer';
+                thumbnailWrappers[videoIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        imageElements.forEach((image, imageIndex) => {
+            image.addEventListener('error', () => {
+                console.error('❌ Image load error:', image.src);
+            });
+            
+            image.addEventListener('load', () => {
+                if (typeof updateThumbnailWidth === 'function') {
+                    const imageWrapperIndex = videoElements.length + imageIndex;
+                    if (thumbnailWrappers[imageWrapperIndex]) {
+                        updateThumbnailWidth(image, thumbnailWrappers[imageWrapperIndex]);
+                    }
+                }
+            });
+            
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                if (typeof toggleMediaFullscreen === 'function') {
+                    toggleMediaFullscreen(image);
+                }
+            };
+            
+            image.addEventListener('click', handleMediaClick);
+            const imageWrapperIndex = videoElements.length + imageIndex;
+            if (thumbnailWrappers[imageWrapperIndex]) {
+                thumbnailWrappers[imageWrapperIndex].style.cursor = 'pointer';
+                thumbnailWrappers[imageWrapperIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        // Add hover effects
+        const thumbnailFrames = projectItem.querySelectorAll('.project-thumbnail-frame');
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursorFollower');
+        
+        projectItem.addEventListener('mouseenter', function() {
+            thumbnailFrames.forEach(frame => {
+                frame.style.borderColor = 'var(--accent-color)';
+            });
+            if (cursor) cursor.classList.add('active');
+            if (cursorFollower) cursorFollower.classList.add('active');
+        });
+        
+        projectItem.addEventListener('mouseleave', function() {
+            thumbnailFrames.forEach(frame => {
+                frame.style.borderColor = 'var(--border-color)';
+            });
+            if (cursor) cursor.classList.remove('active');
+            if (cursorFollower) cursorFollower.classList.remove('active');
+        });
+    });
 };
 
 // Load projects by category (for category pages like /branding, /motion, /personal)

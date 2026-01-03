@@ -52,7 +52,10 @@ const clientDirs = [
   'ZMO',
   '411_Oakland',
   'DNA_Lounge',
-  'Text-Me-Records'
+  'Text-Me-Records',
+  'Louie-El-Ser',
+  'JoogMaster J',
+  'portionclub69'
 ]
 
 // All media file extensions

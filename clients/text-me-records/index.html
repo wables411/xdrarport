@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERSONAL PROJECTS - XD.RAR</title>
+    <title>Text Me Records - CLIENTS</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,13 +60,8 @@
 
     <section class="client-page" style="padding-top: 8rem; min-height: 100vh;">
         <div class="client-page-content">
-            <h1 class="client-page-title">PERSONAL PROJECTS</h1>
-            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--secondary-color); margin-bottom: 4rem; max-width: 800px;">
-                Public-facing visuals tied to nightlife, releases, and live moments.
-            </p>
-            <div class="client-page-projects" id="personalProjects">
-                <!-- Projects will be loaded here -->
-            </div>
+            <h1 class="client-page-title" id="clientPageTitle">Text Me Records</h1>
+            <div class="client-page-projects" id="clientPageProjects"></div>
         </div>
     </section>
 
@@ -78,11 +73,14 @@
     <script src="/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Filter and display only personal projects
-            const category = 'print';
-            const projectsGrid = document.getElementById('personalProjects');
-            if (projectsGrid && typeof window.loadProjectsByCategory === 'function') {
-                window.loadProjectsByCategory(category, projectsGrid);
+            const clientId = 'text-me-records';
+            const client = window.clientsData && window.clientsData[clientId];
+            if (!client) return;
+            const clientPageTitle = document.getElementById('clientPageTitle');
+            const clientPageProjects = document.getElementById('clientPageProjects');
+            if (clientPageTitle) clientPageTitle.textContent = client.name;
+            if (clientPageProjects && typeof window.renderClientProjects === 'function') {
+                window.renderClientProjects(clientId, clientPageProjects);
             }
         });
     </script>

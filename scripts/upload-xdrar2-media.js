@@ -51,7 +51,8 @@ const clientDirs = [
   'YNB',
   'ZMO',
   '411_Oakland',
-  'DNA_Lounge'
+  'DNA_Lounge',
+  'Text-Me-Records'
 ]
 
 // All media file extensions

@@ -1110,6 +1110,22 @@ window.clientsData = {
                 ]
             }
         ]
+    },
+    'text-me-records': {
+        name: 'Text Me Records',
+        projects: [
+            {
+                title: 'Logo Branding Designs',
+                description: 'Logo branding designs for Text Me Records.',
+                tags: ['BRANDING', 'LOGO', 'IMAGE'],
+                date: '2025',
+                images: [
+                    getMediaUrl('Text-Me-Records/Text Me bridge Phone logo (no text).png'),
+                    getMediaUrl('Text-Me-Records/Text Me bridge Phone logo.png'),
+                    getMediaUrl('Text-Me-Records/Text Me text (w logo).png')
+                ]
+            }
+        ]
     }
 };
 

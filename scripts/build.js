@@ -24,7 +24,7 @@ async function build() {
       'clients',
       'work',
       'branding',
-      'motion.html',
+      'visuals',
       'personal.html',
       'archive.html',
       'script.js',

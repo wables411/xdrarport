@@ -29,7 +29,7 @@
                     <a href="/work" class="nav-link" data-text="WORK">WORK</a>
                     <div class="nav-dropdown work-dropdown">
                         <a href="/branding" class="dropdown-item" data-category="identity">BRANDING & IDENTITY</a>
-                        <a href="/motion" class="dropdown-item" data-category="digital">MOTION & VISUAL MEDIA</a>
+                        <a href="/visuals" class="dropdown-item" data-category="digital">VISUALS</a>
                         <a href="/personal" class="dropdown-item" data-category="print">PERSONAL PROJECTS</a>
                     </div>
                 </div>
@@ -78,13 +78,13 @@
                     </a>
                 </div>
                 
-                <!-- Motion Section -->
-                <div class="work-section" data-category="motion">
-                    <a href="/motion" class="work-section-link" style="text-decoration: none; color: inherit;">
+                <!-- Visuals Section -->
+                <div class="work-section" data-category="visuals">
+                    <a href="/visuals" class="work-section-link" style="text-decoration: none; color: inherit;">
                         <h2 class="work-section-title" style="font-family: 'NeueBit', 'Space Grotesk', monospace; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-color); margin-bottom: 2rem; position: relative; display: inline-block;">
-                            <span class="nav-link" data-text="MOTION & VISUAL MEDIA" style="display: inline-block;">MOTION & VISUAL MEDIA</span>
+                            <span class="nav-link" data-text="VISUALS" style="display: inline-block;">VISUALS</span>
                         </h2>
-                        <div class="work-section-thumbnail" id="motionThumbnail" style="width: 100%; max-width: 800px; height: 400px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, opacity 0.3s ease;">
+                        <div class="work-section-thumbnail" id="visualsThumbnail" style="width: 100%; max-width: 800px; height: 400px; overflow: hidden; cursor: pointer; transition: transform 0.3s ease, opacity 0.3s ease;">
                             <!-- Thumbnail will be loaded here -->
                         </div>
                     </a>
@@ -132,7 +132,7 @@
             }
             
             loadWorkThumbnail('brandingThumbnail', 'identity');
-            loadWorkThumbnail('motionThumbnail', 'digital');
+            loadWorkThumbnail('visualsThumbnail', 'digital');
             loadWorkThumbnail('personalThumbnail', 'print');
         };
         

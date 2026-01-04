@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YNB - CLIENTS</title>
+    <title>VISUALS - XD.RAR</title>
     <link rel="stylesheet" href="/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,8 +63,13 @@
 
     <section class="client-page" style="padding-top: 8rem; min-height: 100vh;">
         <div class="client-page-content">
-            <h1 class="client-page-title" id="clientPageTitle">YNB</h1>
-            <div class="client-page-projects" id="clientPageProjects"></div>
+            <h1 class="client-page-title" style="margin-bottom: 1.5rem;">VISUALS</h1>
+            <p style="font-size: 1.125rem; line-height: 1.8; color: var(--secondary-color); margin-bottom: 4rem; max-width: 800px;">
+                Public-facing visuals tied to nightlife, releases, live moments, and digital platforms.
+            </p>
+            <div class="client-page-projects" id="visualsProjects">
+                <!-- Projects will be loaded here -->
+            </div>
         </div>
     </section>
 
@@ -76,14 +81,10 @@
     <script src="/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const clientId = 'ynb';
-            const client = window.clientsData && window.clientsData[clientId];
-            if (!client) return;
-            const clientPageTitle = document.getElementById('clientPageTitle');
-            const clientPageProjects = document.getElementById('clientPageProjects');
-            if (clientPageTitle) clientPageTitle.textContent = client.name;
-            if (clientPageProjects && typeof window.renderClientProjects === 'function') {
-                window.renderClientProjects(clientId, clientPageProjects);
+            // Render visuals projects - all projects with videos (mp4/mov) and Mikos Da Gawd
+            const projectsGrid = document.getElementById('visualsProjects');
+            if (projectsGrid && typeof window.renderVisualsProjects === 'function') {
+                window.renderVisualsProjects(projectsGrid);
             }
         });
     </script>

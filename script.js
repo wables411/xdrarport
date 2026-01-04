@@ -1541,17 +1541,20 @@ window.renderBrandingProjects = function(container) {
         return;
     }
     
-    // Collect all projects from branding clients
+    // Collect all projects from branding clients (excluding Mikos Da Gawd)
     const allProjects = [];
     brandingClientIds.forEach(clientId => {
         const client = window.clientsData[clientId];
         if (client && client.projects) {
             client.projects.forEach(project => {
-                allProjects.push({
-                    ...project,
-                    clientName: client.name,
-                    clientId: clientId
-                });
+                // Exclude Mikos Da Gawd project from branding page
+                if (project.title !== 'Mikos Da Gawd - Oh My Gawd') {
+                    allProjects.push({
+                        ...project,
+                        clientName: client.name,
+                        clientId: clientId
+                    });
+                }
             });
         }
     });
@@ -1624,6 +1627,254 @@ window.renderBrandingProjects = function(container) {
         videoElements.forEach((video, videoIndex) => {
             const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
             
+            if (videoSrc && videoSrc.toLowerCase().endsWith('.mov')) {
+                if (!video.src) {
+                    video.src = videoSrc;
+                }
+            }
+            
+            video.addEventListener('error', () => {
+                console.error('❌ Video load error:', videoSrc);
+            });
+            
+            video.load();
+            
+            video.addEventListener('loadeddata', () => {
+                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                }
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                }
+            });
+            
+            video.addEventListener('loadedmetadata', () => {
+                if (typeof updateThumbnailWidth === 'function' && thumbnailWrappers[videoIndex]) {
+                    updateThumbnailWidth(video, thumbnailWrappers[videoIndex]);
+                }
+                if (video.duration > 0) {
+                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                    video.currentTime = targetTime;
+                    video.play().catch(() => {});
+                }
+            });
+            
+            video.addEventListener('canplay', () => {
+                if (video.duration > 0 && video.currentTime < 0.05) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+                video.play().catch(() => {});
+            });
+            
+            video.addEventListener('timeupdate', () => {
+                if (video.currentTime >= 5 && video.duration > 0) {
+                    video.currentTime = Math.min(3 / 30, video.duration - 0.1);
+                }
+            });
+            
+            video.play().catch(() => {});
+            
+            // Use longer timeout for .mov files as they may take longer to load
+            const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
+            const loadTimeout = isMovFile ? 800 : 300;
+            
+            setTimeout(() => {
+                if (video.readyState >= 2) {
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                    video.play().catch(() => {});
+                } else {
+                    // For .mov files, try reloading if not ready
+                    if (isMovFile) {
+                        video.load();
+                        // Try again after another delay
+                        setTimeout(() => {
+                            if (video.duration > 0) {
+                                const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                                video.currentTime = targetTime;
+                                video.play().catch(() => {});
+                            }
+                        }, 500);
+                    } else {
+                        video.load();
+                    }
+                }
+            }, loadTimeout);
+            
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                if (typeof toggleMediaFullscreen === 'function') {
+                    toggleMediaFullscreen(video);
+                }
+            };
+            
+            video.addEventListener('click', handleMediaClick);
+            if (thumbnailWrappers[videoIndex]) {
+                thumbnailWrappers[videoIndex].style.cursor = 'pointer';
+                thumbnailWrappers[videoIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        imageElements.forEach((image, imageIndex) => {
+            image.addEventListener('error', () => {
+                console.error('❌ Image load error:', image.src);
+            });
+            
+            image.addEventListener('load', () => {
+                if (typeof updateThumbnailWidth === 'function') {
+                    const imageWrapperIndex = videoElements.length + imageIndex;
+                    if (thumbnailWrappers[imageWrapperIndex]) {
+                        updateThumbnailWidth(image, thumbnailWrappers[imageWrapperIndex]);
+                    }
+                }
+            });
+            
+            const handleMediaClick = (e) => {
+                e.stopPropagation();
+                if (typeof toggleMediaFullscreen === 'function') {
+                    toggleMediaFullscreen(image);
+                }
+            };
+            
+            image.addEventListener('click', handleMediaClick);
+            const imageWrapperIndex = videoElements.length + imageIndex;
+            if (thumbnailWrappers[imageWrapperIndex]) {
+                thumbnailWrappers[imageWrapperIndex].style.cursor = 'pointer';
+                thumbnailWrappers[imageWrapperIndex].addEventListener('click', handleMediaClick);
+            }
+        });
+        
+        // Add hover effects
+        const thumbnailFrames = projectItem.querySelectorAll('.project-thumbnail-frame');
+        const cursor = document.getElementById('cursor');
+        const cursorFollower = document.getElementById('cursorFollower');
+        
+        projectItem.addEventListener('mouseenter', function() {
+            thumbnailFrames.forEach(frame => {
+                frame.style.borderColor = 'var(--accent-color)';
+            });
+            if (cursor) cursor.classList.add('active');
+            if (cursorFollower) cursorFollower.classList.add('active');
+        });
+        
+        projectItem.addEventListener('mouseleave', function() {
+            thumbnailFrames.forEach(frame => {
+                frame.style.borderColor = 'var(--border-color)';
+            });
+            if (cursor) cursor.classList.remove('active');
+            if (cursorFollower) cursorFollower.classList.remove('active');
+        });
+    });
+};
+
+// Render visuals projects - all projects with videos (mp4/mov) and Mikos Da Gawd
+window.renderVisualsProjects = function(container) {
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    if (!window.clientsData) {
+        console.error('clientsData not available');
+        return;
+    }
+    
+    // Collect all projects with videos (mp4/mov) from all clients, plus Mikos Da Gawd
+    const allProjects = [];
+    
+    Object.keys(window.clientsData).forEach(clientId => {
+        const client = window.clientsData[clientId];
+        if (client && client.projects) {
+            client.projects.forEach(project => {
+                const videos = project.videos || [];
+                const hasVideo = videos.some(video => {
+                    const ext = video.split('.').pop().toLowerCase();
+                    return ext === 'mp4' || ext === 'mov';
+                });
+                
+                // Include projects with videos OR Mikos Da Gawd project (which has images too)
+                if (hasVideo || project.title === 'Mikos Da Gawd - Oh My Gawd') {
+                    allProjects.push({
+                        ...project,
+                        clientName: client.name,
+                        clientId: clientId
+                    });
+                }
+            });
+        }
+    });
+    
+    // Render each project using the same structure as renderClientProjects
+    allProjects.forEach((project, index) => {
+        const projectItem = document.createElement('div');
+        projectItem.className = 'project-item';
+        projectItem.setAttribute('data-index', index);
+        
+        const tagsHTML = project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('');
+        
+        // Build thumbnails for videos and images
+        const videos = project.videos || [];
+        const images = project.images || [];
+        const totalMedia = videos.length + images.length;
+        let thumbnailsHTML = '';
+        
+        // Add video thumbnails
+        videos.forEach((video) => {
+            const videoExt = video.split('.').pop();
+            const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
+            
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                                <source src="${video}" type="${videoType}">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Add image thumbnails
+        images.forEach((image) => {
+            thumbnailsHTML += `
+                <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
+                    <div class="project-thumbnail-frame">
+                        <div class="project-thumbnail">
+                            <img class="project-image" src="${image}" alt="${project.title}" data-image-src="${image}">
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        projectItem.innerHTML = `
+            <div class="project-info">
+                <h3 class="project-title">${project.title}</h3>
+                <p class="project-description">${project.description}</p>
+                <div class="project-meta" style="margin-top: 0.5rem; color: var(--secondary-color); font-size: 0.875rem;">
+                    <span>${project.clientName}</span> • <span>${project.date}</span>
+                </div>
+            </div>
+            <div class="project-thumbnails-container ${totalMedia > 1 ? 'has-multiple' : ''}" data-count="${totalMedia}">
+                ${thumbnailsHTML}
+            </div>
+        `;
+        
+        container.appendChild(projectItem);
+        
+        // Initialize media (same logic as renderBrandingProjects)
+        const videoElements = projectItem.querySelectorAll('.project-video');
+        const imageElements = projectItem.querySelectorAll('.project-image');
+        const thumbnailWrappers = projectItem.querySelectorAll('.project-thumbnail-wrapper');
+        
+        videoElements.forEach((video, videoIndex) => {
+            const videoSrc = video.getAttribute('data-video-src') || video.querySelector('source')?.src || video.src;
+            
+            // For .mov files, set src directly on video element as well (some browsers need this)
             if (videoSrc && videoSrc.toLowerCase().endsWith('.mov')) {
                 if (!video.src) {
                     video.src = videoSrc;

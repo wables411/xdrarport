@@ -2034,7 +2034,7 @@ window.personalProjectsData = [
     },
     {
         title: 'LAWBNEXUS',
-        description: '1000 Xtra Ultra High Definition Lawbsters, packaged and distributed on Solana. <a href="https://magiceden.us/marketplace/lawbnexus" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: underline;">View on Magic Eden</a>',
+        description: '1000 Xtra Ultra High Definition Lawbsters, packaged and distributed on Solana. <a href="https://magiceden.us/marketplace/lawbnexus" target="_blank" rel="noopener noreferrer" style="color: var(--accent-color); text-decoration: underline;">Collect on secondary.</a>',
         tags: ['NFT', 'COLLECTION', 'VIDEO', 'GIF'],
         date: '2025',
         videos: [

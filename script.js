@@ -2439,7 +2439,7 @@ function renderArchiveGrid(media) {
                 const placeholder = item.querySelector('.archive-placeholder');
                 
                 if (mediaType === 'video' && !item.querySelector('video')) {
-                    // Remove placeholder
+                    // Remove placeholder first
                     if (placeholder) placeholder.remove();
                     
                     const video = document.createElement('video');
@@ -2450,7 +2450,6 @@ function renderArchiveGrid(media) {
                     video.playsInline = true;
                     video.preload = 'metadata';
                     video.setAttribute('data-video-src', mediaUrl);
-                    video.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
                     video.addEventListener('error', () => {
                         console.error('Video load error:', mediaUrl);
                     });
@@ -2459,7 +2458,7 @@ function renderArchiveGrid(media) {
                     });
                     item.appendChild(video);
                 } else if (mediaType === 'image' && !item.querySelector('img')) {
-                    // Remove placeholder
+                    // Remove placeholder first
                     if (placeholder) placeholder.remove();
                     
                     const img = document.createElement('img');
@@ -2467,7 +2466,6 @@ function renderArchiveGrid(media) {
                     img.alt = item.getAttribute('data-title') || '';
                     img.setAttribute('data-image-src', mediaUrl);
                     img.loading = 'lazy';
-                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
                     img.addEventListener('error', () => {
                         console.error('Image load error:', mediaUrl);
                     });
@@ -2494,7 +2492,7 @@ function renderArchiveGrid(media) {
         // Add placeholder for lazy loading
         const placeholder = document.createElement('div');
         placeholder.className = 'archive-placeholder';
-        placeholder.style.cssText = 'width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0;';
+        placeholder.style.cssText = 'width: 100%; height: 100%; background: var(--border-color); display: block;';
         gridItem.appendChild(placeholder);
         
         // Observe for lazy loading

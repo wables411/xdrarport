@@ -23,7 +23,7 @@ async function build() {
       'index.html',
       'clients',
       'work',
-      'branding.html',
+      'branding',
       'motion.html',
       'personal.html',
       'archive.html',

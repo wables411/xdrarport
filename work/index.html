@@ -114,26 +114,112 @@
     <script>
         // Function to load work page thumbnails
         window.loadWorkThumbnails = function() {
+            function getFirstMediaFromProject(project) {
+                // Get first video if available, otherwise first image
+                if (project.videos && project.videos.length > 0) {
+                    return { type: 'video', url: project.videos[0] };
+                } else if (project.images && project.images.length > 0) {
+                    return { type: 'image', url: project.images[0] };
+                }
+                return null;
+            }
+            
             function loadWorkThumbnail(containerId, category) {
                 const container = document.getElementById(containerId);
                 if (!container) return;
                 
-                // For now, use a placeholder that matches the project thumbnail style
-                // This will be replaced with actual project thumbnails when project data is available
-                container.innerHTML = `
-                    <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">
-                        <div class="project-thumbnail-frame" style="width: 100%; height: 100%; border: 1px solid var(--border-color);">
-                            <div class="project-thumbnail" style="width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color);">
-                                <span style="font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase;">Thumbnail</span>
+                let media = null;
+                
+                if (category === 'branding') {
+                    // Get first branding project
+                    const brandingClientIds = ['text-me-records', 'planeta-pisces', '411-oakland', 'portionclub69'];
+                    if (window.clientsData) {
+                        for (const clientId of brandingClientIds) {
+                            const client = window.clientsData[clientId];
+                            if (client && client.projects && client.projects.length > 0) {
+                                // Find first project that's not Mikos Da Gawd
+                                const project = client.projects.find(p => p.title !== 'Mikos Da Gawd - Oh My Gawd');
+                                if (project) {
+                                    media = getFirstMediaFromProject(project);
+                                    if (media) break;
+                                }
+                            }
+                        }
+                    }
+                } else if (category === 'visuals') {
+                    // Get first visuals project (with videos)
+                    if (window.clientsData) {
+                        for (const clientId of Object.keys(window.clientsData)) {
+                            const client = window.clientsData[clientId];
+                            if (client && client.projects) {
+                                for (const project of client.projects) {
+                                    const videos = project.videos || [];
+                                    const hasVideo = videos.some(video => {
+                                        const ext = video.split('.').pop().toLowerCase();
+                                        return ext === 'mp4' || ext === 'mov';
+                                    });
+                                    
+                                    if (hasVideo && videos.length > 0) {
+                                        media = { type: 'video', url: videos[0] };
+                                        break;
+                                    }
+                                }
+                                if (media) break;
+                            }
+                        }
+                    }
+                } else if (category === 'personal') {
+                    // Get first personal project
+                    if (window.personalProjectsData && window.personalProjectsData.length > 0) {
+                        const project = window.personalProjectsData[0];
+                        media = getFirstMediaFromProject(project);
+                    }
+                }
+                
+                // Render thumbnail
+                if (media) {
+                    if (media.type === 'video') {
+                        const videoExt = media.url.split('.').pop();
+                        const videoType = videoExt === 'mov' ? 'video/quicktime' : 'video/mp4';
+                        container.innerHTML = `
+                            <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">
+                                <div class="project-thumbnail-frame" style="width: 100%; height: 100%; border: 1px solid var(--border-color);">
+                                    <div class="project-thumbnail" style="width: 100%; height: 100%; overflow: hidden;">
+                                        <video class="project-video" autoplay muted loop playsinline preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                            <source src="${media.url}" type="${videoType}">
+                                        </video>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = `
+                            <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">
+                                <div class="project-thumbnail-frame" style="width: 100%; height: 100%; border: 1px solid var(--border-color);">
+                                    <div class="project-thumbnail" style="width: 100%; height: 100%; overflow: hidden;">
+                                        <img src="${media.url}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    // Fallback placeholder
+                    container.innerHTML = `
+                        <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">
+                            <div class="project-thumbnail-frame" style="width: 100%; height: 100%; border: 1px solid var(--border-color);">
+                                <div class="project-thumbnail" style="width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center; color: var(--secondary-color);">
+                                    <span style="font-size: 0.875rem; letter-spacing: 0.1em; text-transform: uppercase;">Thumbnail</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             }
             
-            loadWorkThumbnail('brandingThumbnail', 'identity');
-            loadWorkThumbnail('visualsThumbnail', 'digital');
-            loadWorkThumbnail('personalThumbnail', 'print');
+            loadWorkThumbnail('brandingThumbnail', 'branding');
+            loadWorkThumbnail('visualsThumbnail', 'visuals');
+            loadWorkThumbnail('personalThumbnail', 'personal');
         };
         
         document.addEventListener('DOMContentLoaded', function() {

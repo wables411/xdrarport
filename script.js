@@ -2303,41 +2303,74 @@ function collectAllMedia() {
     if (window.clientsData) {
         Object.keys(window.clientsData).forEach(clientId => {
             const client = window.clientsData[clientId];
-            client.projects.forEach(project => {
-                // Add videos
-                if (project.videos) {
-                    project.videos.forEach(videoUrl => {
-                        media.push({
-                            url: videoUrl,
-                            type: 'video',
-                            title: project.title,
-                            client: client.name,
-                            date: project.date || '',
-                            tags: project.tags || [],
-                            category: 'client'
+            if (client && client.projects) {
+                client.projects.forEach(project => {
+                    // Add videos
+                    if (project.videos) {
+                        project.videos.forEach(videoUrl => {
+                            media.push({
+                                url: videoUrl,
+                                type: 'video',
+                                title: project.title,
+                                client: client.name,
+                                date: project.date || '',
+                                tags: project.tags || [],
+                                category: 'client'
+                            });
                         });
-                    });
-                }
-                // Add images
-                if (project.images) {
-                    project.images.forEach(imageUrl => {
-                        media.push({
-                            url: imageUrl,
-                            type: 'image',
-                            title: project.title,
-                            client: client.name,
-                            date: project.date || '',
-                            tags: project.tags || [],
-                            category: 'client'
+                    }
+                    // Add images
+                    if (project.images) {
+                        project.images.forEach(imageUrl => {
+                            media.push({
+                                url: imageUrl,
+                                type: 'image',
+                                title: project.title,
+                                client: client.name,
+                                date: project.date || '',
+                                tags: project.tags || [],
+                                category: 'client'
+                            });
                         });
-                    });
-                }
-            });
+                    }
+                });
+            }
         });
     }
     
-    // TODO: Add media from branding, motion, and personal projects when available
-    // For now, we'll use client data
+    // Collect from personal projects
+    if (window.personalProjectsData) {
+        window.personalProjectsData.forEach(project => {
+            // Add videos
+            if (project.videos) {
+                project.videos.forEach(videoUrl => {
+                    media.push({
+                        url: videoUrl,
+                        type: 'video',
+                        title: project.title,
+                        client: 'Personal',
+                        date: project.date || '',
+                        tags: project.tags || [],
+                        category: 'personal'
+                    });
+                });
+            }
+            // Add images
+            if (project.images) {
+                project.images.forEach(imageUrl => {
+                    media.push({
+                        url: imageUrl,
+                        type: 'image',
+                        title: project.title,
+                        client: 'Personal',
+                        date: project.date || '',
+                        tags: project.tags || [],
+                        category: 'personal'
+                    });
+                });
+            }
+        });
+    }
     
     return media;
 }
@@ -2381,7 +2414,7 @@ function parseDate(dateStr) {
     return isNaN(date.getTime()) ? null : date;
 }
 
-// Render archive grid
+// Render archive grid with lazy loading and virtualization for performance
 function renderArchiveGrid(media) {
     const grid = document.getElementById('archiveGrid');
     if (!grid) return;
@@ -2396,39 +2429,65 @@ function renderArchiveGrid(media) {
         return;
     }
     
+    // Use Intersection Observer for lazy loading
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const item = entry.target;
+                const mediaType = item.getAttribute('data-media-type');
+                const mediaUrl = item.getAttribute('data-media-url');
+                
+                if (mediaType === 'video' && !item.querySelector('video')) {
+                    const video = document.createElement('video');
+                    video.src = mediaUrl;
+                    video.autoplay = true;
+                    video.muted = true;
+                    video.loop = true;
+                    video.playsInline = true;
+                    video.preload = 'metadata';
+                    video.setAttribute('data-video-src', mediaUrl);
+                    video.addEventListener('error', () => {
+                        console.error('Video load error:', mediaUrl);
+                    });
+                    video.play().catch(() => {});
+                    item.appendChild(video);
+                } else if (mediaType === 'image' && !item.querySelector('img')) {
+                    const img = document.createElement('img');
+                    img.src = mediaUrl;
+                    img.alt = item.getAttribute('data-title') || '';
+                    img.setAttribute('data-image-src', mediaUrl);
+                    img.loading = 'lazy';
+                    img.addEventListener('error', () => {
+                        console.error('Image load error:', mediaUrl);
+                    });
+                    item.appendChild(img);
+                }
+                
+                observer.unobserve(item);
+            }
+        });
+    }, {
+        rootMargin: '50px' // Start loading 50px before item comes into view
+    });
+    
+    // Render items with lazy loading placeholders
     media.forEach((item, index) => {
         const gridItem = document.createElement('div');
         gridItem.className = 'archive-grid-item';
         gridItem.setAttribute('data-type', item.type);
         gridItem.setAttribute('data-index', index);
+        gridItem.setAttribute('data-media-type', item.type);
+        gridItem.setAttribute('data-media-url', item.url);
+        gridItem.setAttribute('data-title', item.title);
         
-        if (item.type === 'video') {
-            const video = document.createElement('video');
-            video.src = item.url;
-            video.autoplay = true;
-            video.muted = true;
-            video.loop = true;
-            video.playsInline = true;
-            video.preload = 'metadata';
-            video.setAttribute('data-video-src', item.url);
-            video.addEventListener('error', () => {
-                console.error('Video load error:', item.url);
-            });
-            // Try to play video
-            video.play().catch(err => {
-                // Autoplay may be blocked, that's okay
-            });
-            gridItem.appendChild(video);
-        } else {
-            const img = document.createElement('img');
-            img.src = item.url;
-            img.alt = item.title;
-            img.setAttribute('data-image-src', item.url);
-            img.addEventListener('error', () => {
-                console.error('Image load error:', item.url);
-            });
-            gridItem.appendChild(img);
-        }
+        // Add placeholder for lazy loading
+        const placeholder = document.createElement('div');
+        placeholder.style.cssText = 'width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center;';
+        placeholder.textContent = '';
+        gridItem.appendChild(placeholder);
+        
+        // Observe for lazy loading
+        imageObserver.observe(gridItem);
         
         // Add click handler for fullscreen
         gridItem.addEventListener('click', () => {

@@ -1260,7 +1260,7 @@ window.openClientModal = function(clientId) {
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                            <video class="project-video" muted loop playsinline preload="metadata" data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
                         </div>
@@ -1356,38 +1356,26 @@ window.openClientModal = function(clientId) {
             });
             
             video.addEventListener('loadedmetadata', () => {
-                // Set to frame 3 (assuming 30fps: 3/30 = 0.1 seconds)
+                // Set to frame 3 (assuming 30fps: 3/30 = 0.1 seconds) to show thumbnail frame
                 if (video.duration > 0) {
                     const targetTime = Math.min(3 / 30, video.duration - 0.1);
                     video.currentTime = targetTime;
-                    // Try to play after seeking
-                    video.play().catch(() => {
-                        // If autoplay fails, at least we've shown the frame
-                    });
                 }
             });
             
-            // Once video can play, ensure it's visible and playing
+            // Once video can play, ensure we're at the right frame for thumbnail
             video.addEventListener('canplay', () => {
                 // Ensure we're at the right frame
                 if (video.duration > 0 && video.currentTime < 0.05) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
-                video.play().catch(err => {
-                    // Ignore autoplay errors
-                });
             });
             
             // Limit video playback to 5 seconds max, then loop back to frame 3
             video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
+                if (!video.paused && video.currentTime >= 5 && video.duration > 0) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1); // Loop back to frame 3
                 }
-            });
-            
-            // Try to play the video (autoplay might be blocked by browser)
-            video.play().catch(err => {
-                // Autoplay was prevented, but that's okay - it will play when user interacts
             });
             
             // Force load and seek to show frame after a short delay
@@ -1401,9 +1389,6 @@ window.openClientModal = function(clientId) {
                         const targetTime = Math.min(3 / 30, video.duration - 0.1);
                         video.currentTime = targetTime;
                     }
-                    video.play().catch(() => {
-                        // Ignore autoplay errors, but frame should be visible
-                    });
                 } else {
                     // For .mov files, try reloading if not ready
                     if (isMovFile) {
@@ -1413,7 +1398,6 @@ window.openClientModal = function(clientId) {
                             if (video.duration > 0) {
                                 const targetTime = Math.min(3 / 30, video.duration - 0.1);
                                 video.currentTime = targetTime;
-                                video.play().catch(() => {});
                             }
                         }, 500);
                     } else {
@@ -1421,6 +1405,25 @@ window.openClientModal = function(clientId) {
                     }
                 }
             }, loadTimeout);
+            
+            // Add hover handlers to play/pause video
+            const thumbnailWrapper = thumbnailWrappers[videoIndex];
+            if (thumbnailWrapper) {
+                thumbnailWrapper.addEventListener('mouseenter', () => {
+                    video.play().catch(() => {
+                        // Ignore play errors
+                    });
+                });
+                
+                thumbnailWrapper.addEventListener('mouseleave', () => {
+                    video.pause();
+                    // Reset to frame 3 when not hovering
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                });
+            }
             
             // Add click handler for fullscreen
             const handleMediaClick = (e) => {
@@ -1582,7 +1585,7 @@ window.renderBrandingProjects = function(container) {
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                            <video class="project-video" muted loop playsinline preload="metadata" data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
                         </div>
@@ -1656,7 +1659,6 @@ window.renderBrandingProjects = function(container) {
                 if (video.duration > 0) {
                     const targetTime = Math.min(3 / 30, video.duration - 0.1);
                     video.currentTime = targetTime;
-                    video.play().catch(() => {});
                 }
             });
             
@@ -1664,16 +1666,13 @@ window.renderBrandingProjects = function(container) {
                 if (video.duration > 0 && video.currentTime < 0.05) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
-                video.play().catch(() => {});
             });
             
             video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
+                if (!video.paused && video.currentTime >= 5 && video.duration > 0) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
             });
-            
-            video.play().catch(() => {});
             
             // Use longer timeout for .mov files as they may take longer to load
             const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
@@ -1685,7 +1684,6 @@ window.renderBrandingProjects = function(container) {
                         const targetTime = Math.min(3 / 30, video.duration - 0.1);
                         video.currentTime = targetTime;
                     }
-                    video.play().catch(() => {});
                 } else {
                     // For .mov files, try reloading if not ready
                     if (isMovFile) {
@@ -1695,7 +1693,6 @@ window.renderBrandingProjects = function(container) {
                             if (video.duration > 0) {
                                 const targetTime = Math.min(3 / 30, video.duration - 0.1);
                                 video.currentTime = targetTime;
-                                video.play().catch(() => {});
                             }
                         }, 500);
                     } else {
@@ -1703,6 +1700,25 @@ window.renderBrandingProjects = function(container) {
                     }
                 }
             }, loadTimeout);
+            
+            // Add hover handlers to play/pause video
+            const thumbnailWrapper = thumbnailWrappers[videoIndex];
+            if (thumbnailWrapper) {
+                thumbnailWrapper.addEventListener('mouseenter', () => {
+                    video.play().catch(() => {
+                        // Ignore play errors
+                    });
+                });
+                
+                thumbnailWrapper.addEventListener('mouseleave', () => {
+                    video.pause();
+                    // Reset to frame 3 when not hovering
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                });
+            }
             
             const handleMediaClick = (e) => {
                 e.stopPropagation();
@@ -1829,7 +1845,7 @@ window.renderVisualsProjects = function(container) {
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                            <video class="project-video" muted loop playsinline preload="metadata" data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
                         </div>
@@ -1904,7 +1920,6 @@ window.renderVisualsProjects = function(container) {
                 if (video.duration > 0) {
                     const targetTime = Math.min(3 / 30, video.duration - 0.1);
                     video.currentTime = targetTime;
-                    video.play().catch(() => {});
                 }
             });
             
@@ -1912,16 +1927,14 @@ window.renderVisualsProjects = function(container) {
                 if (video.duration > 0 && video.currentTime < 0.05) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
-                video.play().catch(() => {});
             });
             
             video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
+                if (!video.paused && video.currentTime >= 5 && video.duration > 0) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
             });
             
-            video.play().catch(() => {});
             
             // Use longer timeout for .mov files as they may take longer to load
             const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
@@ -1933,7 +1946,6 @@ window.renderVisualsProjects = function(container) {
                         const targetTime = Math.min(3 / 30, video.duration - 0.1);
                         video.currentTime = targetTime;
                     }
-                    video.play().catch(() => {});
                 } else {
                     // For .mov files, try reloading if not ready
                     if (isMovFile) {
@@ -1943,7 +1955,6 @@ window.renderVisualsProjects = function(container) {
                             if (video.duration > 0) {
                                 const targetTime = Math.min(3 / 30, video.duration - 0.1);
                                 video.currentTime = targetTime;
-                                video.play().catch(() => {});
                             }
                         }, 500);
                     } else {
@@ -1951,6 +1962,25 @@ window.renderVisualsProjects = function(container) {
                     }
                 }
             }, loadTimeout);
+            
+            // Add hover handlers to play/pause video
+            const thumbnailWrapper = thumbnailWrappers[videoIndex];
+            if (thumbnailWrapper) {
+                thumbnailWrapper.addEventListener('mouseenter', () => {
+                    video.play().catch(() => {
+                        // Ignore play errors
+                    });
+                });
+                
+                thumbnailWrapper.addEventListener('mouseleave', () => {
+                    video.pause();
+                    // Reset to frame 3 when not hovering
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                });
+            }
             
             const handleMediaClick = (e) => {
                 e.stopPropagation();
@@ -2081,7 +2111,7 @@ window.renderPersonalProjects = function(container) {
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                            <video class="project-video" muted loop playsinline preload="metadata" data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
                         </div>
@@ -2156,7 +2186,6 @@ window.renderPersonalProjects = function(container) {
                 if (video.duration > 0) {
                     const targetTime = Math.min(3 / 30, video.duration - 0.1);
                     video.currentTime = targetTime;
-                    video.play().catch(() => {});
                 }
             });
             
@@ -2164,16 +2193,14 @@ window.renderPersonalProjects = function(container) {
                 if (video.duration > 0 && video.currentTime < 0.05) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
-                video.play().catch(() => {});
             });
             
             video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
+                if (!video.paused && video.currentTime >= 5 && video.duration > 0) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
             });
             
-            video.play().catch(() => {});
             
             // Use longer timeout for .mov files as they may take longer to load
             const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
@@ -2185,7 +2212,6 @@ window.renderPersonalProjects = function(container) {
                         const targetTime = Math.min(3 / 30, video.duration - 0.1);
                         video.currentTime = targetTime;
                     }
-                    video.play().catch(() => {});
                 } else {
                     // For .mov files, try reloading if not ready
                     if (isMovFile) {
@@ -2195,7 +2221,6 @@ window.renderPersonalProjects = function(container) {
                             if (video.duration > 0) {
                                 const targetTime = Math.min(3 / 30, video.duration - 0.1);
                                 video.currentTime = targetTime;
-                                video.play().catch(() => {});
                             }
                         }, 500);
                     } else {
@@ -2203,6 +2228,25 @@ window.renderPersonalProjects = function(container) {
                     }
                 }
             }, loadTimeout);
+            
+            // Add hover handlers to play/pause video
+            const thumbnailWrapper = thumbnailWrappers[videoIndex];
+            if (thumbnailWrapper) {
+                thumbnailWrapper.addEventListener('mouseenter', () => {
+                    video.play().catch(() => {
+                        // Ignore play errors
+                    });
+                });
+                
+                thumbnailWrapper.addEventListener('mouseleave', () => {
+                    video.pause();
+                    // Reset to frame 3 when not hovering
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                });
+            }
             
             const handleMediaClick = (e) => {
                 e.stopPropagation();
@@ -2448,7 +2492,6 @@ function renderArchiveGrid(media) {
                     
                     const video = document.createElement('video');
                     video.src = mediaUrl;
-                    video.autoplay = true;
                     video.muted = true;
                     video.loop = true;
                     video.playsInline = true;
@@ -2458,8 +2501,23 @@ function renderArchiveGrid(media) {
                     video.addEventListener('error', () => {
                         console.error('Video load error:', mediaUrl);
                     });
-                    video.addEventListener('loadeddata', () => {
+                    video.addEventListener('loadedmetadata', () => {
+                        // Seek to frame 3 for thumbnail
+                        if (video.duration > 0) {
+                            const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                            video.currentTime = targetTime;
+                        }
+                    });
+                    // Add hover handlers to play/pause video
+                    item.addEventListener('mouseenter', () => {
                         video.play().catch(() => {});
+                    });
+                    item.addEventListener('mouseleave', () => {
+                        video.pause();
+                        if (video.duration > 0) {
+                            const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                            video.currentTime = targetTime;
+                        }
                     });
                     item.appendChild(video);
                 } else if (mediaType === 'image' && !item.querySelector('img')) {
@@ -2594,7 +2652,7 @@ window.renderClientProjects = function(clientId, container) {
                 <div class="project-thumbnail-wrapper ${totalMedia > 1 ? 'multiple-thumbnails' : ''}" data-thumbnail-count="${totalMedia}">
                     <div class="project-thumbnail-frame">
                         <div class="project-thumbnail">
-                            <video class="project-video" autoplay muted loop playsinline preload="metadata" data-video-src="${video}">
+                            <video class="project-video" muted loop playsinline preload="metadata" data-video-src="${video}">
                                 <source src="${video}" type="${videoType}">
                             </video>
                         </div>
@@ -2667,7 +2725,6 @@ window.renderClientProjects = function(clientId, container) {
                 if (video.duration > 0) {
                     const targetTime = Math.min(3 / 30, video.duration - 0.1);
                     video.currentTime = targetTime;
-                    video.play().catch(() => {});
                 }
             });
             
@@ -2675,16 +2732,14 @@ window.renderClientProjects = function(clientId, container) {
                 if (video.duration > 0 && video.currentTime < 0.05) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
-                video.play().catch(() => {});
             });
             
             video.addEventListener('timeupdate', () => {
-                if (video.currentTime >= 5 && video.duration > 0) {
+                if (!video.paused && video.currentTime >= 5 && video.duration > 0) {
                     video.currentTime = Math.min(3 / 30, video.duration - 0.1);
                 }
             });
             
-            video.play().catch(() => {});
             
             // Use longer timeout for .mov files as they may take longer to load
             const isMovFile = videoSrc && videoSrc.toLowerCase().endsWith('.mov');
@@ -2696,7 +2751,6 @@ window.renderClientProjects = function(clientId, container) {
                         const targetTime = Math.min(3 / 30, video.duration - 0.1);
                         video.currentTime = targetTime;
                     }
-                    video.play().catch(() => {});
                 } else {
                     // For .mov files, try reloading if not ready
                     if (isMovFile) {
@@ -2706,7 +2760,6 @@ window.renderClientProjects = function(clientId, container) {
                             if (video.duration > 0) {
                                 const targetTime = Math.min(3 / 30, video.duration - 0.1);
                                 video.currentTime = targetTime;
-                                video.play().catch(() => {});
                             }
                         }, 500);
                     } else {
@@ -2714,6 +2767,25 @@ window.renderClientProjects = function(clientId, container) {
                     }
                 }
             }, loadTimeout);
+            
+            // Add hover handlers to play/pause video
+            const thumbnailWrapper = thumbnailWrappers[videoIndex];
+            if (thumbnailWrapper) {
+                thumbnailWrapper.addEventListener('mouseenter', () => {
+                    video.play().catch(() => {
+                        // Ignore play errors
+                    });
+                });
+                
+                thumbnailWrapper.addEventListener('mouseleave', () => {
+                    video.pause();
+                    // Reset to frame 3 when not hovering
+                    if (video.duration > 0) {
+                        const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                        video.currentTime = targetTime;
+                    }
+                });
+            }
             
             const handleMediaClick = (e) => {
                 e.stopPropagation();

@@ -185,13 +185,37 @@
                             <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">
                                 <div class="project-thumbnail-frame" style="width: 100%; height: 100%; border: 1px solid var(--border-color);">
                                     <div class="project-thumbnail" style="width: 100%; height: 100%; overflow: hidden;">
-                                        <video class="project-video" autoplay muted loop playsinline preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                        <video class="project-video" muted loop playsinline preload="metadata" style="width: 100%; height: 100%; object-fit: cover; display: block;">
                                             <source src="${media.url}" type="${videoType}">
                                         </video>
                                     </div>
                                 </div>
                             </div>
                         `;
+                        // Add hover handlers to play/pause video
+                        const video = container.querySelector('video');
+                        const thumbnailWrapper = container.querySelector('.project-thumbnail-wrapper');
+                        if (video && thumbnailWrapper) {
+                            // Seek to frame 3 for thumbnail
+                            video.addEventListener('loadedmetadata', () => {
+                                if (video.duration > 0) {
+                                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                                    video.currentTime = targetTime;
+                                }
+                            });
+                            
+                            thumbnailWrapper.addEventListener('mouseenter', () => {
+                                video.play().catch(() => {});
+                            });
+                            
+                            thumbnailWrapper.addEventListener('mouseleave', () => {
+                                video.pause();
+                                if (video.duration > 0) {
+                                    const targetTime = Math.min(3 / 30, video.duration - 0.1);
+                                    video.currentTime = targetTime;
+                                }
+                            });
+                        }
                     } else {
                         container.innerHTML = `
                             <div class="project-thumbnail-wrapper" style="width: 100%; height: 100%;">

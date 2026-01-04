@@ -16,16 +16,9 @@ function getMediaUrl(relativePath) {
         if (relativePath === 'XDRAR.mp4' || relativePath.endsWith('/XDRAR.mp4')) {
             return `${R2_PUBLIC_URL}/XDRAR.mp4`;
         }
-        // If path already starts with a client directory, use it as-is
-        // Otherwise, assume it's a relative path that needs the full path
-        // Client directories: Crybaby_Oakland/, Bussdown/, Planeta_Pisces_November_2025/, YNB/, ZMO/
-        const clientDirs = ['Crybaby_Oakland/', 'Bussdown/', 'Planeta_Pisces_November_2025/', 'YNB/', 'ZMO/'];
-        const hasClientDir = clientDirs.some(dir => relativePath.startsWith(dir));
-        
-        const path = hasClientDir ? relativePath : relativePath;
-        // URL encode each path segment separately to handle special characters like quotes
+        // URL encode each path segment separately to handle special characters like quotes, spaces, etc.
         // while preserving slashes
-        const pathSegments = path.split('/');
+        const pathSegments = relativePath.split('/');
         const encodedSegments = pathSegments.map(segment => encodeURIComponent(segment));
         const encodedPath = encodedSegments.join('/');
         return `${R2_PUBLIC_URL}/${encodedPath}`;
@@ -1013,7 +1006,7 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'June 2023',
                 videos: [
-                    getMediaUrl('The_Brooklyn_Bussdown_June2023.mp4')
+                    getMediaUrl('Bussdown/The_Brooklyn_Bussdown_June2023.mp4')
                 ]
             },
             {
@@ -1022,7 +1015,7 @@ window.clientsData = {
                 tags: ['PROMO', 'VIDEO'],
                 date: 'September 2023',
                 videos: [
-                    getMediaUrl('The_Brooklyn_Bussdown_Fashion_Week_Edition_Reel_September2023.mp4')
+                    getMediaUrl('Bussdown/The_Brooklyn_Bussdown_Fashion_Week_Edition_Reel_September2023.mp4')
                 ]
             }
         ]

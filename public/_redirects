@@ -1,3 +1,3 @@
-# Cloudflare Pages redirects - Minimal required for subdirectory routing
-# Redirect paths without trailing slashes to directories with trailing slashes
-/clients/dna-lounge    /clients/dna-lounge/   200
+# Cloudflare Pages redirects
+# Cloudflare Pages automatically serves index.html from subdirectories
+# No redirects needed for directory routing

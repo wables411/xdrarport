@@ -2436,8 +2436,12 @@ function renderArchiveGrid(media) {
                 const item = entry.target;
                 const mediaType = item.getAttribute('data-media-type');
                 const mediaUrl = item.getAttribute('data-media-url');
+                const placeholder = item.querySelector('.archive-placeholder');
                 
                 if (mediaType === 'video' && !item.querySelector('video')) {
+                    // Remove placeholder
+                    if (placeholder) placeholder.remove();
+                    
                     const video = document.createElement('video');
                     video.src = mediaUrl;
                     video.autoplay = true;
@@ -2446,17 +2450,24 @@ function renderArchiveGrid(media) {
                     video.playsInline = true;
                     video.preload = 'metadata';
                     video.setAttribute('data-video-src', mediaUrl);
+                    video.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
                     video.addEventListener('error', () => {
                         console.error('Video load error:', mediaUrl);
                     });
-                    video.play().catch(() => {});
+                    video.addEventListener('loadeddata', () => {
+                        video.play().catch(() => {});
+                    });
                     item.appendChild(video);
                 } else if (mediaType === 'image' && !item.querySelector('img')) {
+                    // Remove placeholder
+                    if (placeholder) placeholder.remove();
+                    
                     const img = document.createElement('img');
                     img.src = mediaUrl;
                     img.alt = item.getAttribute('data-title') || '';
                     img.setAttribute('data-image-src', mediaUrl);
                     img.loading = 'lazy';
+                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; display: block;';
                     img.addEventListener('error', () => {
                         console.error('Image load error:', mediaUrl);
                     });
@@ -2467,7 +2478,7 @@ function renderArchiveGrid(media) {
             }
         });
     }, {
-        rootMargin: '50px' // Start loading 50px before item comes into view
+        rootMargin: '100px' // Start loading 100px before item comes into view
     });
     
     // Render items with lazy loading placeholders
@@ -2482,8 +2493,8 @@ function renderArchiveGrid(media) {
         
         // Add placeholder for lazy loading
         const placeholder = document.createElement('div');
-        placeholder.style.cssText = 'width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center;';
-        placeholder.textContent = '';
+        placeholder.className = 'archive-placeholder';
+        placeholder.style.cssText = 'width: 100%; height: 100%; background: var(--border-color); display: flex; align-items: center; justify-content: center; position: absolute; top: 0; left: 0;';
         gridItem.appendChild(placeholder);
         
         // Observe for lazy loading

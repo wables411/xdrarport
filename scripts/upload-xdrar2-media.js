@@ -55,7 +55,8 @@ const clientDirs = [
   'Text-Me-Records',
   'Louie-El-Ser',
   'JoogMaster J',
-  'portionclub69'
+  'portionclub69',
+  'personal'
 ]
 
 // All media file extensions

@@ -25,7 +25,7 @@ async function build() {
       'work',
       'branding',
       'visuals',
-      'personal.html',
+      'personal',
       'archive.html',
       'script.js',
       'styles.css',

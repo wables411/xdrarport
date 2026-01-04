@@ -26,7 +26,7 @@ async function build() {
       'branding',
       'visuals',
       'personal',
-      'archive.html',
+      'archive',
       'script.js',
       'styles.css',
       'XDRAR.mp4',

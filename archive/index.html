@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCHIVE - XD.RAR</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        window.R2_PUBLIC_URL = 'https://pub-e843659987fb49ce82d3227ae212d21c.r2.dev';
+    </script>
+</head>
+<body data-theme="dark">
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+    
+    <header class="header" id="header">
+        <div class="header-inner">
+            <div class="logo-wrapper">
+                <a href="/" class="logo" data-parallax="0.1">XD.RAR</a>
+                <span class="portfolio-label" id="portfolioLabel">Portfolio</span>
+                <span class="time-display" id="timeDisplay"></span>
+                <span class="coordinate-display" id="coordinateDisplay"></span>
+            </div>
+            <nav class="nav">
+                <div class="nav-link-wrapper">
+                    <a href="/work" class="nav-link" data-text="WORK">WORK</a>
+                    <div class="nav-dropdown work-dropdown">
+                        <a href="/branding" class="dropdown-item" data-category="identity">BRANDING & IDENTITY</a>
+                        <a href="/visuals" class="dropdown-item" data-category="digital">MOTION & VISUAL MEDIA</a>
+                        <a href="/personal" class="dropdown-item" data-category="print">PERSONAL PROJECTS</a>
+                    </div>
+                </div>
+                <div class="nav-link-wrapper">
+                    <a href="/clients" class="nav-link" data-text="CLIENTS">CLIENTS</a>
+                    <div class="nav-dropdown clients-dropdown">
+                        <a href="/clients/crybaby-oakland" class="dropdown-item" data-client="crybaby-oakland">Crybaby Oakland</a>
+                        <a href="/clients/bussdown" class="dropdown-item" data-client="bussdown">Bussdown</a>
+                        <a href="/clients/planeta-pisces" class="dropdown-item" data-client="planeta-pisces">Planeta Pisces</a>
+                        <a href="/clients/ynb" class="dropdown-item" data-client="ynb">YNB</a>
+                        <a href="/clients/zmo" class="dropdown-item" data-client="zmo">ZMO</a>
+                        <a href="/clients/411-oakland" class="dropdown-item" data-client="411-oakland">411 Oakland</a>
+                        <a href="/clients/dna-lounge" class="dropdown-item" data-client="dna-lounge">DNA Lounge</a>
+                        <a href="/clients/text-me-records" class="dropdown-item" data-client="text-me-records">Text Me Records</a>
+                        <a href="/clients/louie-el-ser" class="dropdown-item" data-client="louie-el-ser">Louie El Ser</a>
+                        <a href="/clients/joogmaster-j" class="dropdown-item" data-client="joogmaster-j">JoogMaster J</a>
+                        <a href="/clients/portionclub69" class="dropdown-item" data-client="portionclub69">portionclub69</a>
+                    </div>
+                </div>
+                <a href="/#about" class="nav-link" data-text="ABOUT">ABOUT</a>
+                <a href="/#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
+                <a href="/archive" class="nav-link" data-text="ARCHIVE">ARCHIVE</a>
+            </nav>
+            <div class="theme-toggle-wrapper">
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <span class="theme-icon">☀</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="archive-page" style="padding-top: 8rem; min-height: 100vh;">
+        <div class="archive-page-content">
+            <h1 class="archive-page-title">ARCHIVE</h1>
+            
+            <!-- Filter Controls -->
+            <div class="archive-filters">
+                <button class="archive-filter-btn active" data-filter="all">ALL</button>
+                <button class="archive-filter-btn" data-filter="image">IMAGES</button>
+                <button class="archive-filter-btn" data-filter="video">VIDEO</button>
+                <button class="archive-filter-btn" data-filter="branding">BRANDING</button>
+                <button class="archive-filter-btn" data-sort="date" id="dateSortBtn">SORT BY DATE</button>
+            </div>
+            
+            <!-- Archive Grid -->
+            <div class="archive-grid" id="archiveGrid">
+                <!-- Media items will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <div class="media-fullscreen" id="mediaFullscreen">
+        <button class="media-fullscreen-close" id="closeFullscreen">&times;</button>
+        <div class="media-fullscreen-content" id="mediaFullscreenContent"></div>
+    </div>
+
+    <script src="/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.loadArchive === 'function') {
+                window.loadArchive();
+            }
+        });
+    </script>
+</body>
+</html>
+

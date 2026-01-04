@@ -1,3 +1,3 @@
 # Cloudflare Pages redirects
-# Catch-all to serve index.html from subdirectories
-/*    /index.html   200
+# Cloudflare Pages automatically serves index.html from subdirectories
+# No redirects needed for directory routing

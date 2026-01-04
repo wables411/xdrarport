@@ -1117,6 +1117,31 @@ window.clientsData = {
                     getMediaUrl('Text-Me-Records/Text Me bridge Phone logo.png'),
                     getMediaUrl('Text-Me-Records/Text Me text (w logo).png')
                 ]
+            },
+            {
+                title: 'Merch - December 2025',
+                description: 'Merch - December 2025 in collaboration with Andy411 and Studio dad',
+                tags: ['BRANDING', 'MERCH', 'IMAGE'],
+                date: 'December 2025',
+                images: [
+                    getMediaUrl('Text-Me-Records/Text_Me_Records_Merch/Text_Me_Records_-_Black_&_White_Hoodie.png'),
+                    getMediaUrl('Text-Me-Records/Text_Me_Records_Merch/Text_Me_Records_-_Black_&_Yellow_Tshirt.png'),
+                    getMediaUrl('Text-Me-Records/Text_Me_Records_Merch/Text_Me_Records_-_White_&_Black_Tshirt.png'),
+                    getMediaUrl('Text-Me-Records/Text_Me_Records_Merch/Text_Me_Records_-_Yellow_&_Black_Hoodie.png')
+                ]
+            },
+            {
+                title: 'Mikos Da Gawd - Oh My Gawd',
+                description: 'Album cover and promotional content for Mikos Da Gawd.',
+                tags: ['ALBUM', 'PROMO', 'VIDEO', 'IMAGE'],
+                date: '2025',
+                videos: [
+                    getMediaUrl('Text-Me-Records/Mikos_Da_Gawd/OH_My_Gawd_reel.mp4')
+                ],
+                images: [
+                    getMediaUrl('Text-Me-Records/Mikos_Da_Gawd/Aloe_album_cover.png'),
+                    getMediaUrl('Text-Me-Records/Mikos_Da_Gawd/MikosDaGawd-Oh_My_Gawd.png')
+                ]
             }
         ]
     },

@@ -1723,11 +1723,15 @@ section {
 }
 
 .archive-grid-item img,
-.archive-grid-item video {
+.archive-grid-item video,
+.archive-grid-item .archive-media {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .archive-grid-item video {

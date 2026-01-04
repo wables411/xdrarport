@@ -2299,6 +2299,10 @@ let sortByDate = false;
 function collectAllMedia() {
     const media = [];
     
+    console.log('🔍 Collecting media...');
+    console.log('🔍 clientsData available:', !!window.clientsData);
+    console.log('🔍 personalProjectsData available:', !!window.personalProjectsData);
+    
     // Collect from clients
     if (window.clientsData) {
         Object.keys(window.clientsData).forEach(clientId => {
@@ -2450,6 +2454,7 @@ function renderArchiveGrid(media) {
                     video.playsInline = true;
                     video.preload = 'metadata';
                     video.setAttribute('data-video-src', mediaUrl);
+                    video.className = 'archive-media';
                     video.addEventListener('error', () => {
                         console.error('Video load error:', mediaUrl);
                     });
@@ -2466,6 +2471,7 @@ function renderArchiveGrid(media) {
                     img.alt = item.getAttribute('data-title') || '';
                     img.setAttribute('data-image-src', mediaUrl);
                     img.loading = 'lazy';
+                    img.className = 'archive-media';
                     img.addEventListener('error', () => {
                         console.error('Image load error:', mediaUrl);
                     });
@@ -2514,8 +2520,15 @@ function renderArchiveGrid(media) {
 
 // Load archive page
 window.loadArchive = function() {
+    console.log('📦 Loading archive...');
+    
     // Collect all media
     allArchiveMedia = collectAllMedia();
+    console.log(`📦 Collected ${allArchiveMedia.length} media items`);
+    
+    if (allArchiveMedia.length === 0) {
+        console.warn('⚠️ No media found in archive. Check if clientsData and personalProjectsData are loaded.');
+    }
     
     // Render initial grid
     renderArchiveGrid(allArchiveMedia);

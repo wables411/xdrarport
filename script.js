@@ -1108,7 +1108,7 @@ window.clientsData = {
         name: 'Text Me Records',
         projects: [
             {
-                title: 'Logo Branding Designs',
+                title: 'Text Me Records Logos',
                 description: 'Logo branding designs for Text Me Records.',
                 tags: ['BRANDING', 'LOGO', 'IMAGE'],
                 date: '2025',
@@ -1152,7 +1152,7 @@ window.clientsData = {
         name: 'portionclub69',
         projects: [
             {
-                title: 'Branding 2022',
+                title: 'Portion Club Branding',
                 description: 'Branding and logo designs for portionclub69.',
                 tags: ['BRANDING', 'LOGO', 'IMAGE', 'VIDEO'],
                 date: '2022',

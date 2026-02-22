@@ -10,6 +10,10 @@ Static HTML portfolio website.
 - **Cloudflare R2** - Media file storage
 - **Resend API** - Contact form email service
 
+## Fork and recreate (handoff)
+
+To fork this repo and recreate the same site and deployment on another machine (e.g. for another agent), follow **[FORK_AND_RECREATE.md](./FORK_AND_RECREATE.md)**. It covers repo setup, environment variables (local + Cloudflare), R2, Resend, Cloudflare Pages, post-deploy checks, and optional fonts.
+
 ## Setup
 
 ### Prerequisites

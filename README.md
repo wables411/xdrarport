@@ -2,6 +2,8 @@
 
 Static HTML portfolio website.
 
+**Taking over this site? Start with [HANDOFF.md](./HANDOFF.md).**
+
 ## Tech Stack
 
 - **Static HTML/CSS/JS** - Frontend
